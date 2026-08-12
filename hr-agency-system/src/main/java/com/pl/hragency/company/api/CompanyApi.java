@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.UUID;
 
 public interface CompanyApi {
-    UUID create(UUID organizationId, String name, String countryCode,
+    UUID create(UUID userId,
+                UUID organizationId, String name, String countryCode,
                 String taxId, String registrationNumber,
                 String city, String address, String postalCode);
 
-    void createContact(UUID  orgId,
+    void createContact(UUID userId,
+                       UUID  organizationId,
                        UUID companyId,
                        String firstName,
                        String lastName,

@@ -12,6 +12,7 @@ public interface IdentityApi {
     UUID createUser(String email, String firstName, String lastName, String role, UUID organizationId, String password);
     void requireRole(String role);
     boolean isCurrentUserSales();
+    boolean isCurrentUserRecruiter();
     boolean existsInOrganization(
             UUID userId,
             UUID organizationId

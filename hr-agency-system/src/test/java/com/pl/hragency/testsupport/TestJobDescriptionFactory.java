@@ -2,8 +2,8 @@ package com.pl.hragency.testsupport;
 
 import com.pl.hragency.jobdescription.application.command.CreateJobDescriptionCommand;
 import com.pl.hragency.jobdescription.application.service.CreateJobDescriptionHandler;
-import com.pl.hragency.jobdescription.domain.model.EmploymentType;
-import com.pl.hragency.jobdescription.domain.model.WorkMode;
+import com.pl.hragency.jobdescription.api.EmploymentType;
+import com.pl.hragency.jobdescription.api.WorkMode;
 import com.pl.hragency.shared.rest.ExecutionContext;
 import net.datafaker.Faker;
 import org.springframework.stereotype.Component;
@@ -102,7 +102,7 @@ public class TestJobDescriptionFactory {
                 .handle(
                         new ExecutionContext(
                                 organizationId,
-                                userId
+                                userId, "Test"
                         ),
                         command
                 )

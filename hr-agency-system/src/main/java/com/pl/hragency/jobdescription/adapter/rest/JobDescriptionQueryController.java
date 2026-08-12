@@ -37,7 +37,7 @@ public class JobDescriptionQueryController {
 
     private ExecutionContext getContext() {
         CurrentUser currentUser = identityApi.getCurrentUser();
-        return new ExecutionContext(currentUser.organizationId(), currentUser.userId());
+        return currentUser.getExecutionContext();
     }
 
     @GetMapping

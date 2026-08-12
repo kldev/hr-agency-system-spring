@@ -2,7 +2,7 @@ package com.pl.hragency.jobdescription.adapter.persistence;
 
 import com.pl.hragency.jobdescription.domain.model.JobDescription;
 import com.pl.hragency.jobdescription.domain.model.JobDescriptionId;
-import com.pl.hragency.jobdescription.domain.model.SalaryRange;
+import com.pl.hragency.jobdescription.api.SalaryRange;
 import org.springframework.stereotype.Component;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.json.JsonMapper;

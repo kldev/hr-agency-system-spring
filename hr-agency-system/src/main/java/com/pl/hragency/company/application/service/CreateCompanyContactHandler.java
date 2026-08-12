@@ -9,7 +9,7 @@ import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
-@Transactional
+
 @Service
 public class CreateCompanyContactHandler {
     private final CompanyContactRepository companyContactRepository;
@@ -19,6 +19,7 @@ public class CreateCompanyContactHandler {
         this.companyRepository = companyRepository;
     }
 
+    @Transactional
     public CompanyContactId handle(ExecutionContext context, CompanyContactCompanyId companyId, CreateCompanyContactCommand command) {
 
         if (!companyRepository.existsByOrg(companyId.value(), context.organizationId())) {

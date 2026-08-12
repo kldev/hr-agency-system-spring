@@ -50,7 +50,6 @@ public class LoginHandler {
 
         String token = tokenGenerator.generate(user);
 
-
         return new LoginResult(token);
     }
 }

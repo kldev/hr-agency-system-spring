@@ -1,4 +1,4 @@
-package com.pl.hragency.jobdescription.domain.model;
+package com.pl.hragency.jobdescription.api;
 
 import java.math.BigDecimal;
 import java.util.Currency;

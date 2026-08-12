@@ -1,6 +1,6 @@
 package com.pl.hragency.sales;
 
-import com.pl.hragency.sales.domain.event.SalesOpportunityStageChanged;
+import com.pl.hragency.sales.domain.event.SalesOpportunityStageChangedEvent;
 import com.pl.hragency.sales.domain.model.SalesOpportunity;
 import com.pl.hragency.sales.domain.model.SalesOpportunityId;
 import com.pl.hragency.sales.domain.model.SalesOpportunityStage;
@@ -64,7 +64,7 @@ class SalesOpportunityTest {
         var opportunity = createOpportunity();
 
         // when
-        var event = opportunity.changeStage(
+        opportunity.changeStage(
                 SalesOpportunityStage.CONTACTED,
                 null
         );
@@ -72,8 +72,6 @@ class SalesOpportunityTest {
         // then
         assertStageChanged(
                 opportunity,
-                event,
-                SalesOpportunityStage.NEW,
                 SalesOpportunityStage.CONTACTED
         );
     }
@@ -90,7 +88,7 @@ class SalesOpportunityTest {
         );
 
         // when
-        var event = opportunity.changeStage(
+        opportunity.changeStage(
                 SalesOpportunityStage.QUALIFIED,
                 null
         );
@@ -98,8 +96,6 @@ class SalesOpportunityTest {
         // then
         assertStageChanged(
                 opportunity,
-                event,
-                SalesOpportunityStage.CONTACTED,
                 SalesOpportunityStage.QUALIFIED
         );
     }
@@ -121,7 +117,7 @@ class SalesOpportunityTest {
         );
 
         // when
-        var event = opportunity.changeStage(
+       opportunity.changeStage(
                 SalesOpportunityStage.PROPOSAL,
                 null
         );
@@ -129,8 +125,6 @@ class SalesOpportunityTest {
         // then
         assertStageChanged(
                 opportunity,
-                event,
-                SalesOpportunityStage.QUALIFIED,
                 SalesOpportunityStage.PROPOSAL
         );
     }
@@ -144,7 +138,7 @@ class SalesOpportunityTest {
         moveToProposal(opportunity);
 
         // when
-        var event = opportunity.changeStage(
+        opportunity.changeStage(
                 SalesOpportunityStage.WON,
                 null
         );
@@ -152,8 +146,6 @@ class SalesOpportunityTest {
         // then
         assertStageChanged(
                 opportunity,
-                event,
-                SalesOpportunityStage.PROPOSAL,
                 SalesOpportunityStage.WON
         );
 
@@ -173,7 +165,7 @@ class SalesOpportunityTest {
                 "Customer selected another recruitment agency";
 
         // when
-        var event = opportunity.changeStage(
+        opportunity.changeStage(
                 SalesOpportunityStage.LOST,
                 lostReason
         );
@@ -181,8 +173,6 @@ class SalesOpportunityTest {
         // then
         assertStageChanged(
                 opportunity,
-                event,
-                SalesOpportunityStage.PROPOSAL,
                 SalesOpportunityStage.LOST
         );
 
@@ -641,35 +631,11 @@ class SalesOpportunityTest {
 
     private void assertStageChanged(
             SalesOpportunity opportunity,
-            SalesOpportunityStageChanged event,
-            SalesOpportunityStage previousStage,
             SalesOpportunityStage newStage
     ) {
         assertThat(opportunity.stage())
                 .isEqualTo(newStage);
 
-        assertThat(event)
-                .isNotNull();
 
-        assertThat(event.organizationId())
-                .isEqualTo(ORGANIZATION_ID);
-
-        assertThat(event.salesOpportunityId())
-                .isEqualTo(opportunity.id().value());
-
-        assertThat(event.companyId())
-                .isEqualTo(COMPANY_ID);
-
-        assertThat(event.previousStage())
-                .isEqualTo(previousStage);
-
-        assertThat(event.newStage())
-                .isEqualTo(newStage);
-
-        assertThat(event.salesOwnerId())
-                .isEqualTo(SALES_OWNER_ID);
-
-        assertThat(event.occurredAt())
-                .isNotNull();
     }
 }

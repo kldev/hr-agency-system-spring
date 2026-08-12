@@ -10,7 +10,8 @@ import org.springframework.modulith.ApplicationModule;
                 "identity :: event",
                 "company :: event",
                 "jobdescription :: event",
-                "sales :: event"
+                "sales :: event",
+                "recruitment :: event"
         })
 public class AuditModule {
 }

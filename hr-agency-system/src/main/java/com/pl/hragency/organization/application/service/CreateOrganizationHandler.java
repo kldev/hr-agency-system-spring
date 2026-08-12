@@ -5,9 +5,11 @@ import com.pl.hragency.organization.domain.event.OrganizationCreatedEvent;
 import com.pl.hragency.organization.domain.model.Organization;
 import com.pl.hragency.organization.application.port.OrganizationRepository;
 import com.pl.hragency.shared.event.EventPublisher;
+import com.pl.hragency.shared.rest.ExecutionContext;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Service
@@ -37,10 +39,15 @@ public class CreateOrganizationHandler {
 
         repository.save(organization);
 
-        publisher.publish(new OrganizationCreatedEvent(
+        var event = new OrganizationCreatedEvent(
                 organization.id().value(),
                 organization.name(),
-                organization.slug()));
+                organization.slug(),
+                null,
+                null,
+                Instant.now());
+
+        publisher.publish(event);
 
         return organization.id().value();
     }

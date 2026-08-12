@@ -36,8 +36,8 @@ public class CompanyPersistenceAdapter implements CompanyRepository {
     }
 
     @Override
-    public Optional<Company> findById(CompanyId companyId) {
-        return repository.findById(companyId.value()).map(mapper::toDomain);
+    public Optional<Company> findById(CompanyId companyId, UUID organizationId) {
+        return repository.findByIdAndOrganizationId(companyId.value(), organizationId).map(mapper::toDomain);
     }
 
     @Override

@@ -30,7 +30,7 @@ public class SuggestionController {
 
     private ExecutionContext getContext() {
         CurrentUser currentUser = identityApi.getCurrentUser();
-        return new ExecutionContext(currentUser.organizationId(), currentUser.userId());
+        return currentUser.getExecutionContext();
     }
 
     @GetMapping("/users")

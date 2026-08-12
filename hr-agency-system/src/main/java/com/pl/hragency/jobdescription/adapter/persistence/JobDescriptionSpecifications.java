@@ -1,7 +1,7 @@
 package com.pl.hragency.jobdescription.adapter.persistence;
 
-import com.pl.hragency.jobdescription.domain.model.EmploymentType;
-import com.pl.hragency.jobdescription.domain.model.WorkMode;
+import com.pl.hragency.jobdescription.api.EmploymentType;
+import com.pl.hragency.jobdescription.api.WorkMode;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.UUID;

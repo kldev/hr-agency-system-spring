@@ -91,7 +91,7 @@ public class CompanyCommandApiTest extends BaseApiIntegrationTest {
                 .isNotNull();
 
         var company = companyRepository.findById(
-                companyId
+                companyId, organization.id()
         ).orElse(null);
 
         assertThat(company)
@@ -137,7 +137,7 @@ public class CompanyCommandApiTest extends BaseApiIntegrationTest {
                 .isNotNull();
 
         var company = companyRepository.findById(
-                companyId
+                companyId, organization.id()
         ).orElseThrow();
 
         assertThat(company.salesOwnerId())
@@ -215,7 +215,7 @@ public class CompanyCommandApiTest extends BaseApiIntegrationTest {
 
         // then
         var company = companyRepository.findById(
-                companyId
+                companyId, organization.id()
         ).orElseThrow();
 
         assertThat(company).isNotNull();
@@ -273,7 +273,7 @@ public class CompanyCommandApiTest extends BaseApiIntegrationTest {
 
         // then
         var updatedCompany = companyRepository.findById(
-                new CompanyId(companyId)
+                new CompanyId(companyId), organization.id()
         ).orElseThrow();
 
         assertThat(updatedCompany.salesOwnerId())

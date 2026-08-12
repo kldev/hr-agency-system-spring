@@ -7,8 +7,11 @@ import com.pl.hragency.audit.adapter.persistence.SpringDataAuditRepository;
 import com.pl.hragency.audit.domain.model.AuditEventType;
 import com.pl.hragency.organization.application.command.CreateOrganizationCommand;
 import com.pl.hragency.organization.application.service.CreateOrganizationHandler;
+import com.pl.hragency.shared.rest.ExecutionContext;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,8 +30,10 @@ class OrganizationAuditTest extends BaseIntegrationTest {
                 "acmeOrg"
         );
 
+        var context = new ExecutionContext(UUID.randomUUID(), UUID.randomUUID(), "Test");
+
         // when
-        var organizationId = handler.handle(command);
+        var organizationId = handler.handle( command);
 
         // then
         var auditEntries = awaitAuditEntries("Organization",

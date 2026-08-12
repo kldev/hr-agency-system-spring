@@ -44,7 +44,7 @@ public class CompanyController {
 
     private ExecutionContext getContext() {
         CurrentUser currentUser = identityApi.getCurrentUser();
-        return new ExecutionContext(currentUser.organizationId(), currentUser.userId());
+        return currentUser.getExecutionContext();
     }
 
     @PostMapping
@@ -59,7 +59,7 @@ public class CompanyController {
     @PostMapping("{companyId}/assign-sales")
     public ResponseEntity<ApiResult> assignSales(@PathVariable UUID companyId, @Valid @RequestBody AssignSalesOwnerCommand command) {
 
-        assignSalesPersonHandler.handle(new CompanyId(companyId), command);
+        assignSalesPersonHandler.handle(getContext(), new CompanyId(companyId), command);
 
         return ResponseEntity.ok(new ApiResult("Sales person assigned successfully", true));
     }
@@ -99,6 +99,7 @@ public class CompanyController {
         ExecutionContext context =getContext();
         var company = companyQueryService.findOne(new CompanyId(companyId), new CompanyOrganizationId(context.organizationId()))
                 .orElseThrow(() -> new IllegalArgumentException("Company not found"));
+
         var contacts = companyContactQueryService.findByCompanyId(new CompanyContactCompanyId(companyId));
         var detailsItem = new CompanyDetailsItem(company, contacts);
 

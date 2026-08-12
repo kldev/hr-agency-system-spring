@@ -8,39 +8,51 @@ import com.pl.hragency.company.domain.model.CompanyId;
 import com.pl.hragency.identity.api.IdentityApi;
 import com.pl.hragency.shared.event.EventPublisher;
 import com.pl.hragency.shared.event.UserSnapshot;
+import com.pl.hragency.shared.rest.ExecutionContext;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Objects;
 
-@Transactional
 @Service
 public class AssignSalesPersonHandler {
-    private final CompanyRepository companyRepository;
+    private final CompanyRepository repository;
     private final IdentityApi identityApi;
     private final EventPublisher eventPublisher;
 
-    public AssignSalesPersonHandler(CompanyRepository companyRepository, IdentityApi identityApi, EventPublisher eventPublisher) {
-        this.companyRepository = companyRepository;
+    public AssignSalesPersonHandler(CompanyRepository repository,
+                                    IdentityApi identityApi,
+                                    EventPublisher eventPublisher) {
+        this.repository = repository;
         this.identityApi = identityApi;
         this.eventPublisher = eventPublisher;
     }
 
-    public void handle(CompanyId companyId, AssignSalesOwnerCommand command) {
+    @Transactional
+    public void handle(ExecutionContext context, CompanyId companyId, AssignSalesOwnerCommand command) {
 
-       Company company = companyRepository.findById(companyId).orElseThrow(() -> new IllegalStateException("Company not found by id"));
+       Company company = repository.findById(companyId, context.organizationId())
+               .orElseThrow(() -> new IllegalStateException("Company not found by id"));
 
-        if (!identityApi.existsInOrganization(
-                command.salesUserId(),
-                company.organizationId().value()
+
+        // nowy owner
+        var newSales =
+                identityApi.findUser(
+                                command.salesUserId(),
+                                context.organizationId()
+                        )
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "Sales person does not belong to organization"
+                                ));
+
+        if (Objects.equals(
+                company.salesOwnerId(),
+                command.salesUserId()
         )) {
-            throw new IllegalArgumentException(
-                    "Sales person does not belong to company organization"
-            );
+            return;
         }
-
-        var organizationId =
-                company.organizationId().value();
 
         UserSnapshot previousOwner = null;
 
@@ -49,7 +61,7 @@ public class AssignSalesPersonHandler {
             var previousSales =
                     identityApi.findUser(
                             company.salesOwnerId(),
-                            organizationId
+                            context.organizationId()
                     );
 
             previousOwner = previousSales
@@ -61,16 +73,7 @@ public class AssignSalesPersonHandler {
                     .orElse(null);
         }
 
-        // nowy owner
-        var newSales =
-                identityApi.findUser(
-                                command.salesUserId(),
-                                organizationId
-                        )
-                        .orElseThrow(() ->
-                                new IllegalArgumentException(
-                                        "Sales person does not belong to organization"
-                                ));
+
 
         var currentOwner =
                 new UserSnapshot(
@@ -79,16 +82,14 @@ public class AssignSalesPersonHandler {
                         newSales.email()
                 );
 
-        // nic się nie zmieniło
-        if (Objects.equals(
-                company.salesOwnerId(),
-                command.salesUserId()
-        )) {
-            return;
-        }
+        repository.assignSales(companyId, command.salesUserId());
 
-        companyRepository.assignSales(companyId, command.salesUserId());
+        var event = new CompanySalesOwnerChangedEvent(companyId.value(),
+                context.organizationId(),
+                previousOwner, currentOwner,
+                context.userId(), context.fullName(), Instant.now()
+                );
 
-        eventPublisher.publish(new CompanySalesOwnerChangedEvent(companyId.value(), organizationId, previousOwner, currentOwner));
+        eventPublisher.publish(event);
     }
 }

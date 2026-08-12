@@ -4,6 +4,7 @@ import com.pl.hragency.development.scenario.CompanyScenario;
 import com.pl.hragency.development.scenario.JobDescriptionScenario;
 import com.pl.hragency.development.scenario.OrganizationScenario;
 import com.pl.hragency.development.scenario.UserScenario;
+import com.pl.hragency.development.scenario.jobposting.JobPostingScenario;
 import com.pl.hragency.development.scenario.sales.SalesOpportunityScenario;
 import org.springframework.stereotype.Component;
 
@@ -14,17 +15,20 @@ public class DevelopmentScenario {
     private final CompanyScenario companyScenario;
     private final JobDescriptionScenario jobDescriptionScenario;
     private final SalesOpportunityScenario salesOpportunityScenario;
+    private final JobPostingScenario jobPostingScenario;
 
     public DevelopmentScenario(OrganizationScenario organizationScenario,
                                UserScenario userScenario,
                                CompanyScenario companyScenario,
                                JobDescriptionScenario jobDescriptionScenario,
-                               SalesOpportunityScenario salesOpportunityScenario) {
+                               SalesOpportunityScenario salesOpportunityScenario,
+                               JobPostingScenario jobPostingScenario) {
         this.organizationScenario = organizationScenario;
         this.userScenario = userScenario;
         this.companyScenario = companyScenario;
         this.jobDescriptionScenario = jobDescriptionScenario;
         this.salesOpportunityScenario = salesOpportunityScenario;
+        this.jobPostingScenario = jobPostingScenario;
     }
 
     public void create() {
@@ -33,5 +37,6 @@ public class DevelopmentScenario {
         companyScenario.createCompanies(result.organizationId());
         jobDescriptionScenario.create(result.organizationId(), usersIds);
         salesOpportunityScenario.createOpportunities(result.organizationId());
+        jobPostingScenario.create(result.organizationId());
     }
 }

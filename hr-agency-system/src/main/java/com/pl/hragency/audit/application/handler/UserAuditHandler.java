@@ -21,6 +21,8 @@ public class UserAuditHandler {
                 "identity",
                 "User",
                 event.userId(),
+                event.actorId(),
+                event.actorName(),
                 AuditEventType.CREATED,
                 event
         );

@@ -1,4 +1,4 @@
-package com.pl.hragency.jobdescription.domain.model;
+package com.pl.hragency.jobdescription.api;
 
 public enum EmploymentType {
     FULL_TIME,

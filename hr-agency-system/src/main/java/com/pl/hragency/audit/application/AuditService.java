@@ -16,33 +16,32 @@ public class AuditService {
 
     private final AuditPersistenceAdapter persistenceAdapter;
     private final JsonMapper objectMapper;
-    private final IdentityApi api;
+
 
     public AuditService(
             AuditPersistenceAdapter persistenceAdapter,
-            JsonMapper objectMapper, IdentityApi api) {
+            JsonMapper objectMapper) {
 
         this.persistenceAdapter = persistenceAdapter;
         this.objectMapper = objectMapper;
-        this.api = api;
     }
 
     public void record(
             String module,
             String aggregateType,
             UUID aggregateId,
+            UUID actorId,
+            String actorName,
             AuditEventType eventType,
             Object data) {
-
-        var currentUser = api.getCurrentUser();
 
         var auditEntry = AuditEntry.create(
                 module,
                 aggregateType,
                 aggregateId,
                 eventType,
-                currentUser != null ? currentUser.userId() : null,
-                currentUser != null ? currentUser.fullName() : "",
+                actorId,
+                actorName,
                 createDescription(eventType),
                 serialize(data),
                 Instant.now()

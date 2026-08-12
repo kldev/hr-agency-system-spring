@@ -15,26 +15,28 @@ import com.pl.hragency.shared.rest.ExecutionContext;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-@Service
-@Transactional
-public class CreateUserHandler {
+import java.time.Instant;
 
+@Service
+public class CreateUserHandler {
     private final UserRepository userRepository;
-    private final CurrentUserProvider userProvider;
     private final PasswordHasher hasher;
     private final EventPublisher eventPublisher;
 
-    public CreateUserHandler(UserRepository userRepository, CurrentUserProvider userProvider, PasswordHasher hasher, EventPublisher eventPublisher) {
+    public CreateUserHandler(UserRepository userRepository,
+                             PasswordHasher hasher,
+                             EventPublisher eventPublisher) {
         this.userRepository = userRepository;
-        this.userProvider = userProvider;
         this.hasher = hasher;
         this.eventPublisher = eventPublisher;
     }
 
-    public UserId handle(CreateUserCommand command) {
-        /// TODO: validation and errors
+    @Transactional
+    public UserId handle(ExecutionContext context, CreateUserCommand command) {
+
         UserOrganizationId organizationId = new UserOrganizationId(
-                userProvider.get().organizationId());
+                context.organizationId());
+
         User user = User.create(
                 organizationId,
                 command.username(),
@@ -46,10 +48,16 @@ public class CreateUserHandler {
 
         userRepository.save(user);
 
-        eventPublisher.publish(new UserCreatedEvent(user.id().value(),
+        var event = new UserCreatedEvent(
+                user.id().value(),
                 organizationId.value(),
                 command.firstName() + " " +command.lastName(),
-                command.username()));
+                command.username(),
+                context.userId(),
+                context.fullName(),
+                Instant.now());
+
+        eventPublisher.publish(event);
 
         return user.id();
     }

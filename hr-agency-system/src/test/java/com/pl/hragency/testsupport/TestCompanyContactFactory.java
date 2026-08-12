@@ -40,7 +40,7 @@ public class TestCompanyContactFactory {
                                      String email,
                                      String jobTitle, boolean isPrimary) {
 
-        return handler.handle(new ExecutionContext(orgId, UUID.randomUUID()),
+        return handler.handle(new ExecutionContext(orgId, UUID.randomUUID(), "Test"),
                 new CompanyContactCompanyId(companyId),
                 new CreateCompanyContactCommand(email, phone, firstName, lastName, jobTitle, isPrimary )).value();
     }

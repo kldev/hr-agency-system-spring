@@ -29,7 +29,8 @@ public class SalesService implements SalesApi {
         return  createHandler.handle(
                 new ExecutionContext(
                         organizationId,
-                        userId
+                        userId,
+                        "System"
                 ),
                 new CreateSalesOpportunityCommand(
                         input.companyId(),
@@ -48,7 +49,8 @@ public class SalesService implements SalesApi {
         changeStageHandler.handle(
                 new ExecutionContext(
                         organizationId,
-                        userId
+                        userId,
+                        "System"
                 ),
                 new SalesOpportunityId(input.salesOpportunityId()),
                 new ChangeSalesOpportunityStageCommand(

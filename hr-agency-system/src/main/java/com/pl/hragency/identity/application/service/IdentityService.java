@@ -2,6 +2,7 @@ package com.pl.hragency.identity.application.service;
 
 import com.pl.hragency.identity.api.IdentityApi;
 import com.pl.hragency.identity.api.UserSuggestion;
+import com.pl.hragency.identity.application.command.CreateUserCommand;
 import com.pl.hragency.identity.application.port.AuthorizationService;
 import com.pl.hragency.identity.application.port.CurrentUserProvider;
 import com.pl.hragency.identity.application.port.PasswordHasher;
@@ -12,6 +13,7 @@ import com.pl.hragency.identity.domain.model.User;
 import com.pl.hragency.identity.domain.model.UserOrganizationId;
 import com.pl.hragency.identity.domain.model.UserRole;
 import com.pl.hragency.shared.event.UserSnapshot;
+import com.pl.hragency.shared.rest.ExecutionContext;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -21,20 +23,20 @@ import java.util.stream.Collectors;
 public class IdentityService implements IdentityApi {
     private final UserRepository userRepository;
     private final CurrentUserProvider currentUserProvider;
-    private final PasswordHasher hasher;
     private final AuthorizationService authorizationService;
     private final UserSuggestionsQuery userSuggestionsQuery;
+    private final CreateUserHandler createUserHandler;
 
     public IdentityService(UserRepository userRepository,
                            CurrentUserProvider currentUserProvider,
-                           PasswordHasher hasher,
                            AuthorizationService authorizationService,
-                           UserSuggestionsQuery userSuggestionsQuery) {
+                           UserSuggestionsQuery userSuggestionsQuery,
+                           CreateUserHandler createUserHandler) {
         this.userRepository = userRepository;
         this.currentUserProvider = currentUserProvider;
-        this.hasher = hasher;
         this.authorizationService = authorizationService;
         this.userSuggestionsQuery = userSuggestionsQuery;
+        this.createUserHandler = createUserHandler;
     }
 
     @Override
@@ -44,16 +46,11 @@ public class IdentityService implements IdentityApi {
 
     @Override
     public UUID createUser(String email, String firstName, String lastName, String role, UUID organizationId, String password) {
-        User user = User.create(
-                new UserOrganizationId(organizationId),
-                email,
-                firstName,
-                lastName,
-                UserRole.from(role),
-                hasher.hash(password));
 
-        userRepository.save(user);
-        return user.id().value();
+        var command = new CreateUserCommand(email, password, firstName, lastName, UserRole.from(role));
+        var context = new ExecutionContext(organizationId, UUID.randomUUID(), "System");
+
+        return createUserHandler.handle(context, command).value();
     }
 
     @Override
@@ -64,8 +61,17 @@ public class IdentityService implements IdentityApi {
     @Override
     public boolean isCurrentUserSales() {
         var user = getCurrentUser();
+        if (user == null) return false;
 
         return user.role() == UserRole.SALES;
+    }
+
+    @Override
+    public boolean isCurrentUserRecruiter() {
+        var user = getCurrentUser();
+        if (user == null) return false;
+
+        return user.role() == UserRole.RECRUITER;
     }
 
     @Override

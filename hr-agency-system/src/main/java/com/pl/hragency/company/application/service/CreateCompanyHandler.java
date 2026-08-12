@@ -13,9 +13,10 @@ import com.pl.hragency.shared.rest.ExecutionContext;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.UUID;
 
-@Transactional
+
 @Service
 public class CreateCompanyHandler {
 
@@ -30,6 +31,7 @@ public class CreateCompanyHandler {
         this.identityApi = identityApi;
     }
 
+    @Transactional
     public CompanyId handle(ExecutionContext context, CreateCompanyCommand command, boolean assignSales) {
 
         UUID organizationId = context.organizationId();
@@ -52,11 +54,14 @@ public class CreateCompanyHandler {
 
         companyRepository.save(company);
 
-        eventPublisher.publish(new CompanyCreatedEvent(company.id().value(),
+        var event = new CompanyCreatedEvent(company.id().value(),
                 company.organizationId().value(),
                 company.name(),
                 company.address().countryCode().value(),
-                company.taxId().value()));
+                company.taxId().value(),
+                context.userId(), context.fullName(), Instant.now());
+
+        eventPublisher.publish(event);
 
         if (assignSales) {
             companyRepository.assignSales(company.id(), context.userId());
@@ -79,7 +84,10 @@ public class CreateCompanyHandler {
                             newSales.email()
                     );
 
-            eventPublisher.publish(new CompanySalesOwnerChangedEvent(company.id().value(), organizationId, null, currentOwner));
+            var assignOwnerEvent = new CompanySalesOwnerChangedEvent(company.id().value(), organizationId, null,
+                    currentOwner, context.userId(), context.fullName(), Instant.now());
+
+            eventPublisher.publish(assignOwnerEvent);
         }
 
         return company.id();

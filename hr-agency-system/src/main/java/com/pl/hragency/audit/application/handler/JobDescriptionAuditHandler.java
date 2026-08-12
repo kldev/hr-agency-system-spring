@@ -4,6 +4,7 @@ import com.pl.hragency.audit.application.AuditService;
 import com.pl.hragency.audit.domain.model.AuditEventType;
 import com.pl.hragency.jobdescription.domain.event.JobDescriptionCreatedEvent;
 
+import com.pl.hragency.jobdescription.domain.event.JobDescriptionStatusUpdatedEvent;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,22 @@ public class JobDescriptionAuditHandler {
                 "job-description",
                 "JobDescription",
                 event.jobDescriptionId(),
+                event.actorId(),
+                event.actorName(),
                 AuditEventType.CREATED,
+                event
+        );
+    }
+
+    @ApplicationModuleListener
+    void on(JobDescriptionStatusUpdatedEvent event) {
+        auditService.record(
+                "job-description",
+                "JobDescription",
+                event.jobDescriptionId(),
+                event.actorId(),
+                event.actorName(),
+                AuditEventType.STATUS_CHANGED,
                 event
         );
     }

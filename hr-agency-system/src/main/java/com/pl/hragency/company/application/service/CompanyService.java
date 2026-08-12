@@ -24,6 +24,7 @@ public class CompanyService  implements CompanyApi {
     private final CompanyQueryService  companyQueryService;
     private final CompanySuggestionsQuery companySuggestionsQuery;
 
+
     public CompanyService(CreateCompanyHandler createCompanyHandler,
                           CreateCompanyContactHandler createCompanyContactHandler,
                           CompanyQueryService companyQueryService, CompanySuggestionsQuery companySuggestionsQuery) {
@@ -34,7 +35,7 @@ public class CompanyService  implements CompanyApi {
     }
 
     @Override
-    public UUID create(UUID organizationId,
+    public UUID create(UUID userId, UUID organizationId,
                        String name,
                        String countryCode,
                        String taxId,
@@ -55,16 +56,16 @@ public class CompanyService  implements CompanyApi {
 
 
         var company = createCompanyHandler.handle(
-                new ExecutionContext(organizationId, UUID.randomUUID()),
+                new ExecutionContext(organizationId,userId, "System"),
                 command, false);
 
         return company.value();
     }
 
     @Override
-    public void createContact(UUID organizationId, UUID companyId, String firstName, String lastName, String phone, String email, String jobTitle) {
+    public void createContact(UUID userId, UUID organizationId, UUID companyId, String firstName, String lastName, String phone, String email, String jobTitle) {
         CreateCompanyContactCommand command = new CreateCompanyContactCommand(email, phone, firstName, lastName, jobTitle, false);
-        createCompanyContactHandler.handle(new ExecutionContext(organizationId, UUID.randomUUID()),new CompanyContactCompanyId(companyId), command);
+        createCompanyContactHandler.handle(new ExecutionContext(organizationId, userId, "System"),new CompanyContactCompanyId(companyId), command);
     }
 
     @Override

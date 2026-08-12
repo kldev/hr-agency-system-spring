@@ -1,6 +1,6 @@
 package com.pl.hragency.sales.domain.model;
 
-import com.pl.hragency.sales.domain.event.SalesOpportunityStageChanged;
+import com.pl.hragency.sales.domain.event.SalesOpportunityStageChangedEvent;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -131,7 +131,7 @@ public final class SalesOpportunity {
         );
     }
 
-    public SalesOpportunityStageChanged changeStage(
+    public void changeStage(
             SalesOpportunityStage newStage,
             String lostReason
     ) {
@@ -165,15 +165,7 @@ public final class SalesOpportunity {
 
         this.stage = newStage;
 
-        return new SalesOpportunityStageChanged(
-                organizationId,
-                id.value(),
-                companyId,
-                previousStage,
-                newStage,
-                salesOwnerId,
-                Instant.now()
-        );
+
     }
 
     private void validateTransition(
@@ -181,7 +173,8 @@ public final class SalesOpportunity {
     ) {
         boolean allowed = switch (stage) {
             case NEW ->
-                    newStage == SalesOpportunityStage.CONTACTED;
+                    newStage == SalesOpportunityStage.CONTACTED
+                     ||  newStage == SalesOpportunityStage.QUALIFIED;
 
             case CONTACTED ->
                     newStage == SalesOpportunityStage.QUALIFIED;

@@ -21,6 +21,8 @@ public class OrganizationAuditHandler {
                 "organization",
                 "Organization",
                 event.organizationId(),
+                event.actorId(),
+                event.actorName(),
                 AuditEventType.CREATED,
                 event
         );

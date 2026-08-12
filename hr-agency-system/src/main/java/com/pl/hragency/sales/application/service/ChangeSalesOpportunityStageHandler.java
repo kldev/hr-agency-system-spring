@@ -2,11 +2,12 @@ package com.pl.hragency.sales.application.service;
 
 import com.pl.hragency.sales.application.command.ChangeSalesOpportunityStageCommand;
 import com.pl.hragency.sales.application.port.SalesOpportunityRepository;
-import com.pl.hragency.sales.domain.event.SalesOpportunityLost;
-import com.pl.hragency.sales.domain.event.SalesOpportunityStageChanged;
-import com.pl.hragency.sales.domain.event.SalesOpportunityWon;
+import com.pl.hragency.sales.domain.event.SalesOpportunityLostEvent;
+import com.pl.hragency.sales.domain.event.SalesOpportunityStageChangedEvent;
+import com.pl.hragency.sales.domain.event.SalesOpportunityWonEvent;
 import com.pl.hragency.sales.domain.model.SalesOpportunity;
 import com.pl.hragency.sales.domain.model.SalesOpportunityId;
+import com.pl.hragency.sales.domain.model.SalesOpportunityStage;
 import com.pl.hragency.shared.event.EventPublisher;
 import com.pl.hragency.shared.rest.ExecutionContext;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,9 @@ public class ChangeSalesOpportunityStageHandler {
                         )
                 );
 
-        var event = opportunity.changeStage(
+        SalesOpportunityStage previousStage = opportunity.stage();
+
+        opportunity.changeStage(
                 command.stage(),
                 command.lostReason()
         );
@@ -63,35 +66,55 @@ public class ChangeSalesOpportunityStageHandler {
             );
         }
 
+        var event   = new SalesOpportunityStageChangedEvent(
+                context.organizationId(),
+                opportunity.id().value(),
+                opportunity.companyId(),
+                previousStage,
+                opportunity.stage(),
+                opportunity.salesOwnerId(),
+                context.userId(),
+                context.fullName(),
+                Instant.now()
+        );
+
         eventPublisher.publish(event);
 
         publishSpecificEvent(
                 opportunity,
-                command.lostReason()
+                command.lostReason(),
+                context
+
         );
     }
 
     private void publishSpecificEvent(
             SalesOpportunity opportunity,
-            String lostReason
+            String lostReason,
+            ExecutionContext context
     ) {
         switch (opportunity.stage()) {
             case WON -> eventPublisher.publish(
-                    new SalesOpportunityWon(
+                    new SalesOpportunityWonEvent(
                             opportunity.organizationId(),
                             opportunity.id().value(),
                             opportunity.companyId(),
-                            opportunity.salesOwnerId(), Instant.now()
+                            opportunity.salesOwnerId(),
+                            context.userId(),
+                            context.fullName(),
+                            Instant.now()
                             )
             );
 
             case LOST -> eventPublisher.publish(
-                    new SalesOpportunityLost(
+                    new SalesOpportunityLostEvent(
                             opportunity.organizationId(),
                             opportunity.id().value(),
                             opportunity.companyId(),
                             opportunity.salesOwnerId(),
                             lostReason,
+                            context.userId(),
+                            context.fullName(),
                             Instant.now()
                     )
             );

@@ -6,15 +6,16 @@ import com.pl.hragency.jobdescription.application.port.JobDescriptionRepository;
 import com.pl.hragency.jobdescription.domain.event.JobDescriptionCreatedEvent;
 import com.pl.hragency.jobdescription.domain.model.JobDescription;
 import com.pl.hragency.jobdescription.domain.model.JobDescriptionId;
-import com.pl.hragency.jobdescription.domain.model.SalaryRange;
+import com.pl.hragency.jobdescription.api.SalaryRange;
 import com.pl.hragency.shared.event.EventPublisher;
 import com.pl.hragency.shared.rest.ExecutionContext;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Currency;
 
-@Transactional
+
 @Service
 public class CreateJobDescriptionHandler {
 
@@ -31,6 +32,7 @@ public class CreateJobDescriptionHandler {
         this.identityApi = identityApi;
     }
 
+    @Transactional
     public JobDescriptionId handle(
             ExecutionContext context,
             CreateJobDescriptionCommand command) {
@@ -69,7 +71,10 @@ public class CreateJobDescriptionHandler {
                         jobDescription.organizationId(),
                         jobDescription.companyId(),
                         jobDescription.title(),
-                        userSnapshot
+                        userSnapshot,
+                        context.userId(),
+                        context.fullName(),
+                        Instant.now()
                 )
         );
 

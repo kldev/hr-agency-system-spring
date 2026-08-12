@@ -1,7 +1,7 @@
 package com.pl.hragency.jobdescription.application.command;
 
-import com.pl.hragency.jobdescription.domain.model.EmploymentType;
-import com.pl.hragency.jobdescription.domain.model.WorkMode;
+import com.pl.hragency.jobdescription.api.EmploymentType;
+import com.pl.hragency.jobdescription.api.WorkMode;
 
 import java.math.BigDecimal;
 import java.util.List;

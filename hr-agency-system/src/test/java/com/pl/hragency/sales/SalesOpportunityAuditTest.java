@@ -1,17 +1,14 @@
 package com.pl.hragency.sales;
 
 import com.pl.hragency.BaseApiIntegrationTest;
-import com.pl.hragency.audit.adapter.persistence.SpringDataAuditRepository;
 import com.pl.hragency.audit.domain.model.AuditEventType;
-import com.pl.hragency.company.domain.model.CompanyId;
 import com.pl.hragency.identity.domain.model.UserRole;
 import com.pl.hragency.sales.application.command.ChangeSalesOpportunityStageCommand;
 import com.pl.hragency.sales.application.command.CreateSalesOpportunityCommand;
-import com.pl.hragency.sales.domain.event.SalesOpportunityCreated;
-import com.pl.hragency.sales.domain.event.SalesOpportunityStageChanged;
+import com.pl.hragency.sales.domain.event.SalesOpportunityCreatedEvent;
+import com.pl.hragency.sales.domain.event.SalesOpportunityStageChangedEvent;
 import com.pl.hragency.sales.domain.model.SalesOpportunityId;
 import com.pl.hragency.sales.domain.model.SalesOpportunityStage;
-import com.pl.hragency.shared.event.UserSnapshot;
 import com.pl.hragency.testsupport.AuthenticationTestClient;
 import com.pl.hragency.testsupport.TestCompanyFactory;
 import com.pl.hragency.testsupport.TestOrganizationFactory;
@@ -111,7 +108,7 @@ class SalesOpportunityAuditTest extends BaseApiIntegrationTest {
 
         var data = jsonMapper.readValue(
                 audit.getData(),
-                SalesOpportunityCreated.class
+                SalesOpportunityCreatedEvent.class
         );
 
         assertThat(data.opportunityId())
@@ -217,7 +214,7 @@ class SalesOpportunityAuditTest extends BaseApiIntegrationTest {
 
         var data = jsonMapper.readValue(
                 audit.getData(),
-                SalesOpportunityStageChanged.class
+                SalesOpportunityStageChangedEvent.class
         );
 
         assertThat(data.salesOpportunityId())

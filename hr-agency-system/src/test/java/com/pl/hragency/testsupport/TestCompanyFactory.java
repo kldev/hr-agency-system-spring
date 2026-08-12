@@ -40,6 +40,7 @@ public class TestCompanyFactory {
             String postalCode) {
 
         return companyApi.create(
+                UUID.randomUUID(),
                 organizationId,
                 name,
                 countryCode,

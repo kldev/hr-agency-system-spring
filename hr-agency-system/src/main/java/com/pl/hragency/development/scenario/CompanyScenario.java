@@ -1,11 +1,13 @@
 package com.pl.hragency.development.scenario;
 
 import com.pl.hragency.company.api.CompanyApi;
+import com.pl.hragency.identity.api.IdentityApi;
 import net.datafaker.Faker;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
 import java.util.Locale;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
@@ -16,11 +18,13 @@ public class CompanyScenario {
     private final SecureRandom secureRandom;
     private final CompanyApi api;
     private final Faker faker;
+    private final IdentityApi identityApi;
 
     public CompanyScenario(
-            CompanyApi api) {
+            CompanyApi api, IdentityApi identityApi) {
 
         this.api = api;
+        this.identityApi = identityApi;
         this.faker = new Faker(Locale.forLanguageTag("pl"));
         this.secureRandom = new SecureRandom();
     }
@@ -35,8 +39,9 @@ public class CompanyScenario {
 
         var companyName =
                 faker.company().name();
+        var userId = identityApi.findUserSuggestions(orgId, "", Set.of("SALES")).getFirst().id();
 
-       var companyId = api.create(orgId,
+       var companyId = api.create(userId, orgId,
                 companyName,
                "PL",
                 generateTaxNumber(),
@@ -47,7 +52,7 @@ public class CompanyScenario {
         );
 
         IntStream.rangeClosed(1, secureRandom.nextInt(10) )
-                .forEach(i -> api.createContact(orgId, companyId,
+                .forEach(i -> api.createContact(userId, orgId, companyId,
                         faker.name().firstName(),
                         faker.name().lastName(),
                         faker.phoneNumber().cellPhone(),

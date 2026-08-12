@@ -10,6 +10,6 @@ public interface CompanyRepository {
     Company save(Company company);
     boolean exists(String taxId, UUID organizationId);
     void assignSales(CompanyId companyId, UUID salesUserId);
-    Optional<Company> findById(CompanyId companyId);
+    Optional<Company> findById(CompanyId companyId, UUID organizationId);
     boolean existsByOrg(UUID companyId, UUID organizationId);
 }

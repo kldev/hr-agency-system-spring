@@ -1,8 +1,8 @@
 package com.pl.hragency.jobdescription.adapter.persistence;
 
-import com.pl.hragency.jobdescription.domain.model.EmploymentType;
+import com.pl.hragency.jobdescription.api.EmploymentType;
 import com.pl.hragency.jobdescription.domain.model.JobDescriptionStatus;
-import com.pl.hragency.jobdescription.domain.model.WorkMode;
+import com.pl.hragency.jobdescription.api.WorkMode;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;

@@ -5,6 +5,7 @@ import com.pl.hragency.organization.api.OrganizationSummary;
 import com.pl.hragency.organization.application.command.CreateOrganizationCommand;
 import com.pl.hragency.organization.application.port.OrganizationRepository;
 import com.pl.hragency.organization.domain.model.Organization;
+import com.pl.hragency.shared.rest.ExecutionContext;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -37,7 +38,9 @@ public class OrganizationService implements OrganizationApi {
 
     @Override
     public UUID create(String name, String slug) {
-        return handler.handle(new CreateOrganizationCommand(name, slug));
+       // var context= new ExecutionContext(UUID.randomUUID(), UUID.randomUUID(), "System");
+        return handler.handle(
+                new CreateOrganizationCommand(name, slug));
     }
 
     @Override

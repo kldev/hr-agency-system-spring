@@ -23,6 +23,8 @@ public class CompanyAuditHandler {
                 "company",
                 "Company",
                 event.companyId(),
+                event.actorId(),
+                event.actorName(),
                 AuditEventType.CREATED,
                 event
         );
@@ -34,6 +36,8 @@ public class CompanyAuditHandler {
                 "company",
                 "Company",
                 event.companyId(),
+                event.actorId(),
+                event.actorName(),
                 AuditEventType.SALES_OWNER_CHANGED,
                 event
         );

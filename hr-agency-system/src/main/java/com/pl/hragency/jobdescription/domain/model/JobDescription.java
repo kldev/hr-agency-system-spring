@@ -1,5 +1,9 @@
 package com.pl.hragency.jobdescription.domain.model;
 
+import com.pl.hragency.jobdescription.api.EmploymentType;
+import com.pl.hragency.jobdescription.api.SalaryRange;
+import com.pl.hragency.jobdescription.api.WorkMode;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;

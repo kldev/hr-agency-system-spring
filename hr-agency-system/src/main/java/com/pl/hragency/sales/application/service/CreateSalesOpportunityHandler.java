@@ -4,7 +4,7 @@ import com.pl.hragency.company.api.CompanyApi;
 import com.pl.hragency.identity.api.IdentityApi;
 import com.pl.hragency.sales.application.command.CreateSalesOpportunityCommand;
 import com.pl.hragency.sales.application.port.SalesOpportunityRepository;
-import com.pl.hragency.sales.domain.event.SalesOpportunityCreated;
+import com.pl.hragency.sales.domain.event.SalesOpportunityCreatedEvent;
 import com.pl.hragency.sales.domain.exception.CompanyNotFoundException;
 import com.pl.hragency.sales.domain.model.SalesOpportunity;
 import com.pl.hragency.sales.domain.model.SalesOpportunityId;
@@ -14,10 +14,10 @@ import com.pl.hragency.shared.rest.ExecutionContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Service
-@Transactional
 public class CreateSalesOpportunityHandler {
 
     private final SalesOpportunityRepository repository;
@@ -35,6 +35,7 @@ public class CreateSalesOpportunityHandler {
         this.companyApi = companyApi;
     }
 
+    @Transactional
     public SalesOpportunityId handle(
             ExecutionContext context,
             CreateSalesOpportunityCommand command
@@ -66,8 +67,12 @@ public class CreateSalesOpportunityHandler {
 
         UserSnapshot user = identityApi.findUser(salesOwnerId,context.organizationId() ).orElse(null);
 
-        eventPublisher.publish(new SalesOpportunityCreated(opportunity.id().value(),
-                opportunity.companyId(), user));
+        var event = new SalesOpportunityCreatedEvent(opportunity.id().value(),
+                opportunity.companyId(), context.organizationId(), user,
+                context.userId(), context.fullName(),
+                Instant.now());
+
+        eventPublisher.publish(event);
 
         return opportunity.id();
     }

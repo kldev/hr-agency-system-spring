@@ -5,4 +5,5 @@ import java.util.UUID;
 public interface JobDescriptionApi
 {
         UUID create(UUID organizationId, UUID userId, CreateJobDescriptionInput request);
+        boolean exists(UUID organizationId, UUID id);
 }
