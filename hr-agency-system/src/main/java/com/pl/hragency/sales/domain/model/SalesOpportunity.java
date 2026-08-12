@@ -174,7 +174,8 @@ public final class SalesOpportunity {
         boolean allowed = switch (stage) {
             case NEW ->
                     newStage == SalesOpportunityStage.CONTACTED
-                     ||  newStage == SalesOpportunityStage.QUALIFIED;
+                     ||  newStage == SalesOpportunityStage.QUALIFIED
+                            || newStage == SalesOpportunityStage.LOST;
 
             case CONTACTED ->
                     newStage == SalesOpportunityStage.QUALIFIED;

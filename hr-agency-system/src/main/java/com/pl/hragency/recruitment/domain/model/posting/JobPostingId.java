@@ -7,7 +7,7 @@ import java.util.UUID;
 public record JobPostingId(@NotNull UUID value){
     public JobPostingId {
         if (value == null) {
-            throw new IllegalArgumentException("Company contact id cannot be null");
+            throw new IllegalArgumentException("Job posting id cannot be null");
         }
     }
 

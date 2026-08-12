@@ -1,5 +1,6 @@
 package com.pl.hragency.recruitment.domain.event;
 
+import com.pl.hragency.recruitment.domain.model.candidate.CandidateSource;
 import com.pl.hragency.shared.event.DomainEvent;
 
 import java.time.Instant;
@@ -10,6 +11,7 @@ public record CandidateCreatedEvent(UUID candidateId,
                                     String firstName,
                                     String lastName,
                                     String email,
+                                    CandidateSource source,
                                     UUID actorId,
                                     String actorName,
                                     Instant occurredOn) implements DomainEvent {

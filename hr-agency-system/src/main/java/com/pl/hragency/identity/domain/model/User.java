@@ -27,12 +27,16 @@ public class User {
 
         this.id = id;
         this.organizationId = organizationId;
-        this.email = email;
+        this.email = normalizeEmail(email);
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
         this.passwordHash = passwordHash;
         this.createdAt = createdAt;
+    }
+
+    private static String normalizeEmail(String email) {
+        return email.trim().toLowerCase();
     }
 
     public static User rehydrate(

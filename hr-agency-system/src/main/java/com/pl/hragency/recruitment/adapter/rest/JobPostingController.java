@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/recruitment")
+@RequestMapping("/api/recruitment/job-posting")
 @Tag(name = "Recruitment")
 public class JobPostingController {
     private final ChangeJobPostingRecruiterHandler changeJobPostingRecruiterHandler;
@@ -45,24 +45,24 @@ public class JobPostingController {
         return identityApi.getCurrentUser().getExecutionContext();
     }
 
-    @PostMapping("job-posting")
+    @PostMapping("")
     public JobPostingId createJobPosting(@RequestBody CreateJobPostingCommand command) {
         return createJobPostingHandler.handle(getExecutionContext(), command);
     }
 
-    @PutMapping("job-posting/{jobPostingId}")
+    @PutMapping("{jobPostingId}")
     public ApiResult updateJobPosting(@PathVariable UUID jobPostingId, @RequestBody UpdateJobPostingCommand command) {
         updateJobPostingHandler.handle(getExecutionContext(), new JobPostingId(jobPostingId), command);
         return new ApiResult("Job Posting updated", true);
     }
 
-    @PutMapping("job-posting/{jobPostingId}/status")
+    @PutMapping("{jobPostingId}/status")
     public ApiResult updateJobPostingStatus(@PathVariable UUID jobPostingId, @RequestBody ChangeJobPostingStatusCommand command) {
         changeJobPostingStatusHandler.handle(getExecutionContext(), new JobPostingId(jobPostingId), command);
         return new ApiResult("Job Posting updated", true);
     }
 
-    @PutMapping("job-posting/{jobPostingId}/recruiter")
+    @PutMapping("{jobPostingId}/recruiter")
     public ApiResult updateJobPostingStatus(@PathVariable UUID jobPostingId, @RequestBody ChangeJobPostingRecruiterCommand command) {
         changeJobPostingRecruiterHandler.handle(getExecutionContext(), new JobPostingId(jobPostingId), command);
         return new ApiResult("Job Posting updated", true);

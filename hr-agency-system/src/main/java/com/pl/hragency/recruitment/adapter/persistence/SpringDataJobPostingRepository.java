@@ -27,6 +27,7 @@ public interface SpringDataJobPostingRepository extends JpaRepository<JobPosting
     """)
     int updateStatus(UUID id, UUID organizationId, JobPostingStatus status, Instant updateAt);
 
+    /// TODO: version = j.version + 1 where version = :version
     @Modifying
     @Query("""
         update JobPostingJpaEntity j

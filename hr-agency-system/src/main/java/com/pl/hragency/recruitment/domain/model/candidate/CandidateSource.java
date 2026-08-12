@@ -74,6 +74,11 @@ public enum CandidateSource {
     DIRECT_APPLICATION,
 
     /**
+     * Facebook campaign
+     */
+    FACEBOOK,
+
+    /**
      * Source is known but does not match a predefined value.
      */
     OTHER

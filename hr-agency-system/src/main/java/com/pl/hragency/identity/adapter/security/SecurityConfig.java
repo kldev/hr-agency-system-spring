@@ -4,6 +4,7 @@ package com.pl.hragency.identity.adapter.security;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
@@ -61,6 +62,10 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**"
                         ).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/integration/applications")
+                        .hasAuthority("APPLICATION_CREATE")
+                        .requestMatchers(HttpMethod.POST, "/api/integration/candidates")
+                        .hasAuthority("CANDIDATE_CREATE")
                         .anyRequest()
                         .authenticated())
                 //.httpBasic(Customizer.withDefaults())

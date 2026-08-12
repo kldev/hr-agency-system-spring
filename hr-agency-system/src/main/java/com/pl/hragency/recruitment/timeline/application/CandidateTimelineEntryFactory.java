@@ -24,7 +24,8 @@ public class CandidateTimelineEntryFactory {
     public CandidateTimelineEntry from(CandidateCreatedEvent event){
 
         var data = jsonMapper.valueToTree(
-                Map.of("email", event.email()));
+                Map.of("email", event.email(),
+                        "source", event.source()));
 
         return  new CandidateTimelineEntry(
                     UUID.randomUUID(),
@@ -41,7 +42,10 @@ public class CandidateTimelineEntryFactory {
     public CandidateTimelineEntry from(CandidateUpdatedEvent event){
 
         var data = jsonMapper.valueToTree(
-                        Map.of("email", event.email()));
+                        Map.of("email", event.email(),
+                                "firstName", event.firstName(),
+                                "lastName", event.lastName()
+                                ));
 
 
         return  new CandidateTimelineEntry(

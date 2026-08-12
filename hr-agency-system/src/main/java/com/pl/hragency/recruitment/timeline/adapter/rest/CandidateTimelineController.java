@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/recruitment")
+@RequestMapping("/api/recruitment/candidates")
 @Tag(name = "Recruitment")
 public class CandidateTimelineController {
     private final IdentityApi identityApi;
@@ -31,7 +31,7 @@ public class CandidateTimelineController {
 
         CurrentUser user = identityApi.getCurrentUser();
 
-        var pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        var pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "occurredAt"));
 
         var result = handler.handle(user.getExecutionContext(), candidateId, pageRequest);
         return new PageResponse<>(result.getContent(),
