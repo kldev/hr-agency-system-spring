@@ -1,5 +1,6 @@
 package com.pl.hragency.identity.adapter.rest;
 
+import com.pl.hragency.identity.domain.exception.InvalidIntegrationCredentialsException;
 import com.pl.hragency.identity.domain.exception.InvalidLoginCommandException;
 import com.pl.hragency.identity.domain.exception.InvalidPasswordException;
 import com.pl.hragency.shared.rest.ApiError;
@@ -24,6 +25,17 @@ public class IdentityApiExceptionHandler {
     @ExceptionHandler(InvalidLoginCommandException.class)
     ResponseEntity<ApiError> handleInvalidLoginCommandException(
             InvalidLoginCommandException ex) {
+
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(new ApiError(
+                        ex.getMessage()));
+    }
+    //InvalidIntegrationCredentialsException
+
+    @ExceptionHandler(InvalidIntegrationCredentialsException.class)
+    ResponseEntity<ApiError> handleInvalidIntegrationCredentialsException(
+            InvalidIntegrationCredentialsException ex) {
 
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)

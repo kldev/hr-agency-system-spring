@@ -6,6 +6,7 @@ CREATE TABLE integration_clients
     name             VARCHAR(150) NOT NULL,
     description      VARCHAR(500),
 
+    key_id          VARCHAR(100) NOT NULL UNIQUE,
     api_key_hash     VARCHAR(255) NOT NULL,
 
     revoked_at TIMESTAMP WITH TIME ZONE,

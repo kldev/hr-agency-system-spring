@@ -39,7 +39,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtFilter)
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   JwtAuthenticationFilter jwtFilter,
+                                                   ApiKeyAuthenticationFilter  apiKeyFilter)
             throws Exception {
 
         return http
@@ -63,15 +65,17 @@ public class SecurityConfig {
                                 "/swagger-resources/**"
                         ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/integration/applications")
-                        .hasAuthority("APPLICATION_CREATE")
+                        .hasAuthority("SCOPE_APPLICATION_CREATE")
                         .requestMatchers(HttpMethod.POST, "/api/integration/candidates")
-                        .hasAuthority("CANDIDATE_CREATE")
+                        .hasAuthority("SCOPE_CANDIDATE_CREATE")
                         .anyRequest()
                         .authenticated())
                 //.httpBasic(Customizer.withDefaults())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+                .addFilterBefore(apiKeyFilter,
+                        UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(
                         jwtFilter,
                         UsernamePasswordAuthenticationFilter.class
