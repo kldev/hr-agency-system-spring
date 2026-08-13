@@ -6,7 +6,7 @@ import org.springframework.modulith.ApplicationModule;
         displayName = "Identity", allowedDependencies = {
                 "organization :: api",
                 "shared :: event", "shared :: rest",
-                "shared :: persistance"
+        "persistence"
         })
 public class IdentityModule {
 }

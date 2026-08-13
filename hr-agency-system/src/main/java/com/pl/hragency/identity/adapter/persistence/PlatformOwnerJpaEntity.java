@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "platform_users")
-public class PlatformUserJpaEntity {
+public class PlatformOwnerJpaEntity {
 
     @Id
     @Column(name = "id", nullable = false, updatable = false)
@@ -28,10 +28,10 @@ public class PlatformUserJpaEntity {
     @Column(name = "password_hash", nullable = false, length = 100)
     private String passwordHash;
 
-    protected PlatformUserJpaEntity() {
+    protected PlatformOwnerJpaEntity() {
     }
 
-    public PlatformUserJpaEntity(
+    public PlatformOwnerJpaEntity(
             UUID id,
             String email,
             String role,

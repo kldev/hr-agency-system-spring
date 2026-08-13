@@ -1,8 +1,10 @@
 package com.pl.hragency.identity.application.service;
 
+import com.pl.hragency.identity.api.CurrentIntegrationClient;
 import com.pl.hragency.identity.api.IdentityApi;
 import com.pl.hragency.identity.api.UserSuggestion;
 import com.pl.hragency.identity.application.command.CreateUserCommand;
+import com.pl.hragency.identity.application.handler.CreateUserHandler;
 import com.pl.hragency.identity.application.port.*;
 import com.pl.hragency.identity.api.CurrentUser;
 import com.pl.hragency.identity.application.query.UserSuggestionsQuery;
@@ -19,18 +21,18 @@ import java.util.stream.Collectors;
 @Service
 public class IdentityService implements IdentityApi {
     private final UserRepository userRepository;
-    private final CurrentUserProvider currentUserProvider;
+    private final CurrentPrincipalProvider currentUserProvider;
     private final AuthorizationService authorizationService;
     private final UserSuggestionsQuery userSuggestionsQuery;
     private final CreateUserHandler createUserHandler;
-    private final PlatformUserRepository platformUserRepository;
+    private final PlatformOwnerRepository platformUserRepository;
     private final PasswordHasher hasher;
 
     public IdentityService(UserRepository userRepository,
-                           CurrentUserProvider currentUserProvider,
+                           CurrentPrincipalProvider currentUserProvider,
                            AuthorizationService authorizationService,
                            UserSuggestionsQuery userSuggestionsQuery,
-                           CreateUserHandler createUserHandler, PlatformUserRepository platformUserRepository, PasswordHasher hasher) {
+                           CreateUserHandler createUserHandler, PlatformOwnerRepository platformUserRepository, PasswordHasher hasher) {
         this.userRepository = userRepository;
         this.currentUserProvider = currentUserProvider;
         this.authorizationService = authorizationService;
@@ -42,7 +44,12 @@ public class IdentityService implements IdentityApi {
 
     @Override
     public CurrentUser getCurrentUser() {
-        return currentUserProvider.get();
+        return currentUserProvider.getRequiredUser();
+    }
+
+    @Override
+    public CurrentIntegrationClient gCurrentIntegrationClient() {
+        return currentUserProvider.getRequiredIntegration();
     }
 
     @Override

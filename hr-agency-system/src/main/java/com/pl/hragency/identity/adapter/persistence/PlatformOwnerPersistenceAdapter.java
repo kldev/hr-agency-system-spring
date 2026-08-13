@@ -1,5 +1,5 @@
 package com.pl.hragency.identity.adapter.persistence;
-import com.pl.hragency.identity.application.port.PlatformUserRepository;
+import com.pl.hragency.identity.application.port.PlatformOwnerRepository;
 import com.pl.hragency.identity.domain.model.PlatformOwner;
 import org.springframework.stereotype.Component;
 
@@ -8,11 +8,11 @@ import java.util.Optional;
 
 
 @Component
-public class PlatformUserPersistenceAdapter implements PlatformUserRepository {
+public class PlatformOwnerPersistenceAdapter implements PlatformOwnerRepository {
     private final SpringDataPlatformUserRepository repository;
     private final PlatformOwnerMapper mapper;
 
-    public PlatformUserPersistenceAdapter(SpringDataPlatformUserRepository repository, PlatformOwnerMapper mapper) {
+    public PlatformOwnerPersistenceAdapter(SpringDataPlatformUserRepository repository, PlatformOwnerMapper mapper) {
         this.repository = repository;
         this.mapper = mapper;
     }

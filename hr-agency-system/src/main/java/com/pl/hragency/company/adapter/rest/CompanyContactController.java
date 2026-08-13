@@ -1,9 +1,7 @@
 package com.pl.hragency.company.adapter.rest;
 
 import com.pl.hragency.company.application.command.CreateCompanyContactCommand;
-import com.pl.hragency.company.application.query.CompanyContactQueryService;
-import com.pl.hragency.company.application.query.CompanyDetailsItem;
-import com.pl.hragency.company.application.service.CreateCompanyContactHandler;
+import com.pl.hragency.company.application.handler.CreateCompanyContactHandler;
 import com.pl.hragency.company.domain.model.CompanyContactCompanyId;
 import com.pl.hragency.company.domain.model.CompanyContactId;
 import com.pl.hragency.identity.api.CurrentUser;

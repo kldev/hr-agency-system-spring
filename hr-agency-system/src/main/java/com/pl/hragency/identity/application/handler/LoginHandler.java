@@ -1,7 +1,6 @@
-package com.pl.hragency.identity.application.service;
+package com.pl.hragency.identity.application.handler;
 
 import com.pl.hragency.identity.application.command.LoginCommand;
-import com.pl.hragency.identity.application.port.OrganizationContext;
 import com.pl.hragency.identity.application.port.PasswordHasher;
 import com.pl.hragency.identity.application.port.TokenGenerator;
 import com.pl.hragency.identity.application.port.UserRepository;

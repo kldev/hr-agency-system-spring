@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PlatformOwnerMapper {
 
-    public PlatformOwner toDomain(PlatformUserJpaEntity entity) {
+    public PlatformOwner toDomain(PlatformOwnerJpaEntity entity) {
         return PlatformOwner.rehydrate(
                 new PlatformOwnerId(entity.getId()),
                 entity.getEmail(),
@@ -18,8 +18,8 @@ public class PlatformOwnerMapper {
         );
     }
 
-    public PlatformUserJpaEntity toEntity(PlatformOwner owner) {
-        return new PlatformUserJpaEntity(
+    public PlatformOwnerJpaEntity toEntity(PlatformOwner owner) {
+        return new PlatformOwnerJpaEntity(
                 owner.id().value(),
                 owner.email(),
                 owner.role().name(),

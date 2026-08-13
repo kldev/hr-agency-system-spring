@@ -1,6 +1,6 @@
 package com.pl.hragency.identity.adapter.persistence;
 
-import com.pl.hragency.shared.persistance.BaseQueryRepository;
+import com.pl.hragency.shared.persistence.BaseQueryRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;

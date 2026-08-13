@@ -4,7 +4,8 @@ import com.pl.hragency.company.api.CompanyApi;
 import com.pl.hragency.company.api.CompanySuggestion;
 import com.pl.hragency.company.application.command.CreateCompanyCommand;
 import com.pl.hragency.company.application.command.CreateCompanyContactCommand;
-import com.pl.hragency.company.application.port.CompanyRepository;
+import com.pl.hragency.company.application.handler.CreateCompanyContactHandler;
+import com.pl.hragency.company.application.handler.CreateCompanyHandler;
 import com.pl.hragency.company.application.query.CompanyListItem;
 import com.pl.hragency.company.application.query.CompanyListQuery;
 import com.pl.hragency.company.application.query.CompanyQueryService;
@@ -20,7 +21,7 @@ import java.util.UUID;
 @Service
 public class CompanyService  implements CompanyApi {
     private final CreateCompanyHandler createCompanyHandler;
-    private final CreateCompanyContactHandler  createCompanyContactHandler;
+    private final CreateCompanyContactHandler createCompanyContactHandler;
     private final CompanyQueryService  companyQueryService;
     private final CompanySuggestionsQuery companySuggestionsQuery;
 

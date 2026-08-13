@@ -1,6 +1,6 @@
 package com.pl.hragency.company;
 
-import com.pl.hragency.BaseApiIntegrationTest;
+import com.pl.hragency.BaseRestIntegrationTest;
 import com.pl.hragency.audit.domain.model.AuditEventType;
 import com.pl.hragency.company.application.command.AssignSalesOwnerCommand;
 import com.pl.hragency.company.application.command.CreateCompanyCommand;
@@ -18,7 +18,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CompanyAuditTest extends BaseApiIntegrationTest {
+public class CompanyAuditTest extends BaseRestIntegrationTest {
     @Autowired
     private TestOrganizationFactory organizationFactory;
 

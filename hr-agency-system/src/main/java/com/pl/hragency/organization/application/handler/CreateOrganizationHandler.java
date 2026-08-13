@@ -1,11 +1,10 @@
-package com.pl.hragency.organization.application.service;
+package com.pl.hragency.organization.application.handler;
 
 import com.pl.hragency.organization.application.command.CreateOrganizationCommand;
 import com.pl.hragency.organization.domain.event.OrganizationCreatedEvent;
 import com.pl.hragency.organization.domain.model.Organization;
 import com.pl.hragency.organization.application.port.OrganizationRepository;
 import com.pl.hragency.shared.event.EventPublisher;
-import com.pl.hragency.shared.rest.ExecutionContext;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 

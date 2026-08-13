@@ -1,9 +1,9 @@
-package com.pl.hragency.identity.application.service;
+package com.pl.hragency.identity.application.handler;
 
 
 import com.pl.hragency.identity.application.command.OwnerLoginCommand;
 import com.pl.hragency.identity.application.port.PasswordHasher;
-import com.pl.hragency.identity.application.port.PlatformUserRepository;
+import com.pl.hragency.identity.application.port.PlatformOwnerRepository;
 import com.pl.hragency.identity.application.port.TokenGenerator;
 import com.pl.hragency.identity.application.result.LoginResult;
 import com.pl.hragency.identity.domain.exception.InvalidLoginCommandException;
@@ -15,9 +15,9 @@ import org.springframework.stereotype.Service;
 public class PlatformLoginHandler {
     private final PasswordHasher passwordHasher;
     private final TokenGenerator tokenGenerator;
-    private final PlatformUserRepository repository;
+    private final PlatformOwnerRepository repository;
 
-    public PlatformLoginHandler(PasswordHasher passwordHasher, TokenGenerator tokenGenerator, PlatformUserRepository repository) {
+    public PlatformLoginHandler(PasswordHasher passwordHasher, TokenGenerator tokenGenerator, PlatformOwnerRepository repository) {
         this.passwordHasher = passwordHasher;
         this.tokenGenerator = tokenGenerator;
         this.repository = repository;

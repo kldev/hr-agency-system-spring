@@ -1,6 +1,6 @@
 package com.pl.hragency.sales;
 
-import com.pl.hragency.BaseApiIntegrationTest;
+import com.pl.hragency.BaseRestIntegrationTest;
 import com.pl.hragency.audit.domain.model.AuditEventType;
 import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.sales.application.command.ChangeSalesOpportunityStageCommand;
@@ -22,7 +22,7 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class SalesOpportunityAuditTest extends BaseApiIntegrationTest {
+class SalesOpportunityAuditTest extends BaseRestIntegrationTest {
 
     @Autowired
     private TestOrganizationFactory organizationFactory;

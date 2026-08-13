@@ -2,7 +2,7 @@ package com.pl.hragency.identity.adapter.rest;
 
 import com.pl.hragency.identity.application.command.LoginCommand;
 import com.pl.hragency.identity.application.result.LoginResult;
-import com.pl.hragency.identity.application.service.LoginHandler;
+import com.pl.hragency.identity.application.handler.LoginHandler;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

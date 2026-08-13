@@ -1,4 +1,4 @@
-package com.pl.hragency.jobdescription.application.service;
+package com.pl.hragency.jobdescription.application.handler;
 
 import com.pl.hragency.identity.api.IdentityApi;
 import com.pl.hragency.jobdescription.application.command.CreateJobDescriptionCommand;

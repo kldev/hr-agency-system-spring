@@ -1,11 +1,10 @@
-package com.pl.hragency.company.application.service;
+package com.pl.hragency.company.application.handler;
 
 import com.pl.hragency.company.application.command.CreateCompanyCommand;
 import com.pl.hragency.company.application.port.CompanyRepository;
 import com.pl.hragency.company.domain.event.CompanyCreatedEvent;
 import com.pl.hragency.company.domain.event.CompanySalesOwnerChangedEvent;
 import com.pl.hragency.company.domain.model.*;
-import com.pl.hragency.identity.api.CurrentUser;
 import com.pl.hragency.identity.api.IdentityApi;
 import com.pl.hragency.shared.event.EventPublisher;
 import com.pl.hragency.shared.event.UserSnapshot;

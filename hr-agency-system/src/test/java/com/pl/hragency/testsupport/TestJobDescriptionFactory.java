@@ -1,7 +1,7 @@
 package com.pl.hragency.testsupport;
 
 import com.pl.hragency.jobdescription.application.command.CreateJobDescriptionCommand;
-import com.pl.hragency.jobdescription.application.service.CreateJobDescriptionHandler;
+import com.pl.hragency.jobdescription.application.handler.CreateJobDescriptionHandler;
 import com.pl.hragency.jobdescription.api.EmploymentType;
 import com.pl.hragency.jobdescription.api.WorkMode;
 import com.pl.hragency.shared.rest.ExecutionContext;

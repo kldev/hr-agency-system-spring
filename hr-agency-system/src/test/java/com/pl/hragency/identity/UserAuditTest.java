@@ -1,6 +1,6 @@
 package com.pl.hragency.identity;
 
-import com.pl.hragency.BaseApiIntegrationTest;
+import com.pl.hragency.BaseRestIntegrationTest;
 import com.pl.hragency.audit.domain.model.AuditEventType;
 import com.pl.hragency.identity.application.command.CreateUserCommand;
 import com.pl.hragency.identity.domain.model.UserId;
@@ -15,7 +15,7 @@ import org.springframework.http.MediaType;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
-public class UserAuditTest extends BaseApiIntegrationTest {
+public class UserAuditTest extends BaseRestIntegrationTest {
 
     @Autowired
     private TestOrganizationFactory organizationFactory;

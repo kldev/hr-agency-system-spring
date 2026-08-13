@@ -1,6 +1,6 @@
 package com.pl.hragency.company;
 
-import com.pl.hragency.BaseApiIntegrationTest;
+import com.pl.hragency.BaseRestIntegrationTest;
 import com.pl.hragency.company.application.command.CreateCompanyContactCommand;
 import com.pl.hragency.company.domain.model.CompanyContactId;
 import com.pl.hragency.company.application.port.CompanyContactRepository;
@@ -17,7 +17,7 @@ import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CompanyContactCommandTest extends BaseApiIntegrationTest {
+public class CompanyContactCommandTest extends BaseRestIntegrationTest {
 
     @Autowired
     private TestOrganizationFactory organizationFactory;

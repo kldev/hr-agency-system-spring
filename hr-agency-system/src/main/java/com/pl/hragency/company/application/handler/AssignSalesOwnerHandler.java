@@ -1,4 +1,4 @@
-package com.pl.hragency.company.application.service;
+package com.pl.hragency.company.application.handler;
 
 import com.pl.hragency.company.application.command.AssignSalesOwnerCommand;
 import com.pl.hragency.company.application.port.CompanyRepository;
@@ -16,14 +16,14 @@ import java.time.Instant;
 import java.util.Objects;
 
 @Service
-public class AssignSalesPersonHandler {
+public class AssignSalesOwnerHandler {
     private final CompanyRepository repository;
     private final IdentityApi identityApi;
     private final EventPublisher eventPublisher;
 
-    public AssignSalesPersonHandler(CompanyRepository repository,
-                                    IdentityApi identityApi,
-                                    EventPublisher eventPublisher) {
+    public AssignSalesOwnerHandler(CompanyRepository repository,
+                                   IdentityApi identityApi,
+                                   EventPublisher eventPublisher) {
         this.repository = repository;
         this.identityApi = identityApi;
         this.eventPublisher = eventPublisher;

@@ -1,4 +1,4 @@
-package com.pl.hragency.company.application.service;
+package com.pl.hragency.company.application.handler;
 
 import com.pl.hragency.company.application.command.CreateCompanyContactCommand;
 import com.pl.hragency.company.application.port.CompanyContactRepository;

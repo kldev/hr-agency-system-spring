@@ -2,7 +2,7 @@ package com.pl.hragency.recruitment.timeline.adapter.rest;
 
 import com.pl.hragency.identity.api.CurrentUser;
 import com.pl.hragency.identity.api.IdentityApi;
-import com.pl.hragency.recruitment.timeline.application.service.GetCandidateTimelineHandler;
+import com.pl.hragency.recruitment.timeline.application.handler.GetCandidateTimelineHandler;
 import com.pl.hragency.recruitment.timeline.model.CandidateTimelineEntry;
 import com.pl.hragency.shared.rest.PageResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;

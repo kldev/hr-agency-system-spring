@@ -1,7 +1,7 @@
 package com.pl.hragency.identity;
 
 
-import com.pl.hragency.BaseApiIntegrationTest;
+import com.pl.hragency.BaseRestIntegrationTest;
 import com.pl.hragency.identity.application.query.UserListItem;
 import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.shared.rest.PageResponse;
@@ -14,7 +14,7 @@ import org.springframework.core.ParameterizedTypeReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class UserQueryApiTest extends BaseApiIntegrationTest {
+class UserQueryApiTest extends BaseRestIntegrationTest {
 
     @Autowired
     private TestOrganizationFactory organizationFactory;

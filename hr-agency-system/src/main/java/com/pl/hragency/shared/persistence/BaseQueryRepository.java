@@ -1,4 +1,4 @@
-package com.pl.hragency.shared.persistance;
+package com.pl.hragency.shared.persistence;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;

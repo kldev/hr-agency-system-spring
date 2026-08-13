@@ -1,12 +1,10 @@
 package com.pl.hragency.organization;
 
-import com.pl.hragency.BaseApiIntegrationTest;
 import com.pl.hragency.BaseIntegrationTest;
 
-import com.pl.hragency.audit.adapter.persistence.SpringDataAuditRepository;
 import com.pl.hragency.audit.domain.model.AuditEventType;
 import com.pl.hragency.organization.application.command.CreateOrganizationCommand;
-import com.pl.hragency.organization.application.service.CreateOrganizationHandler;
+import com.pl.hragency.organization.application.handler.CreateOrganizationHandler;
 import com.pl.hragency.shared.rest.ExecutionContext;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

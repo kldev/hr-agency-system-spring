@@ -3,9 +3,9 @@ package com.pl.hragency.organization.application.service;
 import com.pl.hragency.organization.api.OrganizationApi;
 import com.pl.hragency.organization.api.OrganizationSummary;
 import com.pl.hragency.organization.application.command.CreateOrganizationCommand;
+import com.pl.hragency.organization.application.handler.CreateOrganizationHandler;
 import com.pl.hragency.organization.application.port.OrganizationRepository;
 import com.pl.hragency.organization.domain.model.Organization;
-import com.pl.hragency.shared.rest.ExecutionContext;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;

@@ -1,19 +1,16 @@
 package com.pl.hragency.company;
 
-import com.pl.hragency.BaseApiIntegrationTest;
+import com.pl.hragency.BaseRestIntegrationTest;
 import com.pl.hragency.company.application.query.CompanyDetailsItem;
-import com.pl.hragency.company.application.query.CompanyListItem;
-import com.pl.hragency.shared.rest.PageResponse;
 import com.pl.hragency.testsupport.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
 
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CompanyContactQueryTest extends BaseApiIntegrationTest {
+public class CompanyContactQueryTest extends BaseRestIntegrationTest {
 
     @Autowired
     private TestOrganizationFactory organizationFactory;

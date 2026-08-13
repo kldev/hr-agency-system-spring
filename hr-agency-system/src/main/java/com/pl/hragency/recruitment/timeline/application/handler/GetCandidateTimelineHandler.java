@@ -1,4 +1,4 @@
-package com.pl.hragency.recruitment.timeline.application.service;
+package com.pl.hragency.recruitment.timeline.application.handler;
 import com.pl.hragency.recruitment.timeline.application.port.CandidateTimelineRepository;
 import com.pl.hragency.recruitment.timeline.model.CandidateTimelineEntry;
 import com.pl.hragency.shared.rest.ExecutionContext;

@@ -1,6 +1,6 @@
 package com.pl.hragency.recruitment.posting;
 
-import com.pl.hragency.BaseApiIntegrationTest;
+import com.pl.hragency.BaseRestIntegrationTest;
 import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.jobdescription.api.EmploymentType;
 import com.pl.hragency.jobdescription.api.WorkMode;
@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class JobPostingCommandTest extends BaseApiIntegrationTest {
+public class JobPostingCommandTest extends BaseRestIntegrationTest {
 
     @Autowired
     private TestOrganizationFactory organizationFactory;

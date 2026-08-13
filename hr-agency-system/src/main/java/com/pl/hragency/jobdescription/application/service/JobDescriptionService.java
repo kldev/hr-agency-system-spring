@@ -5,6 +5,7 @@ import com.pl.hragency.jobdescription.api.JobDescriptionApi;
 import com.pl.hragency.jobdescription.application.command.CreateJobDescriptionCommand;
 import com.pl.hragency.jobdescription.api.EmploymentType;
 import com.pl.hragency.jobdescription.api.WorkMode;
+import com.pl.hragency.jobdescription.application.handler.CreateJobDescriptionHandler;
 import com.pl.hragency.jobdescription.application.port.JobDescriptionRepository;
 import com.pl.hragency.jobdescription.domain.model.JobDescriptionId;
 import com.pl.hragency.shared.rest.ExecutionContext;

@@ -6,15 +6,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -24,6 +22,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     public SecurityConfig() {
+    }
+
+    @Bean
+    UserDetailsService emptyDetailsService() {
+        return username -> { throw new UsernameNotFoundException("no local users, only JWT tokens allowed"); };
     }
 
 
@@ -41,21 +44,20 @@ public class SecurityConfig {
                         )
                 )
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.GET, "/").permitAll()
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/platform/login").permitAll()
                         .requestMatchers("/docs")
                         .permitAll()
-                        .requestMatchers("/api-spec")
-                        .permitAll()
-                        .requestMatchers("/api-spec/**")
-                        .permitAll()
                         .requestMatchers(
+
+                                "/api-spec/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**"
                         ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/integrations/job-applications")
-                        .hasAuthority("SCOPE_APPLICATION_CREATE")
+                        .hasAuthority("SCOPE_APPLICATION_WRITE")
                         .anyRequest()
                         .authenticated())
                 //.httpBasic(Customizer.withDefaults())

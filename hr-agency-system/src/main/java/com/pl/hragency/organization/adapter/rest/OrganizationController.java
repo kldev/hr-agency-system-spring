@@ -1,14 +1,10 @@
 package com.pl.hragency.organization.adapter.rest;
 
-import com.pl.hragency.identity.adapter.security.SecurityUser;
-import com.pl.hragency.identity.api.IdentityApi;
 import com.pl.hragency.organization.application.command.CreateOrganizationCommand;
-import com.pl.hragency.organization.application.service.CreateOrganizationHandler;
-import com.pl.hragency.shared.rest.ExecutionContext;
+import com.pl.hragency.organization.application.handler.CreateOrganizationHandler;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,6 +1,6 @@
 package com.pl.hragency.sales;
 
-import com.pl.hragency.BaseApiIntegrationTest;
+import com.pl.hragency.BaseRestIntegrationTest;
 import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.sales.application.command.ChangeSalesOpportunityStageCommand;
 import com.pl.hragency.sales.application.command.CreateSalesOpportunityCommand;
@@ -21,7 +21,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class SalesOpportunityCommandTest extends BaseApiIntegrationTest {
+class SalesOpportunityCommandTest extends BaseRestIntegrationTest {
 
     @Autowired
     private TestOrganizationFactory organizationFactory;

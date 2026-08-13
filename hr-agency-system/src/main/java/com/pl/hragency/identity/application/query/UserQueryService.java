@@ -2,23 +2,21 @@ package com.pl.hragency.identity.application.query;
 
 import com.pl.hragency.identity.adapter.persistence.SpringDataUserRepository;
 import com.pl.hragency.identity.adapter.persistence.UserJpaEntity;
-import com.pl.hragency.identity.application.port.CurrentUserProvider;
+import com.pl.hragency.identity.application.port.CurrentPrincipalProvider;
 
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class UserQueryService {
 
     private final SpringDataUserRepository repository;
-    private final CurrentUserProvider currentUserProvider;
+    private final CurrentPrincipalProvider currentUserProvider;
 
     public UserQueryService(
             SpringDataUserRepository repository,
-            CurrentUserProvider currentUserProvider) {
+            CurrentPrincipalProvider currentUserProvider) {
 
         this.repository = repository;
         this.currentUserProvider = currentUserProvider;
@@ -28,7 +26,7 @@ public class UserQueryService {
 
         var organizationId =
                 currentUserProvider
-                        .get()
+                        .getRequiredUser()
                         .organizationId();
 
 

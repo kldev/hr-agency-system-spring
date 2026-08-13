@@ -1,6 +1,6 @@
 package com.pl.hragency.jobdescription;
 
-import com.pl.hragency.BaseApiIntegrationTest;
+import com.pl.hragency.BaseRestIntegrationTest;
 import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.jobdescription.application.query.JobDescriptionItem;
 import com.pl.hragency.jobdescription.api.EmploymentType;
@@ -20,7 +20,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class JobDescriptionQueryTest extends BaseApiIntegrationTest {
+class JobDescriptionQueryTest extends BaseRestIntegrationTest {
 
     @Autowired
     private TestOrganizationFactory organizationFactory;

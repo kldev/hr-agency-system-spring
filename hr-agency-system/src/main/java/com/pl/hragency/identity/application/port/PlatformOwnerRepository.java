@@ -4,7 +4,7 @@ import com.pl.hragency.identity.domain.model.PlatformOwner;
 
 import java.util.Optional;
 
-public interface PlatformUserRepository {
+public interface PlatformOwnerRepository {
     Optional<PlatformOwner> findByEmail(String email);
 
     void save(

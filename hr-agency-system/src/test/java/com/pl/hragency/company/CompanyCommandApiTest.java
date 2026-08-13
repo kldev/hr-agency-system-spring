@@ -1,6 +1,6 @@
 package com.pl.hragency.company;
 
-import com.pl.hragency.BaseApiIntegrationTest;
+import com.pl.hragency.BaseRestIntegrationTest;
 import com.pl.hragency.company.application.command.AssignSalesOwnerCommand;
 import com.pl.hragency.company.application.command.CreateCompanyCommand;
 import com.pl.hragency.company.application.port.CompanyRepository;
@@ -20,7 +20,7 @@ import java.util.Objects;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class CompanyCommandApiTest extends BaseApiIntegrationTest {
+public class CompanyCommandApiTest extends BaseRestIntegrationTest {
     @Autowired
     private TestOrganizationFactory organizationFactory;
 

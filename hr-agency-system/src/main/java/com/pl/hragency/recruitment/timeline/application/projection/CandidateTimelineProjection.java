@@ -1,4 +1,4 @@
-package com.pl.hragency.recruitment.timeline.application.handler;
+package com.pl.hragency.recruitment.timeline.application.projection;
 
 import com.pl.hragency.recruitment.domain.event.CandidateCreatedEvent;
 import com.pl.hragency.recruitment.domain.event.CandidateStatusChangedEvent;

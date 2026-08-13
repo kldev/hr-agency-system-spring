@@ -4,8 +4,8 @@ import com.pl.hragency.identity.api.CurrentUser;
 import com.pl.hragency.identity.api.IdentityApi;
 import com.pl.hragency.jobdescription.application.command.ChangeJobDescriptionStatusCommand;
 import com.pl.hragency.jobdescription.application.command.CreateJobDescriptionCommand;
-import com.pl.hragency.jobdescription.application.service.ChangeJobDescriptionStatusHandler;
-import com.pl.hragency.jobdescription.application.service.CreateJobDescriptionHandler;
+import com.pl.hragency.jobdescription.application.handler.ChangeJobDescriptionStatusHandler;
+import com.pl.hragency.jobdescription.application.handler.CreateJobDescriptionHandler;
 import com.pl.hragency.jobdescription.domain.model.JobDescriptionId;
 import com.pl.hragency.shared.rest.ApiResult;
 import com.pl.hragency.shared.rest.ExecutionContext;
@@ -20,15 +20,15 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/job-description")
 @Tag(name = "Job Description")
-public class JobDescriptionController {
+public class JobDescriptionCommandController {
 
     private final CreateJobDescriptionHandler  createHandler;
     private final ChangeJobDescriptionStatusHandler changeStatusHandler;
     private final IdentityApi identityApi;
 
-    public JobDescriptionController(CreateJobDescriptionHandler createHandler,
-                                    ChangeJobDescriptionStatusHandler changeStatusHandler,
-                                    IdentityApi identityApi) {
+    public JobDescriptionCommandController(CreateJobDescriptionHandler createHandler,
+                                           ChangeJobDescriptionStatusHandler changeStatusHandler,
+                                           IdentityApi identityApi) {
         this.createHandler = createHandler;
         this.changeStatusHandler = changeStatusHandler;
         this.identityApi = identityApi;

@@ -1,6 +1,6 @@
 package com.pl.hragency.organization;
 
-import com.pl.hragency.BaseApiIntegrationTest;
+import com.pl.hragency.BaseRestIntegrationTest;
 import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.organization.application.command.CreateOrganizationCommand;
 import com.pl.hragency.testsupport.AuthenticationTestClient;
@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class OrganizationApiTest extends BaseApiIntegrationTest {
+class OrganizationApiTest extends BaseRestIntegrationTest {
 
     @Autowired
     private TestOrganizationFactory organizationFactory;
