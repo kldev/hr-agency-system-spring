@@ -1,12 +1,13 @@
-package com.pl.hragency.recruitment.application.service;
+package com.pl.hragency.recruitment.application.handler;
 
 import com.pl.hragency.recruitment.application.command.UpdateCandidateCommand;
 import com.pl.hragency.recruitment.application.port.CandidateRepository;
 import com.pl.hragency.recruitment.domain.event.CandidateUpdatedEvent;
-import com.pl.hragency.recruitment.domain.exception.CandidateNotFoundException;
 import com.pl.hragency.recruitment.domain.model.candidate.Candidate;
 import com.pl.hragency.recruitment.domain.model.candidate.CandidateId;
 import com.pl.hragency.shared.event.EventPublisher;
+import com.pl.hragency.shared.rest.EntityNotFoundException;
+import com.pl.hragency.shared.rest.EntityType;
 import com.pl.hragency.shared.rest.ExecutionContext;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class UpdateCandidateHandler {
     public void handle(ExecutionContext context, CandidateId id, UpdateCandidateCommand command) {
 
         Candidate candidate = repository.findById(context.organizationId(), id)
-                .orElseThrow(() -> new CandidateNotFoundException(id.value()));
+                .orElseThrow(() -> new EntityNotFoundException(EntityType.Candidate, id.value()));
 
         candidate.update(command.email(), command.firstName(), command.lastName(), command.phone());
 

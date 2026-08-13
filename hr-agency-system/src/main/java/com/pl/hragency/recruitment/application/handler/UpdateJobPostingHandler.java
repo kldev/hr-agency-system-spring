@@ -1,13 +1,14 @@
-package com.pl.hragency.recruitment.application.service;
+package com.pl.hragency.recruitment.application.handler;
 
 import com.pl.hragency.jobdescription.api.SalaryRange;
 import com.pl.hragency.recruitment.application.command.UpdateJobPostingCommand;
 import com.pl.hragency.recruitment.application.port.JobPostingRepository;
 import com.pl.hragency.recruitment.domain.event.JobPostingUpdatedEvent;
-import com.pl.hragency.recruitment.domain.exception.JobPostingNotFoundException;
 import com.pl.hragency.recruitment.domain.model.posting.JobPosting;
 import com.pl.hragency.recruitment.domain.model.posting.JobPostingId;
 import com.pl.hragency.shared.event.EventPublisher;
+import com.pl.hragency.shared.rest.EntityNotFoundException;
+import com.pl.hragency.shared.rest.EntityType;
 import com.pl.hragency.shared.rest.ExecutionContext;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class UpdateJobPostingHandler {
 
     public void handle(ExecutionContext context, JobPostingId id, UpdateJobPostingCommand command) {
         JobPosting posting = repository.findById(context.organizationId(), id)
-                .orElseThrow(JobPostingNotFoundException::new);
+                .orElseThrow(() -> new EntityNotFoundException(EntityType.JobPosting, id.value()));
 
         posting.updateContent(command.title(),
                 command.summary(),

@@ -52,7 +52,8 @@ public class JobPostingMapper {
                         Currency.getInstance(entity.getSalaryCurrency())),
                 entity.getStatus(),
                 entity.getCreatedAt(),
-                entity.getUpdatedAt()
+                entity.getUpdatedAt(),
+                entity.getVersion()
         );
     }
 }

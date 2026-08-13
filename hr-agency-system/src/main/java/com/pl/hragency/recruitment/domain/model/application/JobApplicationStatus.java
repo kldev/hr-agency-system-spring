@@ -1,6 +1,6 @@
 package com.pl.hragency.recruitment.domain.model.application;
 
-public enum ApplicationStatus {
+public enum JobApplicationStatus {
 
     /**
      * Candidate has submitted an application for the job posting.

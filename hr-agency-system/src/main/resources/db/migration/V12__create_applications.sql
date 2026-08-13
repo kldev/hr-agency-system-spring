@@ -9,7 +9,7 @@ CREATE TABLE applications
     source            VARCHAR(30) NOT NULL,
     status            VARCHAR(30) NOT NULL,
 
-    applied_at       TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_at       TIMESTAMP WITH TIME ZONE NOT NULL,
     updated_at       TIMESTAMP WITH TIME ZONE NOT NULL,
 
     CONSTRAINT pk_applications
@@ -21,7 +21,10 @@ CREATE TABLE applications
 
     CONSTRAINT fk_applications_job_posting
         FOREIGN KEY (job_posting_id)
-            REFERENCES job_postings(id)
+            REFERENCES job_postings(id),
+
+    CONSTRAINT uk_applications_candidate_job_posting
+        UNIQUE (organization_id, job_posting_id, candidate_id)
 );
 
 CREATE INDEX idx_applications_organization

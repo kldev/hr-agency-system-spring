@@ -54,5 +54,20 @@ public class GlobalExceptionHandler {
 
     }
 
+    //EntityNotFoundException
+    @ExceptionHandler(
+            EntityNotFoundException.class
+    )
+    ResponseEntity<?> handleEntityNotFoundError(
+            EntityNotFoundException ex) {
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(
+                        new ApiError(ex.getMessage())
+                );
+
+    }
+
 
 }

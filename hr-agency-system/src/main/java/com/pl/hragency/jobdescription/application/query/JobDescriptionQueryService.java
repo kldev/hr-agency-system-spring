@@ -1,8 +1,10 @@
 package com.pl.hragency.jobdescription.application.query;
 
 import com.pl.hragency.jobdescription.application.port.JobDescriptionRepository;
-import com.pl.hragency.jobdescription.domain.exception.JobDescriptionNotFoundException;
+
 import com.pl.hragency.jobdescription.domain.model.JobDescriptionId;
+import com.pl.hragency.shared.rest.EntityNotFoundException;
+import com.pl.hragency.shared.rest.EntityType;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +32,7 @@ public class JobDescriptionQueryService {
                 .findById(organizationId, jobDescriptionId)
                 .map(JobDescriptionItem::from)
                 .orElseThrow(() ->
-                        new JobDescriptionNotFoundException(jobDescriptionId.value())
+                        new EntityNotFoundException(EntityType.JobDescription, jobDescriptionId.value())
                 );
     }
 

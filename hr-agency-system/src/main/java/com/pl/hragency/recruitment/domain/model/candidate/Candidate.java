@@ -15,7 +15,7 @@ public final class Candidate {
     private String phone;
 
     private CandidateStatus status;
-    private CandidateSource source;
+    private final CandidateSource source;
 
     private final Instant createdAt;
     private Instant updatedAt;
@@ -42,7 +42,7 @@ public final class Candidate {
         this.phone = phone;
 
         this.status = Objects.requireNonNull(status);
-        this.source = source;
+        this.source = Objects.requireNonNull(source);
 
         this.createdAt = Objects.requireNonNull(createdAt);
         this.updatedAt = Objects.requireNonNull(updatedAt);

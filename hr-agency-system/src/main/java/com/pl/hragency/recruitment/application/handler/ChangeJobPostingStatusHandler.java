@@ -1,13 +1,14 @@
-package com.pl.hragency.recruitment.application.service;
+package com.pl.hragency.recruitment.application.handler;
 
 import com.pl.hragency.recruitment.application.command.ChangeJobPostingStatusCommand;
 import com.pl.hragency.recruitment.application.port.JobPostingRepository;
 import com.pl.hragency.recruitment.domain.event.JobPostingStatusUpdatedEvent;
-import com.pl.hragency.recruitment.domain.exception.JobPostingNotFoundException;
 import com.pl.hragency.recruitment.domain.model.posting.JobPosting;
 import com.pl.hragency.recruitment.domain.model.posting.JobPostingId;
 import com.pl.hragency.recruitment.domain.model.posting.JobPostingStatus;
 import com.pl.hragency.shared.event.EventPublisher;
+import com.pl.hragency.shared.rest.EntityNotFoundException;
+import com.pl.hragency.shared.rest.EntityType;
 import com.pl.hragency.shared.rest.ExecutionContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +27,9 @@ public class ChangeJobPostingStatusHandler {
 
     @Transactional
     public void handle(ExecutionContext context, JobPostingId id, ChangeJobPostingStatusCommand command) {
-        JobPosting posting = repository.findById(context.organizationId(), id).orElseThrow(JobPostingNotFoundException::new);
+        JobPosting posting = repository.findById(context.organizationId(), id)
+                .orElseThrow(() -> new EntityNotFoundException(EntityType.JobPosting, id.value()));
+
         JobPostingStatus oldStatus = posting.status();
 
         if (oldStatus == command.status()) {

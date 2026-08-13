@@ -35,6 +35,7 @@ public final class JobPosting {
 
     private final Instant createdAt;
     private Instant updatedAt;
+    private Long version;
 
     private JobPosting(
             JobPostingId id,
@@ -54,7 +55,8 @@ public final class JobPosting {
             SalaryRange salaryRange,
             JobPostingStatus status,
             Instant createdAt,
-            Instant updatedAt) {
+            Instant updatedAt,
+            Long version) {
 
         this.id = Objects.requireNonNull(id);
         this.organizationId = Objects.requireNonNull(organizationId);
@@ -80,6 +82,7 @@ public final class JobPosting {
 
         this.createdAt = Objects.requireNonNull(createdAt);
         this.updatedAt = Objects.requireNonNull(updatedAt);
+        this.version = version;
     }
 
     public static JobPosting draft(
@@ -96,7 +99,8 @@ public final class JobPosting {
             String countryCode,
             EmploymentType employmentType,
             WorkMode workMode,
-            SalaryRange salaryRange) {
+            SalaryRange salaryRange
+            ) {
 
         Instant now = Instant.now();
 
@@ -118,7 +122,8 @@ public final class JobPosting {
                 salaryRange,
                 JobPostingStatus.DRAFT,
                 now,
-                now
+                now,
+                null
         );
     }
 
@@ -140,7 +145,8 @@ public final class JobPosting {
             SalaryRange salaryRange,
             JobPostingStatus status,
             Instant createdAt,
-            Instant updatedAt) {
+            Instant updatedAt,
+            Long version) {
 
         return new JobPosting(
                 id,
@@ -160,7 +166,8 @@ public final class JobPosting {
                 salaryRange,
                 status,
                 createdAt,
-                updatedAt
+                updatedAt,
+                version
         );
     }
 
@@ -195,6 +202,10 @@ public final class JobPosting {
 
         status = JobPostingStatus.ARCHIVED;
         touch();
+    }
+
+    public boolean active(){
+        return status == JobPostingStatus.PUBLISHED;
     }
 
     public void updateContent(
@@ -331,4 +342,6 @@ public final class JobPosting {
     public Instant updatedAt() {
         return updatedAt;
     }
+
+    public Long version() { return  version; }
 }

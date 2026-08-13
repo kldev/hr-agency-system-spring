@@ -1,14 +1,15 @@
-package com.pl.hragency.recruitment.application.service;
+package com.pl.hragency.recruitment.application.handler;
 
 import com.pl.hragency.identity.api.IdentityApi;
 import com.pl.hragency.recruitment.application.command.ChangeJobPostingRecruiterCommand;
 import com.pl.hragency.recruitment.application.port.JobPostingRepository;
 import com.pl.hragency.recruitment.domain.event.JobPostingRecruiterUpdatedEvent;
-import com.pl.hragency.recruitment.domain.exception.JobPostingNotFoundException;
 import com.pl.hragency.recruitment.domain.model.posting.JobPosting;
 import com.pl.hragency.recruitment.domain.model.posting.JobPostingId;
 import com.pl.hragency.shared.event.EventPublisher;
 import com.pl.hragency.shared.event.UserSnapshot;
+import com.pl.hragency.shared.rest.EntityNotFoundException;
+import com.pl.hragency.shared.rest.EntityType;
 import com.pl.hragency.shared.rest.ExecutionContext;
 import org.springframework.stereotype.Service;
 
@@ -32,11 +33,10 @@ public class ChangeJobPostingRecruiterHandler {
     public void handle(ExecutionContext context, JobPostingId id, ChangeJobPostingRecruiterCommand command) {
 
         JobPosting jobPosting = repository.findById(context.organizationId(), id)
-                .orElseThrow(JobPostingNotFoundException::new);
+                .orElseThrow(() -> new EntityNotFoundException(EntityType.JobPosting, id.value()));
 
-        if (!identityApi.existsInOrganization(command.recruiterId(), context.organizationId())) {
-            throw new IllegalArgumentException("Invalid recruiterId: " + command.recruiterId());
-        }
+        UserSnapshot newRecruiter = identityApi.findUser(command.recruiterId(),
+                context.organizationId()).orElseThrow(() -> new EntityNotFoundException(EntityType.Recruiter, command.recruiterId()));
 
         UUID oldRecruiterId;
         oldRecruiterId = jobPosting.recruiterId();
@@ -44,9 +44,6 @@ public class ChangeJobPostingRecruiterHandler {
         repository.updateRecruiter(context.organizationId(), id, command.recruiterId());
 
         UserSnapshot oldRecruiter = identityApi.findUser(oldRecruiterId,
-                context.organizationId()).orElse(null);
-
-        UserSnapshot newRecruiter = identityApi.findUser(command.recruiterId(),
                 context.organizationId()).orElse(null);
 
         var event = new JobPostingRecruiterUpdatedEvent(id.value(),

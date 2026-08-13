@@ -5,7 +5,7 @@ import org.springframework.modulith.ApplicationModule;
 @ApplicationModule(
         displayName = "Company", allowedDependencies = {
                 "shared :: event", "identity :: api", "shared :: rest",
-        "persistence"
+        "shared :: persistence"
         })
 public class CompanyModule {
 }

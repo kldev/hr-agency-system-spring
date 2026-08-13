@@ -3,11 +3,12 @@ package com.pl.hragency.jobdescription.application.handler;
 import com.pl.hragency.jobdescription.application.command.ChangeJobDescriptionStatusCommand;
 import com.pl.hragency.jobdescription.application.port.JobDescriptionRepository;
 import com.pl.hragency.jobdescription.domain.event.JobDescriptionStatusUpdatedEvent;
-import com.pl.hragency.jobdescription.domain.exception.JobDescriptionNotFoundException;
 import com.pl.hragency.jobdescription.domain.model.JobDescription;
 import com.pl.hragency.jobdescription.domain.model.JobDescriptionId;
 import com.pl.hragency.jobdescription.domain.model.JobDescriptionStatus;
 import com.pl.hragency.shared.event.EventPublisher;
+import com.pl.hragency.shared.rest.EntityNotFoundException;
+import com.pl.hragency.shared.rest.EntityType;
 import com.pl.hragency.shared.rest.ExecutionContext;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class ChangeJobDescriptionStatusHandler {
     public void handle(ExecutionContext context, JobDescriptionId id, ChangeJobDescriptionStatusCommand command) {
 
         JobDescription jobDescription = repository.findById(context.organizationId(), id)
-                .orElseThrow( () -> new JobDescriptionNotFoundException(id.value()));
+                .orElseThrow( () -> new EntityNotFoundException(EntityType.JobDescription, id.value()));
 
         JobDescriptionStatus oldStatus = jobDescription.status();
 

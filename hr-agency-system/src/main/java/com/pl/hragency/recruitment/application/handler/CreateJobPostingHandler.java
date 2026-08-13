@@ -1,4 +1,4 @@
-package com.pl.hragency.recruitment.application.service;
+package com.pl.hragency.recruitment.application.handler;
 
 import com.pl.hragency.identity.api.IdentityApi;
 import com.pl.hragency.jobdescription.api.JobDescriptionApi;
@@ -6,11 +6,12 @@ import com.pl.hragency.jobdescription.api.SalaryRange;
 import com.pl.hragency.recruitment.application.command.CreateJobPostingCommand;
 import com.pl.hragency.recruitment.application.port.JobPostingRepository;
 import com.pl.hragency.recruitment.domain.event.JobPostingCreatedEvent;
-import com.pl.hragency.recruitment.domain.exception.JobPostingNotFoundException;
 import com.pl.hragency.recruitment.domain.model.posting.JobPosting;
 import com.pl.hragency.recruitment.domain.model.posting.JobPostingId;
 import com.pl.hragency.shared.event.EventPublisher;
 import com.pl.hragency.shared.event.UserSnapshot;
+import com.pl.hragency.shared.rest.EntityNotFoundException;
+import com.pl.hragency.shared.rest.EntityType;
 import com.pl.hragency.shared.rest.ExecutionContext;
 
 import org.springframework.stereotype.Service;
@@ -52,7 +53,7 @@ public class CreateJobPostingHandler {
     public JobPostingId handle(ExecutionContext context, CreateJobPostingCommand command) {
 
         if (!jobDescriptionApi.exists(context.organizationId(), command.jobDescriptionId())){
-            throw new JobPostingNotFoundException();
+            throw new EntityNotFoundException(EntityType.JobDescription, command.jobDescriptionId());
         }
 
         UUID recruitmentId = resolveRecruitmentId(context, command.recruitmentId());

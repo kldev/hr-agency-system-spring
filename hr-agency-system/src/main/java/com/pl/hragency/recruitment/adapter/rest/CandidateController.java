@@ -3,13 +3,12 @@ package com.pl.hragency.recruitment.adapter.rest;
 import com.pl.hragency.identity.api.IdentityApi;
 import com.pl.hragency.recruitment.application.command.CreateCandidateCommand;
 import com.pl.hragency.recruitment.application.command.UpdateCandidateCommand;
-import com.pl.hragency.recruitment.application.service.CreateCandidateHandler;
-import com.pl.hragency.recruitment.application.service.UpdateCandidateHandler;
+import com.pl.hragency.recruitment.application.handler.CreateCandidateHandler;
+import com.pl.hragency.recruitment.application.handler.UpdateCandidateHandler;
 import com.pl.hragency.recruitment.domain.model.candidate.CandidateId;
 import com.pl.hragency.shared.rest.ApiResult;
 import com.pl.hragency.shared.rest.ExecutionContext;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.websocket.server.PathParam;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +37,7 @@ public class CandidateController {
     @PostMapping
     public CandidateId createCandidate(@Validated @RequestBody CreateCandidateCommand command) {
 
-        return createCandidateHandler.handle(getExecutionContext(), command);
+        return createCandidateHandler.handle(getExecutionContext(), command).id();
     }
 
     @PutMapping("{candidateId}")

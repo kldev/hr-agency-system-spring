@@ -6,11 +6,11 @@ import com.pl.hragency.recruitment.application.command.ChangeJobPostingRecruiter
 import com.pl.hragency.recruitment.application.command.ChangeJobPostingStatusCommand;
 import com.pl.hragency.recruitment.application.command.CreateJobPostingCommand;
 import com.pl.hragency.recruitment.application.command.UpdateJobPostingCommand;
-import com.pl.hragency.recruitment.application.service.ChangeJobPostingStatusHandler;
-import com.pl.hragency.recruitment.application.service.CreateJobPostingHandler;
-import com.pl.hragency.recruitment.application.service.UpdateJobPostingHandler;
+import com.pl.hragency.recruitment.application.handler.ChangeJobPostingStatusHandler;
+import com.pl.hragency.recruitment.application.handler.CreateJobPostingHandler;
+import com.pl.hragency.recruitment.application.handler.UpdateJobPostingHandler;
 import com.pl.hragency.recruitment.domain.model.posting.JobPostingId;
-import com.pl.hragency.recruitment.application.service.ChangeJobPostingRecruiterHandler;
+import com.pl.hragency.recruitment.application.handler.ChangeJobPostingRecruiterHandler;
 import com.pl.hragency.shared.rest.ApiResult;
 import com.pl.hragency.shared.rest.ExecutionContext;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,6 +28,11 @@ public class JobPostingController {
     private final ChangeJobPostingStatusHandler changeJobPostingStatusHandler;
     private final IdentityApi identityApi;
 
+
+    private ExecutionContext getExecutionContext() {
+        return identityApi.getCurrentUser().getExecutionContext();
+    }
+
     public JobPostingController(ChangeJobPostingRecruiterHandler changeJobPostingRecruiterHandler,
                                 CreateJobPostingHandler createJobPostingHandler,
                                 UpdateJobPostingHandler updateJobPostingHandler,
@@ -41,9 +46,6 @@ public class JobPostingController {
         this.identityApi = identityApi;
     }
 
-    private ExecutionContext getExecutionContext() {
-        return identityApi.getCurrentUser().getExecutionContext();
-    }
 
     @PostMapping("")
     public JobPostingId createJobPosting(@RequestBody CreateJobPostingCommand command) {

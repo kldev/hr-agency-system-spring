@@ -3,6 +3,7 @@ package com.pl.hragency.recruitment.adapter.persistence;
 import com.pl.hragency.recruitment.application.port.CandidateRepository;
 
 import com.pl.hragency.recruitment.domain.model.candidate.Candidate;
+import com.pl.hragency.recruitment.domain.model.candidate.CandidateEmail;
 import com.pl.hragency.recruitment.domain.model.candidate.CandidateId;
 import org.springframework.stereotype.Component;
 
@@ -26,17 +27,18 @@ public class CandidatePersistenceAdapter implements CandidateRepository {
     }
 
     @Override
-    public boolean existsByEmail(String email, UUID organizationId) {
-        return repository.existsByEmailAndOrganizationId(normalizeEmail(email), organizationId);
+    public boolean existsByEmail(CandidateEmail email, UUID organizationId) {
+        return repository.existsByEmailAndOrganizationId(email.value(), organizationId);
+    }
+
+    @Override
+    public Optional<Candidate> findByEmail(CandidateEmail email, UUID organizationId) {
+        return repository.findByEmailAndOrganizationId(email.value(), organizationId).map(mapper::toDomain);
     }
 
     @Override
     public Optional<Candidate> findById(UUID organizationId, CandidateId id) {
 
         return repository.findByIdAndOrganizationId(id.value(), organizationId).map(mapper::toDomain);
-    }
-
-    private static String normalizeEmail(String email) {
-        return email.trim().toLowerCase();
     }
 }
