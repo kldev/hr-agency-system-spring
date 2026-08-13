@@ -12,6 +12,41 @@ import java.nio.file.AccessDeniedException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    ResponseEntity<ApiValidationError> handleValidationException(
+            MethodArgumentNotValidException ex) {
+
+        var errors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> new ApiValidationError.ValidationError(
+                        error.getField(),
+                        error.getDefaultMessage()
+                ))
+                .toList();
+
+        return ResponseEntity.badRequest()
+                .body(new ApiValidationError(
+                        "Request validation failed",
+                        errors
+                ));
+    }
+
+    // NullPointerException
+    @ExceptionHandler(
+            NullPointerException.class
+    )
+    ResponseEntity<?> handleNullError(
+            NullPointerException ex) {
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        new ApiError(ex.getMessage())
+                );
+
+    }
+
     @ExceptionHandler(
             IllegalArgumentException.class
     )
@@ -34,20 +69,6 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
-                .body(
-                        new ApiError(ex.getMessage())
-                );
-
-    }
-
-    @ExceptionHandler(
-            MethodArgumentNotValidException.class
-    )
-    ResponseEntity<?> handleNotValidError(
-            MethodArgumentNotValidException ex) {
-
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
                 .body(
                         new ApiError(ex.getMessage())
                 );

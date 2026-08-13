@@ -1,5 +1,7 @@
 package com.pl.hragency.jobdescription.application.handler;
 
+import com.pl.hragency.company.api.CompanyApi;
+import com.pl.hragency.company.domain.model.Company;
 import com.pl.hragency.identity.api.IdentityApi;
 import com.pl.hragency.jobdescription.application.command.CreateJobDescriptionCommand;
 import com.pl.hragency.jobdescription.application.port.JobDescriptionRepository;
@@ -8,6 +10,8 @@ import com.pl.hragency.jobdescription.domain.model.JobDescription;
 import com.pl.hragency.jobdescription.domain.model.JobDescriptionId;
 import com.pl.hragency.jobdescription.api.SalaryRange;
 import com.pl.hragency.shared.event.EventPublisher;
+import com.pl.hragency.shared.rest.EntityNotFoundException;
+import com.pl.hragency.shared.rest.EntityType;
 import com.pl.hragency.shared.rest.ExecutionContext;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -22,14 +26,16 @@ public class CreateJobDescriptionHandler {
     private final JobDescriptionRepository repository;
     private final EventPublisher eventPublisher;
     private final IdentityApi  identityApi;
+    private final CompanyApi companyApi;
 
     public CreateJobDescriptionHandler(
             JobDescriptionRepository repository,
-            EventPublisher eventPublisher, IdentityApi identityApi) {
+            EventPublisher eventPublisher, IdentityApi identityApi, CompanyApi companyApi) {
 
         this.repository = repository;
         this.eventPublisher = eventPublisher;
         this.identityApi = identityApi;
+        this.companyApi = companyApi;
     }
 
     @Transactional
@@ -42,6 +48,12 @@ public class CreateJobDescriptionHandler {
                 command.salaryMax(),
                 Currency.getInstance(command.salaryCurrency())
         );
+
+        var companyExits = companyApi.exists(context.organizationId(), command.companyId());
+        if (!companyExits) {
+            throw new EntityNotFoundException(EntityType.Company, command.companyId());
+        }
+
 
         var jobDescription = JobDescription.create(
                 context.organizationId(),

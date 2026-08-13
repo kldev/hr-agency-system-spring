@@ -6,6 +6,7 @@ import com.pl.hragency.jobdescription.api.WorkMode;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public final class JobDescription {
@@ -59,16 +60,16 @@ public final class JobDescription {
         this.id = id;
         this.organizationId = organizationId;
         this.companyId = companyId;
-        this.title = title;
+        this.title = requireText(title, "Title");
         this.summary = summary;
         this.description = description;
         this.responsibilities = List.copyOf(responsibilities);
         this.requirements = List.copyOf(requirements);
         this.skills = List.copyOf(skills);
         this.location = location;
-        this.countryCode = countryCode;
-        this.employmentType = employmentType;
-        this.workMode = workMode;
+        this.countryCode =  requireText(countryCode, "Country Code");
+        this.employmentType =  Objects.requireNonNull(employmentType);
+        this.workMode =  Objects.requireNonNull(workMode);
         this.salaryRange = salaryRange;
         this.status = status;
         this.recruiterId = recruiterId;
@@ -156,6 +157,19 @@ public final class JobDescription {
                 createdAt,
                 updatedAt
         );
+    }
+
+    private static String requireText(
+            String value,
+            String fieldName) {
+
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException(
+                    fieldName + " must not be blank"
+            );
+        }
+
+        return value;
     }
 
     public void update(

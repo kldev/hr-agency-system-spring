@@ -79,6 +79,7 @@ public class CreateJobApplicationHandler {
         jobApplicationRepository.save(application);
 
         var event = new JobApplicationCreatedEvent(application.id().value(),
+                posting.id().value(),
                 posting.title(),
                 application.organizationId(),
                 application.candidateId().value(),

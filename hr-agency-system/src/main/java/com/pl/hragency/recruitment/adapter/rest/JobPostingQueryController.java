@@ -41,6 +41,7 @@ public class JobPostingQueryController {
             @RequestParam(required = false) String search,
             @RequestParam(required = false) JobPostingStatus status,
             @RequestParam(required = false) UUID companyId,
+            @RequestParam(required = false) UUID jobDescriptionId,
             @RequestParam(defaultValue = "0")
             int page,
 
@@ -57,7 +58,7 @@ public class JobPostingQueryController {
         );
 
         var result = queryService.search(getContext().organizationId(),
-                new JobPostingListQuery(search, status, companyId), pageable
+                new JobPostingListQuery(search, status, companyId, jobDescriptionId), pageable
         );
 
         return new PageResponse<>(
@@ -68,4 +69,6 @@ public class JobPostingQueryController {
                 result.getTotalPages()
         );
     }
+
+
 }

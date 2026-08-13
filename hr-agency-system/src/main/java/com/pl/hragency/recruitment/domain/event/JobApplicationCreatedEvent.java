@@ -7,6 +7,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 public record JobApplicationCreatedEvent(UUID applicationId,
+                                         UUID jobPostingId,
                                          String jobTitle,
                                          UUID organizationId,
                                          UUID candidateId,

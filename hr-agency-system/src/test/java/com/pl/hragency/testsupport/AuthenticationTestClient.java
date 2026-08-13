@@ -1,6 +1,7 @@
 package com.pl.hragency.testsupport;
 
 import com.pl.hragency.identity.application.command.LoginCommand;
+import com.pl.hragency.identity.application.command.OwnerLoginCommand;
 import com.pl.hragency.identity.application.result.LoginResult;
 
 import org.springframework.stereotype.Component;
@@ -25,6 +26,24 @@ public class AuthenticationTestClient {
                         user.email(),
                         user.password(),
                         user.organizationSlug()
+                ))
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(LoginResult.class)
+                .returnResult()
+                .getResponseBody()
+                .token();
+    }
+
+    public String loginOwner(TestOwner user) {
+
+        return client
+                .post()
+                .uri("/api/platform/login")
+                .body(new OwnerLoginCommand(
+                        user.email(),
+                        user.password()
                 ))
                 .exchange()
                 .expectStatus()

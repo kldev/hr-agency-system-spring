@@ -70,6 +70,6 @@ public record IntegrationAuthentication(
 
     @Override
     public String getName() {
-        return clientId.toString();
+        return clientName;
     }
 }

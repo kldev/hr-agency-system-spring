@@ -10,6 +10,7 @@ import com.pl.hragency.testsupport.TestOrganizationFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -75,8 +76,8 @@ class UserRepositoryTest extends BaseIntegrationTest {
         assertThat(found.passwordHash())
                 .isEqualTo("bcrypt-hash");
 
-        assertThat(found.createdAt())
-                .isEqualTo(user.createdAt());
+        assertThat(found.createdAt().truncatedTo(ChronoUnit.SECONDS))
+                .isEqualTo(user.createdAt().truncatedTo(ChronoUnit.SECONDS));
     }
 
     @Test

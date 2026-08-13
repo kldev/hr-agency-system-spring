@@ -313,7 +313,7 @@ class JobDescriptionCommandTest extends BaseRestIntegrationTest {
                 .body(command)
                 .exchange()
                 .expectStatus()
-                .isForbidden();
+                .isNotFound();
     }
 
     @Test

@@ -57,7 +57,8 @@ public class JobPostingPersistenceAdapter implements JobPostingRepository {
                 JobPostingSpecifications.organizationId(organizationId),
                 JobPostingSpecifications.search(query.search()),
                 JobPostingSpecifications.status(query.status()),
-                JobPostingSpecifications.companyId(query.companyId())
+                JobPostingSpecifications.companyId(query.companyId()),
+                JobPostingSpecifications.jobDescriptionId(query.jobDescriptionId())
         );
         return repository.findAll(specification, pageable).map(mapper::toDomain);
     }

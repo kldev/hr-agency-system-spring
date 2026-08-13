@@ -6,36 +6,60 @@ import com.pl.hragency.jobdescription.api.WorkMode;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
+import jakarta.validation.constraints.*;
 
 public record CreateJobPostingCommand(
-    UUID jobDescriptionId,
 
-    UUID recruitmentId,
+        @NotNull(message = "Job description is required")
+        UUID jobDescriptionId,
 
-    String title,
+        @NotNull(message = "Recruitment is required")
+        UUID recruitmentId,
 
-    String summary,
+        @NotBlank(message = "Title is required")
+        @Size(max = 200, message = "Title must not exceed 200 characters")
+        String title,
 
-    String description,
+        @NotBlank(message = "Summary is required")
+        @Size(max = 1000, message = "Summary must not exceed 1000 characters")
+        String summary,
 
-    List<String> responsibilities,
+        @NotBlank(message = "Description is required")
+        String description,
 
-    List<String> requirements,
+        @NotEmpty(message = "At least one responsibility is required")
+        List<@NotBlank(message = "Responsibility must not be blank") String> responsibilities,
 
-    List<String> skills,
+        @NotEmpty(message = "At least one requirement is required")
+        List<@NotBlank(message = "Requirement must not be blank") String> requirements,
 
-    String location,
+        List<@NotBlank(message = "Skill must not be blank") String> skills,
 
-    String countryCode,
+        String location,
 
-    EmploymentType employmentType,
+        @NotBlank(message = "Country code is required")
+        @Pattern(
+                regexp = "^[A-Z]{2}$",
+                message = "Country code must be a 2-letter ISO code"
+        )
+        String countryCode,
 
-    WorkMode workMode,
+        @NotNull(message = "Employment type is required")
+        EmploymentType employmentType,
 
-    BigDecimal salaryMin,
+        @NotNull(message = "Work mode is required")
+        WorkMode workMode,
 
-    BigDecimal salaryMax,
+        @PositiveOrZero(message = "Minimum salary must be greater than or equal to 0")
+        BigDecimal salaryMin,
 
-    String salaryCurrency)
-{
+        @PositiveOrZero(message = "Maximum salary must be greater than or equal to 0")
+        BigDecimal salaryMax,
+
+        @Pattern(
+                regexp = "^[A-Z]{3}$",
+                message = "Salary currency must be a 3-letter ISO code"
+        )
+        String salaryCurrency
+) {
 }

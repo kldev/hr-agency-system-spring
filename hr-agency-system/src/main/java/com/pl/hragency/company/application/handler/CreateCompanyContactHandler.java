@@ -4,6 +4,8 @@ import com.pl.hragency.company.application.command.CreateCompanyContactCommand;
 import com.pl.hragency.company.application.port.CompanyContactRepository;
 import com.pl.hragency.company.application.port.CompanyRepository;
 import com.pl.hragency.company.domain.model.*;
+import com.pl.hragency.shared.rest.EntityNotFoundException;
+import com.pl.hragency.shared.rest.EntityType;
 import com.pl.hragency.shared.rest.ExecutionContext;
 import jakarta.transaction.Transactional;
 
@@ -23,7 +25,7 @@ public class CreateCompanyContactHandler {
     public CompanyContactId handle(ExecutionContext context, CompanyContactCompanyId companyId, CreateCompanyContactCommand command) {
 
         if (!companyRepository.existsByOrg(companyId.value(), context.organizationId())) {
-            throw new IllegalArgumentException("Company not belong to your organization");
+            throw new EntityNotFoundException(EntityType.Company, companyId.value());
         }
 
         CompanyContact companyContact = CompanyContact.create(

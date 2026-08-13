@@ -5,5 +5,6 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.UUID;
 
-public record JobPostingListQuery(String search, JobPostingStatus status, UUID companyId) {
+public record JobPostingListQuery(String search, JobPostingStatus status,
+                                  UUID companyId, UUID jobDescriptionId) {
 }

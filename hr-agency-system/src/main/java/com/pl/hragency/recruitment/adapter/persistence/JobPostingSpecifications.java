@@ -129,4 +129,18 @@ public class JobPostingSpecifications {
                         companyId
                 );
     }
+
+    public static Specification<JobPostingJpaEntity> jobDescriptionId(
+            UUID jobDescriptionId
+    ) {
+        if (jobDescriptionId == null) {
+            return Specification.allOf();
+        }
+
+        return (root, query, cb) ->
+                cb.equal(
+                        root.get("jobDescriptionId"),
+                        jobDescriptionId
+                );
+    }
 }

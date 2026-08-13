@@ -7,12 +7,15 @@ import com.pl.hragency.identity.domain.model.IntegrationScope;
 import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.jobdescription.api.EmploymentType;
 import com.pl.hragency.jobdescription.api.WorkMode;
+import com.pl.hragency.recruitment.application.command.ChangeJobPostingStatusCommand;
 import com.pl.hragency.recruitment.application.command.CreateJobApplicationCommand;
 import com.pl.hragency.recruitment.application.command.CreateJobPostingCommand;
 import com.pl.hragency.recruitment.application.command.UpdateCandidateCommand;
 import com.pl.hragency.recruitment.application.port.JobPostingRepository;
 import com.pl.hragency.recruitment.domain.model.candidate.CandidateSource;
 import com.pl.hragency.recruitment.domain.model.posting.JobPostingId;
+import com.pl.hragency.recruitment.domain.model.posting.JobPostingStatus;
+import com.pl.hragency.recruitment.domain.result.ApplyForPostingResult;
 import com.pl.hragency.shared.rest.ApiResult;
 import com.pl.hragency.testsupport.*;
 import org.junit.jupiter.api.Assertions;
@@ -22,6 +25,8 @@ import org.springframework.http.MediaType;
 
 import java.math.BigDecimal;
 import java.util.Set;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class RecruitmentIntegrationTest extends BaseRestIntegrationTest {
     @Autowired
@@ -81,7 +86,8 @@ public class RecruitmentIntegrationTest extends BaseRestIntegrationTest {
 
         var token = authenticationClient.login(user);
 
-        return restTestClient
+
+        var postingId = restTestClient
                 .post()
                 .uri(url("/api/recruitment/job-posting"))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -93,6 +99,20 @@ public class RecruitmentIntegrationTest extends BaseRestIntegrationTest {
                 .expectBody(JobPostingId.class)
                 .returnResult()
                 .getResponseBody();
+
+        assertThat(postingId).isNotNull();
+
+        restTestClient.put()
+                .uri(url("/api/recruitment/job-posting/%s/status".formatted(postingId.value())))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + token)
+                .body(new ChangeJobPostingStatusCommand(JobPostingStatus.PUBLISHED))
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(ApiResult.class);
+
+        return postingId;
     }
 
     private IntegrationClientResult createIntegrationClient(
@@ -115,7 +135,7 @@ public class RecruitmentIntegrationTest extends BaseRestIntegrationTest {
                 .getResponseBody();
     }
 
-    private ApiResult applyForJobPosting(String apiKey, CreateJobApplicationCommand command){
+    private ApplyForPostingResult applyForJobPosting(String apiKey, CreateJobApplicationCommand command){
 
         return restTestClient
                 .post()
@@ -126,7 +146,7 @@ public class RecruitmentIntegrationTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(ApiResult.class)
+                .expectBody(ApplyForPostingResult.class)
                 .returnResult()
                 .getResponseBody();
     }

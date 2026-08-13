@@ -2,9 +2,11 @@ package com.pl.hragency.organization;
 
 import com.pl.hragency.BaseRestIntegrationTest;
 import com.pl.hragency.identity.domain.model.OrganizationRole;
+import com.pl.hragency.identity.domain.model.PlatformRole;
 import com.pl.hragency.organization.application.command.CreateOrganizationCommand;
 import com.pl.hragency.testsupport.AuthenticationTestClient;
 import com.pl.hragency.testsupport.TestOrganizationFactory;
+import com.pl.hragency.testsupport.TestOwnerFactory;
 import com.pl.hragency.testsupport.TestUserFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class OrganizationApiTest extends BaseRestIntegrationTest {
+
+    @Autowired
+    private TestOwnerFactory ownerFactory;
 
     @Autowired
     private TestOrganizationFactory organizationFactory;
@@ -25,20 +30,15 @@ class OrganizationApiTest extends BaseRestIntegrationTest {
     @Test
     void adminShouldBeAbleToCreateOrganization() {
 
-        // given
-        var adminOrganization =
-                organizationFactory.create();
-
         var admin =
-                userFactory.create(
-                        adminOrganization,
-                        "admin@test.com",
+                ownerFactory.create(
+                        "owner@test.com",
                         "Password123!",
-                        OrganizationRole.ADMIN
+                        PlatformRole.OWNER
                 );
 
         var token =
-                authenticationClient.login(admin);
+                authenticationClient.loginOwner(admin);
 
         var command =
                 new CreateOrganizationCommand(
