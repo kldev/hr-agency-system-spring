@@ -1,7 +1,7 @@
 package com.pl.hragency.recruitment.posting;
 
 import com.pl.hragency.BaseApiIntegrationTest;
-import com.pl.hragency.identity.domain.model.UserRole;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.jobdescription.api.EmploymentType;
 import com.pl.hragency.jobdescription.api.WorkMode;
 import com.pl.hragency.recruitment.application.command.ChangeJobPostingStatusCommand;
@@ -101,7 +101,7 @@ public class JobPostingCommandTest extends BaseApiIntegrationTest {
                 organization,
                 "recruiter@test.com",
                 "Password123!",
-                UserRole.RECRUITER
+                OrganizationRole.RECRUITER
         );
 
         var companyId = companyFactory.create(
@@ -198,7 +198,7 @@ public class JobPostingCommandTest extends BaseApiIntegrationTest {
                 organization,
                 "recruiter@test.com",
                 "Password123!",
-                UserRole.RECRUITER
+                OrganizationRole.RECRUITER
         );
 
         var jobPostingId = createJobPosting(organization, user);
@@ -239,7 +239,7 @@ public class JobPostingCommandTest extends BaseApiIntegrationTest {
                 organization,
                 "recruiter@test.com",
                 "Password123!",
-                UserRole.RECRUITER
+                OrganizationRole.RECRUITER
         );
 
         var jobPostingId = createJobPosting(organization, user);
@@ -289,7 +289,7 @@ public class JobPostingCommandTest extends BaseApiIntegrationTest {
                 organizationA,
                 "recruiter-a@test.com",
                 "Password123!",
-                UserRole.RECRUITER
+                OrganizationRole.RECRUITER
         );
 
         var organizationB = organizationFactory.create();
@@ -298,7 +298,7 @@ public class JobPostingCommandTest extends BaseApiIntegrationTest {
                 organizationB,
                 "recruiter-b@test.com",
                 "Password123!",
-                UserRole.RECRUITER
+                OrganizationRole.RECRUITER
         );
 
         var companyB = companyFactory.create(

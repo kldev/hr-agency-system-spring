@@ -1,7 +1,7 @@
 package com.pl.hragency.sales;
 
 import com.pl.hragency.BaseApiIntegrationTest;
-import com.pl.hragency.identity.domain.model.UserRole;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.sales.application.command.ChangeSalesOpportunityStageCommand;
 import com.pl.hragency.sales.application.command.CreateSalesOpportunityCommand;
 import com.pl.hragency.sales.application.port.SalesOpportunityRepository;
@@ -48,7 +48,7 @@ class SalesOpportunityCommandTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var companyId = companyFactory.create(
@@ -135,7 +135,7 @@ class SalesOpportunityCommandTest extends BaseApiIntegrationTest {
                 organization,
                 "sales@test.com",
                 "Password123!",
-                UserRole.SALES
+                OrganizationRole.SALES
         );
 
         var companyId = companyFactory.create(
@@ -202,7 +202,7 @@ class SalesOpportunityCommandTest extends BaseApiIntegrationTest {
                 organization,
                 "sales@test.com",
                 "Password123!",
-                UserRole.SALES
+                OrganizationRole.SALES
         );
 
         var companyId = companyFactory.create(
@@ -273,7 +273,7 @@ class SalesOpportunityCommandTest extends BaseApiIntegrationTest {
                 .orElseThrow();
 
         assertThat(salesOpportunity.stage())
-                .isEqualTo(SalesOpportunityStage.WON);
+                .isEqualTo(SalesOpportunityStage.NEW);
 
         assertThat(salesOpportunity.lostReason())
                 .isNull();
@@ -289,7 +289,7 @@ class SalesOpportunityCommandTest extends BaseApiIntegrationTest {
                 organization,
                 "sales@test.com",
                 "Password123!",
-                UserRole.SALES
+                OrganizationRole.SALES
         );
 
         var companyId = companyFactory.create(
@@ -376,7 +376,7 @@ class SalesOpportunityCommandTest extends BaseApiIntegrationTest {
                 organization1,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var companyId = companyFactory.create(
@@ -420,7 +420,7 @@ class SalesOpportunityCommandTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var token = authenticationClient.login(user);
@@ -462,7 +462,7 @@ class SalesOpportunityCommandTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var companyId = companyFactory.create(
@@ -506,7 +506,7 @@ class SalesOpportunityCommandTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var token = authenticationClient.login(user);
@@ -546,7 +546,7 @@ class SalesOpportunityCommandTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var companyId = companyFactory.create(

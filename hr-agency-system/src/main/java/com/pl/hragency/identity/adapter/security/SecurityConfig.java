@@ -22,21 +22,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    private final PasswordEncoder encoder;
-    private final AppUserDetailsService userDetailsService;
 
-    public SecurityConfig(PasswordEncoder encoder, AppUserDetailsService userDetailsService) {
-        this.encoder = encoder;
-        this.userDetailsService = userDetailsService;
+    public SecurityConfig() {
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager() throws Exception {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
-
-        authProvider.setPasswordEncoder(encoder);
-        return new ProviderManager(authProvider);
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
@@ -53,6 +42,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/api/platform/login").permitAll()
                         .requestMatchers("/docs")
                         .permitAll()
                         .requestMatchers("/api-spec")
@@ -64,10 +54,8 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/integration/applications")
+                        .requestMatchers(HttpMethod.POST, "/api/integrations/job-applications")
                         .hasAuthority("SCOPE_APPLICATION_CREATE")
-                        .requestMatchers(HttpMethod.POST, "/api/integration/candidates")
-                        .hasAuthority("SCOPE_CANDIDATE_CREATE")
                         .anyRequest()
                         .authenticated())
                 //.httpBasic(Customizer.withDefaults())

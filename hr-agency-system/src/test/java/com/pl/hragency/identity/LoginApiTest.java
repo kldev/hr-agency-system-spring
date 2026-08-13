@@ -2,7 +2,7 @@ package com.pl.hragency.identity;
 
 import com.pl.hragency.BaseApiIntegrationTest;
 import com.pl.hragency.identity.application.command.LoginCommand;
-import com.pl.hragency.identity.domain.model.UserRole;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.testsupport.AuthenticationTestClient;
 import com.pl.hragency.testsupport.TestOrganizationFactory;
 import com.pl.hragency.testsupport.TestUserFactory;
@@ -53,7 +53,7 @@ class LoginApiTest extends BaseApiIntegrationTest {
                         organization,
                         "john@test.com",
                         "CorrectPassword123!",
-                        UserRole.RECRUITER
+                        OrganizationRole.RECRUITER
                 );
 
         // when / then
@@ -106,7 +106,7 @@ class LoginApiTest extends BaseApiIntegrationTest {
                         acme,
                         "john@test.com",
                         "AcmePassword123!",
-                        UserRole.RECRUITER
+                        OrganizationRole.RECRUITER
                 );
 
         var otherUser =
@@ -114,7 +114,7 @@ class LoginApiTest extends BaseApiIntegrationTest {
                         other,
                         "john@test.com",
                         "OtherPassword123!",
-                        UserRole.RECRUITER
+                        OrganizationRole.RECRUITER
                 );
 
         // when

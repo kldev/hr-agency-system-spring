@@ -2,7 +2,7 @@ package com.pl.hragency.sales;
 
 import com.pl.hragency.BaseApiIntegrationTest;
 import com.pl.hragency.audit.domain.model.AuditEventType;
-import com.pl.hragency.identity.domain.model.UserRole;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.sales.application.command.ChangeSalesOpportunityStageCommand;
 import com.pl.hragency.sales.application.command.CreateSalesOpportunityCommand;
 import com.pl.hragency.sales.domain.event.SalesOpportunityCreatedEvent;
@@ -46,7 +46,7 @@ class SalesOpportunityAuditTest extends BaseApiIntegrationTest {
                 organization,
                 "sales@test.com",
                 "Password123!",
-                UserRole.SALES
+                OrganizationRole.SALES
         );
 
         var companyId = companyFactory.create(
@@ -137,7 +137,7 @@ class SalesOpportunityAuditTest extends BaseApiIntegrationTest {
                 organization,
                 "sales@test.com",
                 "Password123!",
-                UserRole.SALES
+                OrganizationRole.SALES
         );
 
         var companyId = companyFactory.create(

@@ -2,7 +2,7 @@ package com.pl.hragency.company;
 
 import com.pl.hragency.BaseApiIntegrationTest;
 import com.pl.hragency.company.application.query.CompanyListItem;
-import com.pl.hragency.identity.domain.model.UserRole;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.shared.rest.PageResponse;
 import com.pl.hragency.testsupport.AuthenticationTestClient;
 import com.pl.hragency.testsupport.TestCompanyFactory;
@@ -37,7 +37,7 @@ public class CompanyQueryApiTest extends BaseApiIntegrationTest {
                 organization,
                 "user@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         companyFactory.create(
@@ -102,7 +102,7 @@ public class CompanyQueryApiTest extends BaseApiIntegrationTest {
                 organization,
                 "user@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         companyFactory.create(
@@ -167,7 +167,7 @@ public class CompanyQueryApiTest extends BaseApiIntegrationTest {
                 organization,
                 "user@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         for (int i = 1; i <= 5; i++) {
@@ -227,7 +227,7 @@ public class CompanyQueryApiTest extends BaseApiIntegrationTest {
                 organization,
                 "user@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         companyFactory.create(
@@ -303,7 +303,7 @@ public class CompanyQueryApiTest extends BaseApiIntegrationTest {
                 organization1,
                 "user1@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         companyFactory.create(
@@ -364,7 +364,7 @@ public class CompanyQueryApiTest extends BaseApiIntegrationTest {
                 organization,
                 "user@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var token = authenticationClient.login(user);

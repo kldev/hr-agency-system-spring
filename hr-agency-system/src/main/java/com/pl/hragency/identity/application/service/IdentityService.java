@@ -3,15 +3,12 @@ package com.pl.hragency.identity.application.service;
 import com.pl.hragency.identity.api.IdentityApi;
 import com.pl.hragency.identity.api.UserSuggestion;
 import com.pl.hragency.identity.application.command.CreateUserCommand;
-import com.pl.hragency.identity.application.port.AuthorizationService;
-import com.pl.hragency.identity.application.port.CurrentUserProvider;
-import com.pl.hragency.identity.application.port.PasswordHasher;
-import com.pl.hragency.identity.application.port.UserRepository;
+import com.pl.hragency.identity.application.port.*;
 import com.pl.hragency.identity.api.CurrentUser;
 import com.pl.hragency.identity.application.query.UserSuggestionsQuery;
-import com.pl.hragency.identity.domain.model.User;
-import com.pl.hragency.identity.domain.model.UserOrganizationId;
-import com.pl.hragency.identity.domain.model.UserRole;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
+import com.pl.hragency.identity.domain.model.PlatformOwner;
+import com.pl.hragency.identity.domain.model.PlatformRole;
 import com.pl.hragency.shared.event.UserSnapshot;
 import com.pl.hragency.shared.rest.ExecutionContext;
 import org.springframework.stereotype.Service;
@@ -26,17 +23,21 @@ public class IdentityService implements IdentityApi {
     private final AuthorizationService authorizationService;
     private final UserSuggestionsQuery userSuggestionsQuery;
     private final CreateUserHandler createUserHandler;
+    private final PlatformUserRepository platformUserRepository;
+    private final PasswordHasher hasher;
 
     public IdentityService(UserRepository userRepository,
                            CurrentUserProvider currentUserProvider,
                            AuthorizationService authorizationService,
                            UserSuggestionsQuery userSuggestionsQuery,
-                           CreateUserHandler createUserHandler) {
+                           CreateUserHandler createUserHandler, PlatformUserRepository platformUserRepository, PasswordHasher hasher) {
         this.userRepository = userRepository;
         this.currentUserProvider = currentUserProvider;
         this.authorizationService = authorizationService;
         this.userSuggestionsQuery = userSuggestionsQuery;
         this.createUserHandler = createUserHandler;
+        this.platformUserRepository = platformUserRepository;
+        this.hasher = hasher;
     }
 
     @Override
@@ -47,15 +48,24 @@ public class IdentityService implements IdentityApi {
     @Override
     public UUID createUser(String email, String firstName, String lastName, String role, UUID organizationId, String password) {
 
-        var command = new CreateUserCommand(email, password, firstName, lastName, UserRole.from(role));
+        var command = new CreateUserCommand(email, password, firstName, lastName, OrganizationRole.from(role));
         var context = new ExecutionContext(organizationId, UUID.randomUUID(), "System");
 
         return createUserHandler.handle(context, command).value();
     }
 
     @Override
+    public UUID createPlatformUser(String email, String role, String password) {
+        var user = PlatformOwner.create(email, PlatformRole.valueOf(role), hasher.hash(password));
+
+        platformUserRepository.save(user);
+
+        return user.id().value();
+    }
+
+    @Override
     public void requireRole(String role) {
-        authorizationService.requireRole(UserRole.from(role));
+        authorizationService.requireRole(OrganizationRole.from(role));
     }
 
     @Override
@@ -63,7 +73,7 @@ public class IdentityService implements IdentityApi {
         var user = getCurrentUser();
         if (user == null) return false;
 
-        return user.role() == UserRole.SALES;
+        return user.role() == OrganizationRole.SALES;
     }
 
     @Override
@@ -71,7 +81,7 @@ public class IdentityService implements IdentityApi {
         var user = getCurrentUser();
         if (user == null) return false;
 
-        return user.role() == UserRole.RECRUITER;
+        return user.role() == OrganizationRole.RECRUITER;
     }
 
     @Override
@@ -89,7 +99,7 @@ public class IdentityService implements IdentityApi {
     public List<UserSuggestion> findUserSuggestions(UUID organizationId, String search, Set<String> roles) {
         if (roles == null) roles = new HashSet<>();
 
-        Set<UserRole> mappedRoles = roles.stream().map(UserRole::from).collect(Collectors.toSet());
+        Set<OrganizationRole> mappedRoles = roles.stream().map(OrganizationRole::from).collect(Collectors.toSet());
 
         return userSuggestionsQuery.find(organizationId, search, mappedRoles);
     }

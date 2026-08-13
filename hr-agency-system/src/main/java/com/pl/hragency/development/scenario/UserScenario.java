@@ -19,6 +19,8 @@ public class UserScenario {
 
         List<UUID> users = new ArrayList<>();
         String testPassword = "pass123";
+
+        api.createPlatformUser("root", "OWNER", testPassword);
         api.createUser("admin@hr-agency.mail", "Admin", "Agency", "ADMIN", organizationId, testPassword);
         users.add(api.createUser("a.kowalska@hr-agency.mail", "Anna", "Kowalska", "RECRUITER", organizationId, testPassword));
         users.add(api.createUser("t.brand@hr-agency.mail", "Tom", "Brand", "SALES", organizationId, testPassword));

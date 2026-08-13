@@ -5,7 +5,7 @@ import com.pl.hragency.company.application.command.AssignSalesOwnerCommand;
 import com.pl.hragency.company.application.command.CreateCompanyCommand;
 import com.pl.hragency.company.application.port.CompanyRepository;
 import com.pl.hragency.company.domain.model.CompanyId;
-import com.pl.hragency.identity.domain.model.UserRole;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.shared.rest.ApiError;
 import com.pl.hragency.testsupport.AuthenticationTestClient;
 import com.pl.hragency.testsupport.TestCompanyFactory;
@@ -76,7 +76,7 @@ public class CompanyCommandApiTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var token = authenticationClient.login(admin);
@@ -122,7 +122,7 @@ public class CompanyCommandApiTest extends BaseApiIntegrationTest {
                 organization,
                 "sales@test.com",
                 "Password123!",
-                UserRole.SALES
+                OrganizationRole.SALES
         );
 
         var token = authenticationClient.login(sales);
@@ -154,14 +154,14 @@ public class CompanyCommandApiTest extends BaseApiIntegrationTest {
                 organizationA,
                 "admin-a@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var salesB = userFactory.create(
                 organizationB,
                 "sales-b@test.com",
                 "Password123!",
-                UserRole.SALES
+                OrganizationRole.SALES
         );
 
         var companyA = companyFactory.create(
@@ -203,7 +203,7 @@ public class CompanyCommandApiTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var token = authenticationClient.login(admin);
@@ -234,14 +234,14 @@ public class CompanyCommandApiTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var sales = userFactory.create(
                 organization,
                 "sales@test.com",
                 "Password123!",
-                UserRole.SALES
+                OrganizationRole.SALES
         );
 
         var companyId = companyFactory.create(
@@ -290,7 +290,7 @@ public class CompanyCommandApiTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var token = authenticationClient.login(admin);

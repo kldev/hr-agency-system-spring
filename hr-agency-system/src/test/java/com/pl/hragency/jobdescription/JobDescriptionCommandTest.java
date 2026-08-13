@@ -1,7 +1,7 @@
 package com.pl.hragency.jobdescription;
 
 import com.pl.hragency.BaseApiIntegrationTest;
-import com.pl.hragency.identity.domain.model.UserRole;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.jobdescription.application.command.CreateJobDescriptionCommand;
 import com.pl.hragency.jobdescription.api.EmploymentType;
 import com.pl.hragency.jobdescription.domain.model.JobDescriptionId;
@@ -47,7 +47,7 @@ class JobDescriptionCommandTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var companyId = companyFactory.create(
@@ -187,7 +187,7 @@ class JobDescriptionCommandTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var companyId = companyFactory.create(
@@ -275,7 +275,7 @@ class JobDescriptionCommandTest extends BaseApiIntegrationTest {
                 organization1,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var companyId = companyFactory.create(
@@ -326,7 +326,7 @@ class JobDescriptionCommandTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var token = authenticationClient.login(user);
@@ -375,7 +375,7 @@ class JobDescriptionCommandTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var companyId = companyFactory.create(
@@ -426,7 +426,7 @@ class JobDescriptionCommandTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var companyId = companyFactory.create(
@@ -477,7 +477,7 @@ class JobDescriptionCommandTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var companyId = companyFactory.create(

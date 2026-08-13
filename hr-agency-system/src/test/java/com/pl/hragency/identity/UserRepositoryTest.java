@@ -2,10 +2,9 @@ package com.pl.hragency.identity;
 
 
 import com.pl.hragency.BaseIntegrationTest;
-import com.pl.hragency.identity.adapter.persistence.SpringDataUserRepository;
 import com.pl.hragency.identity.domain.model.User;
 import com.pl.hragency.identity.domain.model.UserOrganizationId;
-import com.pl.hragency.identity.domain.model.UserRole;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.identity.application.port.UserRepository;
 import com.pl.hragency.testsupport.TestOrganizationFactory;
 import org.junit.jupiter.api.Test;
@@ -37,7 +36,7 @@ class UserRepositoryTest extends BaseIntegrationTest {
                 "john.smith@acme.com",
                 "John",
                 "Smith",
-                UserRole.RECRUITER,
+                OrganizationRole.RECRUITER,
                 "bcrypt-hash"
         );
 
@@ -71,7 +70,7 @@ class UserRepositoryTest extends BaseIntegrationTest {
                 .isEqualTo("Smith");
 
         assertThat(found.role())
-                .isEqualTo(UserRole.RECRUITER);
+                .isEqualTo(OrganizationRole.RECRUITER);
 
         assertThat(found.passwordHash())
                 .isEqualTo("bcrypt-hash");
@@ -95,7 +94,7 @@ class UserRepositoryTest extends BaseIntegrationTest {
                 "john.smith@acme.com",
                 "John",
                 "Smith",
-                UserRole.RECRUITER,
+                OrganizationRole.RECRUITER,
                 "bcrypt-hash"
         );
 
@@ -143,7 +142,7 @@ class UserRepositoryTest extends BaseIntegrationTest {
                 "alex.cross@acme.com",
                 "Alex",
                 "Cross",
-                UserRole.RECRUITER,
+                OrganizationRole.RECRUITER,
                 "bcrypt-hash"
         );
 
@@ -182,7 +181,7 @@ class UserRepositoryTest extends BaseIntegrationTest {
                 "john.smith@example.com",
                 "John",
                 "Smith",
-                UserRole.RECRUITER,
+                OrganizationRole.RECRUITER,
                 "hash1"
         );
 
@@ -191,7 +190,7 @@ class UserRepositoryTest extends BaseIntegrationTest {
                 "john.smith@example.com",
                 "John",
                 "Smith",
-                UserRole.RECRUITER,
+                OrganizationRole.RECRUITER,
                 "hash2"
         );
 

@@ -1,6 +1,6 @@
 package com.pl.hragency.testsupport;
 
-import com.pl.hragency.identity.domain.model.UserRole;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
 
 import java.util.UUID;
 
@@ -10,6 +10,6 @@ public record TestUser(
         String organizationSlug,
         String email,
         String password,
-        UserRole role
+        OrganizationRole role
 ) {
 }

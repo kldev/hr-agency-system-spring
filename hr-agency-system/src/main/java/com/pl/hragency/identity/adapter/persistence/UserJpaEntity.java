@@ -1,7 +1,7 @@
 package com.pl.hragency.identity.adapter.persistence;
 
 
-import com.pl.hragency.identity.domain.model.UserRole;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
 import jakarta.persistence.*;
 
 import java.time.Instant;
@@ -36,7 +36,7 @@ public class UserJpaEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserRole role;
+    private OrganizationRole role;
 
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
@@ -53,7 +53,7 @@ public class UserJpaEntity {
             String email,
             String firstName,
             String lastName,
-            UserRole role,
+            OrganizationRole role,
             String passwordHash,
             Instant createdAt) {
 
@@ -87,7 +87,7 @@ public class UserJpaEntity {
         return lastName;
     }
 
-    public UserRole getRole() {
+    public OrganizationRole getRole() {
         return role;
     }
 

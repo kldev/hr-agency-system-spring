@@ -1,11 +1,10 @@
 package com.pl.hragency.organization;
 
 import com.pl.hragency.BaseApiIntegrationTest;
-import com.pl.hragency.identity.domain.model.UserRole;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.organization.application.command.CreateOrganizationCommand;
 import com.pl.hragency.testsupport.AuthenticationTestClient;
 import com.pl.hragency.testsupport.TestOrganizationFactory;
-import com.pl.hragency.testsupport.TestUser;
 import com.pl.hragency.testsupport.TestUserFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +34,7 @@ class OrganizationApiTest extends BaseApiIntegrationTest {
                         adminOrganization,
                         "admin@test.com",
                         "Password123!",
-                        UserRole.ADMIN
+                        OrganizationRole.ADMIN
                 );
 
         var token =
@@ -80,7 +79,7 @@ class OrganizationApiTest extends BaseApiIntegrationTest {
                         organization,
                         "recruiter@test.com",
                         "Password123!",
-                        UserRole.RECRUITER
+                        OrganizationRole.RECRUITER
                 );
 
         var token =

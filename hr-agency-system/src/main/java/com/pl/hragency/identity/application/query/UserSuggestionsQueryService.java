@@ -1,13 +1,11 @@
 package com.pl.hragency.identity.application.query;
 
 
-import com.pl.hragency.identity.adapter.persistence.SpringDataUserRepository;
-
 import com.pl.hragency.identity.adapter.persistence.UserQueryRepository;
 import com.pl.hragency.identity.adapter.persistence.UserSpecifications;
 import com.pl.hragency.identity.adapter.persistence.UserSuggestionProjection;
 import com.pl.hragency.identity.api.UserSuggestion;
-import com.pl.hragency.identity.domain.model.UserRole;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -35,7 +33,7 @@ public class UserSuggestionsQueryService
     public List<UserSuggestion> find(
             UUID organizationId,
             String search,
-            Set<UserRole> roles
+            Set<OrganizationRole> roles
     ) {
         var pageable = PageRequest.of(0, LIMIT,
                 Sort.by(Sort.Direction.DESC, "createdAt"));

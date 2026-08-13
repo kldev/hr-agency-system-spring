@@ -1,14 +1,10 @@
 package com.pl.hragency.identity;
 
 import com.pl.hragency.BaseApiIntegrationTest;
-import com.pl.hragency.BaseIntegrationTest;
-import com.pl.hragency.audit.adapter.persistence.SpringDataAuditRepository;
 import com.pl.hragency.audit.domain.model.AuditEventType;
 import com.pl.hragency.identity.application.command.CreateUserCommand;
-import com.pl.hragency.identity.application.result.LoginResult;
-import com.pl.hragency.identity.application.service.CreateUserHandler;
 import com.pl.hragency.identity.domain.model.UserId;
-import com.pl.hragency.identity.domain.model.UserRole;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.testsupport.AuthenticationTestClient;
 import com.pl.hragency.testsupport.TestOrganizationFactory;
 import com.pl.hragency.testsupport.TestUserFactory;
@@ -45,7 +41,7 @@ public class UserAuditTest extends BaseApiIntegrationTest {
 
         var command = new CreateUserCommand("test-user-1@fake.mail",
                 "some-password",
-                "Test", "User", UserRole.SALES);
+                "Test", "User", OrganizationRole.SALES);
 
         var response = restTestClient
                 .post()

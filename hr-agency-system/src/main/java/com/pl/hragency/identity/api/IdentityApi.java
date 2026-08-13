@@ -10,6 +10,7 @@ import java.util.UUID;
 public interface IdentityApi {
     CurrentUser getCurrentUser();
     UUID createUser(String email, String firstName, String lastName, String role, UUID organizationId, String password);
+    UUID createPlatformUser(String email, String role, String password);
     void requireRole(String role);
     boolean isCurrentUserSales();
     boolean isCurrentUserRecruiter();

@@ -1,14 +1,11 @@
 package com.pl.hragency.company;
 
 import com.pl.hragency.BaseApiIntegrationTest;
-import com.pl.hragency.audit.adapter.persistence.SpringDataAuditRepository;
 import com.pl.hragency.audit.domain.model.AuditEventType;
 import com.pl.hragency.company.application.command.AssignSalesOwnerCommand;
 import com.pl.hragency.company.application.command.CreateCompanyCommand;
 import com.pl.hragency.company.domain.model.CompanyId;
-import com.pl.hragency.identity.application.command.CreateUserCommand;
-import com.pl.hragency.identity.domain.model.UserId;
-import com.pl.hragency.identity.domain.model.UserRole;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.shared.event.UserSnapshot;
 import com.pl.hragency.testsupport.AuthenticationTestClient;
 import com.pl.hragency.testsupport.TestOrganizationFactory;
@@ -100,21 +97,21 @@ public class CompanyAuditTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var sales1 = userFactory.create(
                 organization,
                 "sales1@test.com",
                 "Password123!",
-                UserRole.SALES
+                OrganizationRole.SALES
         );
 
         var sales2 = userFactory.create(
                 organization,
                 "sales2@test.com",
                 "Password123!",
-                UserRole.SALES
+                OrganizationRole.SALES
         );
 
         var token = authenticationClient.login(admin);

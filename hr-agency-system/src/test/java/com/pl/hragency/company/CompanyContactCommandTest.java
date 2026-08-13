@@ -4,7 +4,7 @@ import com.pl.hragency.BaseApiIntegrationTest;
 import com.pl.hragency.company.application.command.CreateCompanyContactCommand;
 import com.pl.hragency.company.domain.model.CompanyContactId;
 import com.pl.hragency.company.application.port.CompanyContactRepository;
-import com.pl.hragency.identity.domain.model.UserRole;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.testsupport.AuthenticationTestClient;
 import com.pl.hragency.testsupport.TestCompanyFactory;
 import com.pl.hragency.testsupport.TestOrganizationFactory;
@@ -44,7 +44,7 @@ public class CompanyContactCommandTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var companyId = companyFactory.create(
@@ -128,7 +128,7 @@ public class CompanyContactCommandTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var companyId = companyFactory.create(
@@ -195,7 +195,7 @@ public class CompanyContactCommandTest extends BaseApiIntegrationTest {
                 organization1,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var companyId = companyFactory.create(
@@ -241,7 +241,7 @@ public class CompanyContactCommandTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var companyId = companyFactory.create(
@@ -287,7 +287,7 @@ public class CompanyContactCommandTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         var token = authenticationClient.login(user);

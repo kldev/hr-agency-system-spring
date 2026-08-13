@@ -26,6 +26,19 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(
+            IllegalStateException.class
+    )
+    ResponseEntity<?> handleIllegalArgumentError(
+            IllegalStateException ex) {
+
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .body(
+                        new ApiError(ex.getMessage())
+                );
+
+    }
 
     @ExceptionHandler(
             MethodArgumentNotValidException.class

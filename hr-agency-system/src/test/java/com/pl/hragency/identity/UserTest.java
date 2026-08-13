@@ -4,7 +4,7 @@ package com.pl.hragency.identity;
 import com.pl.hragency.identity.domain.model.User;
 import com.pl.hragency.identity.domain.model.UserId;
 import com.pl.hragency.identity.domain.model.UserOrganizationId;
-import com.pl.hragency.identity.domain.model.UserRole;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -25,7 +25,7 @@ class UserTest {
                 "john.smith@acme.com",
                 "John",
                 "Smith",
-                UserRole.RECRUITER,
+                OrganizationRole.RECRUITER,
                 "hashed-password"
         );
 
@@ -44,7 +44,7 @@ class UserTest {
                 .isEqualTo("Smith");
 
         assertThat(user.role())
-                .isEqualTo(UserRole.RECRUITER);
+                .isEqualTo(OrganizationRole.RECRUITER);
 
         assertThat(user.passwordHash())
                 .isEqualTo("hashed-password");
@@ -66,7 +66,7 @@ class UserTest {
                 "john@acme.com",
                 "John",
                 "Smith",
-                UserRole.RECRUITER,
+                OrganizationRole.RECRUITER,
                 "password"
         );
 
@@ -75,7 +75,7 @@ class UserTest {
                 "jane@acme.com",
                 "Jane",
                 "Smith",
-                UserRole.RECRUITER,
+                OrganizationRole.RECRUITER,
                 "password"
         );
 
@@ -99,7 +99,7 @@ class UserTest {
                 "john@acme.com",
                 "John",
                 "Smith",
-                UserRole.RECRUITER,
+                OrganizationRole.RECRUITER,
                 "password"
         );
 
@@ -128,7 +128,7 @@ class UserTest {
                 "john.smith@acme.com",
                 "John",
                 "Smith",
-                UserRole.RECRUITER,
+                OrganizationRole.RECRUITER,
                 "hashed-password",
                 createdAt
         );
@@ -150,7 +150,7 @@ class UserTest {
                 .isEqualTo("Smith");
 
         assertThat(user.role())
-                .isEqualTo(UserRole.RECRUITER);
+                .isEqualTo(OrganizationRole.RECRUITER);
 
         assertThat(user.passwordHash())
                 .isEqualTo("hashed-password");
@@ -177,7 +177,7 @@ class UserTest {
                 "user@acme.com",
                 "John",
                 "Smith",
-                UserRole.SALES,
+                OrganizationRole.SALES,
                 "hash",
                 createdAt
         );

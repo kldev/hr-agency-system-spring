@@ -16,8 +16,6 @@ public final class IntegrationClient {
 
     private final Set<IntegrationScope> scopes;
 
-    private boolean active;
-
     private final Instant createdAt;
     private Instant updatedAt;
     private Instant revokedAt;
@@ -48,7 +46,7 @@ public final class IntegrationClient {
 
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.revokedAt = revokedAt;
+
     }
 
     public static IntegrationClient create(
@@ -144,7 +142,7 @@ public final class IntegrationClient {
     }
 
     public boolean hasScope(IntegrationScope scope) {
-        return active && scopes.contains(scope);
+        return revokedAt == null && scopes.contains(scope);
     }
 
     private void touch(Instant now) {

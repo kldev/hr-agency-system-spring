@@ -1,6 +1,6 @@
 package com.pl.hragency.identity.adapter.persistence;
 
-import com.pl.hragency.identity.domain.model.UserRole;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Set;
@@ -50,7 +50,7 @@ public final class UserSpecifications {
     }
 
     public static Specification<UserJpaEntity> roles(
-            Set<UserRole> roles
+            Set<OrganizationRole> roles
     ) {
         if (roles == null || roles.isEmpty()) {
             return Specification.allOf();
@@ -61,7 +61,7 @@ public final class UserSpecifications {
     }
 
     public static Specification<UserJpaEntity> hasRole(
-            UserRole role
+            OrganizationRole role
     ) {
         if (role == null) {
             return Specification.allOf();

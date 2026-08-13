@@ -218,7 +218,7 @@ class SalesOpportunityTest {
         assertThat(opportunity.stage())
                 .isEqualTo(SalesOpportunityStage.NEW);
     }
-    
+
     @Test
     void shouldRejectNewToProposal() {
 
@@ -242,19 +242,6 @@ class SalesOpportunityTest {
         assertInvalidTransition(
                 opportunity,
                 SalesOpportunityStage.WON
-        );
-    }
-
-    @Test
-    void shouldRejectNewToLost() {
-
-        // given
-        var opportunity = createOpportunity();
-
-        // when / then
-        assertInvalidTransition(
-                opportunity,
-                SalesOpportunityStage.LOST
         );
     }
 

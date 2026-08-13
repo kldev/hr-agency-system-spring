@@ -2,7 +2,7 @@ package com.pl.hragency.testsupport;
 
 
 import com.pl.hragency.identity.api.IdentityApi;
-import com.pl.hragency.identity.domain.model.UserRole;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,7 +21,7 @@ public class TestUserFactory {
                 organization,
                 "john.smith@test.com",
                 "Password123!",
-                UserRole.RECRUITER
+                OrganizationRole.RECRUITER
         );
     }
 
@@ -29,7 +29,7 @@ public class TestUserFactory {
             TestOrganization organization,
             String email,
             String password,
-            UserRole role) {
+            OrganizationRole role) {
 
         var userId = handler.createUser(
                         email,

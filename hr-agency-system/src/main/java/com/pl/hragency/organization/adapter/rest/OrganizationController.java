@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/organization")
 @Tag(name = "Organization")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasRole('OWNER')")
 public class OrganizationController {
     private final CreateOrganizationHandler handler;
 

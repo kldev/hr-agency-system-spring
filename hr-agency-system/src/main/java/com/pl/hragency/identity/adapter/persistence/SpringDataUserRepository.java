@@ -1,13 +1,11 @@
 package com.pl.hragency.identity.adapter.persistence;
 
-import com.pl.hragency.identity.domain.model.UserRole;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,7 +19,7 @@ public interface SpringDataUserRepository extends JpaRepository<UserJpaEntity, U
 
     Page<UserJpaEntity> findAllByOrganizationIdAndRole(
             UUID organizationId,
-            UserRole role,
+            OrganizationRole role,
             Pageable pageable);
 
     Page<UserJpaEntity> findAllByOrganizationIdAndEmailContainingIgnoreCase(

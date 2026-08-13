@@ -10,7 +10,7 @@ public class User {
     private String email;
     private String firstName;
     private String lastName;
-    private UserRole role;
+    private OrganizationRole role;
     private String passwordHash;
 
     private final Instant createdAt;
@@ -21,7 +21,7 @@ public class User {
             String email,
             String firstName,
             String lastName,
-            UserRole role,
+            OrganizationRole role,
             String passwordHash,
             Instant createdAt) {
 
@@ -45,7 +45,7 @@ public class User {
             String email,
             String firstName,
             String lastName,
-            UserRole role,
+            OrganizationRole role,
             String passwordHash,
             Instant createdAt) {
 
@@ -66,7 +66,7 @@ public class User {
             String email,
             String firstName,
             String lastName,
-            UserRole role,
+            OrganizationRole role,
             String passwordHash) {
 
         return new User(
@@ -93,7 +93,7 @@ public class User {
         return email;
     }
 
-    public UserRole role() {
+    public OrganizationRole role() {
         return role;
     }
 

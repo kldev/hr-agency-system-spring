@@ -3,7 +3,7 @@ package com.pl.hragency.identity;
 
 import com.pl.hragency.BaseApiIntegrationTest;
 import com.pl.hragency.identity.application.query.UserListItem;
-import com.pl.hragency.identity.domain.model.UserRole;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.shared.rest.PageResponse;
 import com.pl.hragency.testsupport.AuthenticationTestClient;
 import com.pl.hragency.testsupport.TestOrganizationFactory;
@@ -39,21 +39,21 @@ class UserQueryApiTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         userFactory.create(
                 organization,
                 "john@test.com",
                 "Password123!",
-                UserRole.RECRUITER
+                OrganizationRole.RECRUITER
         );
 
         userFactory.create(
                 organization,
                 "anna@test.com",
                 "Password123!",
-                UserRole.SALES
+                OrganizationRole.SALES
         );
 
         var token = authenticationClient.login(loggedUser);
@@ -85,28 +85,28 @@ class UserQueryApiTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         userFactory.create(
                 organization,
                 "john@test.com",
                 "Password123!",
-                UserRole.RECRUITER
+                OrganizationRole.RECRUITER
         );
 
         userFactory.create(
                 organization,
                 "anna@test.com",
                 "Password123!",
-                UserRole.SALES
+                OrganizationRole.SALES
         );
 
         userFactory.create(
                 organization,
                 "mark@test.com",
                 "Password123!",
-                UserRole.RECRUITER
+                OrganizationRole.RECRUITER
         );
 
         var token = authenticationClient.login(loggedUser);
@@ -141,28 +141,28 @@ class UserQueryApiTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         userFactory.create(
                 organization,
                 "john.smith@test.com",
                 "Password123!",
-                UserRole.RECRUITER
+                OrganizationRole.RECRUITER
         );
 
         userFactory.create(
                 organization,
                 "john.wilson@test.com",
                 "Password123!",
-                UserRole.SALES
+                OrganizationRole.SALES
         );
 
         userFactory.create(
                 organization,
                 "anna@test.com",
                 "Password123!",
-                UserRole.SALES
+                OrganizationRole.SALES
         );
 
         var token = authenticationClient.login(loggedUser);
@@ -201,21 +201,21 @@ class UserQueryApiTest extends BaseApiIntegrationTest {
                 organization,
                 "admin@test.com",
                 "Password123!",
-                UserRole.ADMIN
+                OrganizationRole.ADMIN
         );
 
         userFactory.create(
                 organization,
                 "john@test.com",
                 "Password123!",
-                UserRole.RECRUITER
+                OrganizationRole.RECRUITER
         );
 
         userFactory.create(
                 otherOrganization,
                 "other@test.com",
                 "Password123!",
-                UserRole.RECRUITER
+                OrganizationRole.RECRUITER
         );
 
         var token = authenticationClient.login(loggedUser);

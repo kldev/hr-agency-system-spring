@@ -19,19 +19,12 @@ import java.util.UUID;
 @Component
 public class JwtAuthenticationFilter
         extends OncePerRequestFilter {
-
-
     private final JwtService jwtService;
-    private final AppUserDetailsService userDetailsService;
-    private final OrganizationContext organizationContext;
 
     public JwtAuthenticationFilter(
-            JwtService jwtService,
-            AppUserDetailsService userDetailsService, OrganizationContext organizationContext) {
-
+            JwtService jwtService
+           ) {
         this.jwtService = jwtService;
-        this.userDetailsService = userDetailsService;
-        this.organizationContext = organizationContext;
     }
 
 
@@ -58,39 +51,41 @@ public class JwtAuthenticationFilter
         String token =
                 header.substring(7);
 
-        String username =
-                jwtService.extractUsername(token);
 
-        UUID organizationId =
-                jwtService.extractOrganizationId(token);
-
-        if(username != null &&
-                SecurityContextHolder.getContext()
-                        .getAuthentication() == null) {
-
-
-            organizationContext.setOrganizationId(
-                    new UserOrganizationId(organizationId)
-            );
-
-            SecurityUser user =(SecurityUser)
-                    userDetailsService
-                            .loadUserByUsername(username);
-
-            UsernamePasswordAuthenticationToken auth =
-                    new UsernamePasswordAuthenticationToken(
-                            user,
-                            null,
-                            user.getAuthorities()
-                    );
-
-
-            SecurityContextHolder
-                    .getContext()
-                    .setAuthentication(auth);
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            filterChain.doFilter(request, response);
+            return;
         }
 
-        filterChain.doFilter(request,response);
+        try {
+            JwtSubjectType subjectType = jwtService.extractSubjectType(token);
+
+            switch (subjectType) {
+                case ORGANIZATION -> setAuthentication(jwtService.extractSecurityUser(token));
+                case PLATFORM -> setAuthentication(jwtService.extractPlatformOwner(token));
+            }
+        }
+        catch (Exception ex) {
+            SecurityContextHolder.clearContext();
+        }
+
+        filterChain.doFilter(request, response);
+    }
+
+    private void setAuthentication(
+            org.springframework.security.core.userdetails.UserDetails user
+    ) {
+
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(
+                        user,
+                        null,
+                        user.getAuthorities()
+                );
+
+        SecurityContextHolder
+                .getContext()
+                .setAuthentication(authentication);
     }
 }
 

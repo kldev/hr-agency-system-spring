@@ -2,7 +2,7 @@ package com.pl.hragency.identity.domain.model;
 
 import java.util.Arrays;
 
-public enum UserRole {
+public enum OrganizationRole {
 
     ADMIN,
     RECRUITER,
@@ -10,7 +10,7 @@ public enum UserRole {
     INTERVIEWER,
     SALES;
 
-    public static UserRole from(String value) {
+    public static OrganizationRole from(String value) {
         return Arrays.stream(values())
                 .filter(role -> role.name().equalsIgnoreCase(value))
                 .findFirst()

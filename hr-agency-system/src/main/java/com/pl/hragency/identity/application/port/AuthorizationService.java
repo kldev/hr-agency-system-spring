@@ -1,12 +1,12 @@
 package com.pl.hragency.identity.application.port;
 
-import com.pl.hragency.identity.domain.model.UserRole;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
 
 public interface AuthorizationService {
-    boolean hasRole(UserRole role);
+    boolean hasRole(OrganizationRole role);
 
-    void requireRole(UserRole role);
+    void requireRole(OrganizationRole role);
 
-    void requireAnyRole(UserRole ...roles);
+    void requireAnyRole(OrganizationRole...roles);
 }
 

@@ -11,7 +11,6 @@ import java.util.UUID;
 
 
 @Component
-
 public class UserPersistenceAdapter implements UserRepository {
     private final SpringDataUserRepository userRepository;
     private final UserMapper mapper;

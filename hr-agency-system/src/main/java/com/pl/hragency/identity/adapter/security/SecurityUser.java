@@ -1,6 +1,6 @@
 package com.pl.hragency.identity.adapter.security;
 
-import com.pl.hragency.identity.domain.model.UserRole;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public record SecurityUser(@NotNull UUID userId, String email,
                            UUID orgId,
-                           List<UserRole> roles,
+                           List<OrganizationRole> roles,
                            String fullName) implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
