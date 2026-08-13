@@ -9,6 +9,7 @@ import com.pl.hragency.recruitment.application.command.CreateJobPostingCommand;
 import com.pl.hragency.recruitment.application.port.JobPostingRepository;
 import com.pl.hragency.recruitment.domain.model.posting.JobPostingId;
 import com.pl.hragency.recruitment.domain.model.posting.JobPostingStatus;
+import com.pl.hragency.shared.rest.ApiResult;
 import com.pl.hragency.testsupport.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,8 +78,7 @@ public class JobPostingCommandTest extends BaseRestIntegrationTest {
 
         var token = authenticationClient.login(user);
 
-        return restTestClient
-                .post()
+        var postingId = restTestClient.post()
                 .uri(url("/api/recruitment/job-posting"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token)
@@ -89,6 +89,20 @@ public class JobPostingCommandTest extends BaseRestIntegrationTest {
                 .expectBody(JobPostingId.class)
                 .returnResult()
                 .getResponseBody();
+
+        assertThat(postingId).isNotNull();
+
+        restTestClient.put()
+                .uri(url("/api/recruitment/job-posting/%s/status".formatted(postingId.value())))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + token)
+                .body(new ChangeJobPostingStatusCommand(JobPostingStatus.PUBLISHED))
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(ApiResult.class);
+
+        return postingId;
     }
 
     @Test

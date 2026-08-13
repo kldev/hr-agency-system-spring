@@ -3,6 +3,7 @@ package com.pl.hragency.recruitment.adapter.persistence;
 
 import com.pl.hragency.jobdescription.api.EmploymentType;
 import com.pl.hragency.jobdescription.api.WorkMode;
+import com.pl.hragency.recruitment.domain.model.posting.JobPostingStatus;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.UUID;
@@ -98,6 +99,34 @@ public class JobPostingSpecifications {
                 cb.equal(
                         root.get("workMode"),
                         workMode
+                );
+    }
+
+    public static Specification<JobPostingJpaEntity> status(
+            JobPostingStatus status
+    ) {
+        if (status == null) {
+            return Specification.allOf();
+        }
+
+        return (root, query, cb) ->
+                cb.equal(
+                        root.get("status"),
+                        status
+                );
+    }
+
+    public static Specification<JobPostingJpaEntity> companyId(
+            UUID companyId
+    ) {
+        if (companyId == null) {
+            return Specification.allOf();
+        }
+
+        return (root, query, cb) ->
+                cb.equal(
+                        root.get("companyId"),
+                        companyId
                 );
     }
 }

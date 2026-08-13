@@ -21,7 +21,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/recruitment/job-posting")
 @Tag(name = "Recruitment")
-public class JobPostingController {
+public class JobPostingCommandController {
     private final ChangeJobPostingRecruiterHandler changeJobPostingRecruiterHandler;
     private final CreateJobPostingHandler  createJobPostingHandler;
     private final UpdateJobPostingHandler updateJobPostingHandler;
@@ -33,11 +33,11 @@ public class JobPostingController {
         return identityApi.getCurrentUser().getExecutionContext();
     }
 
-    public JobPostingController(ChangeJobPostingRecruiterHandler changeJobPostingRecruiterHandler,
-                                CreateJobPostingHandler createJobPostingHandler,
-                                UpdateJobPostingHandler updateJobPostingHandler,
-                                ChangeJobPostingStatusHandler changeJobPostingStatusHandler,
-                                IdentityApi identityApi) {
+    public JobPostingCommandController(ChangeJobPostingRecruiterHandler changeJobPostingRecruiterHandler,
+                                       CreateJobPostingHandler createJobPostingHandler,
+                                       UpdateJobPostingHandler updateJobPostingHandler,
+                                       ChangeJobPostingStatusHandler changeJobPostingStatusHandler,
+                                       IdentityApi identityApi) {
 
         this.changeJobPostingRecruiterHandler = changeJobPostingRecruiterHandler;
         this.createJobPostingHandler = createJobPostingHandler;

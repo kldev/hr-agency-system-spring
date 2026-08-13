@@ -139,7 +139,8 @@ public class RecruitmentIntegrationTest extends BaseRestIntegrationTest {
         var jobPostingId = createJobPosting(organization, user);
         var key = createIntegrationClient(user);
 
-        var result = applyForJobPosting(key.apiKey(), new CreateJobApplicationCommand(jobPostingId.value(), "test@gmail.com", "Test", "User","", CandidateSource.FACEBOOK));
+        var command =  new CreateJobApplicationCommand(jobPostingId.value(), "test@gmail.com", "Test", "User","", CandidateSource.FACEBOOK);
+        var result = applyForJobPosting(key.apiKey(), command);
 
         Assertions.assertNotNull(result);
     }

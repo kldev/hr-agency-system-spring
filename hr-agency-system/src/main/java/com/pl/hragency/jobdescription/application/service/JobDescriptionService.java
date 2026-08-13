@@ -1,16 +1,14 @@
 package com.pl.hragency.jobdescription.application.service;
 
-import com.pl.hragency.jobdescription.api.CreateJobDescriptionInput;
-import com.pl.hragency.jobdescription.api.JobDescriptionApi;
+import com.pl.hragency.jobdescription.api.*;
 import com.pl.hragency.jobdescription.application.command.CreateJobDescriptionCommand;
-import com.pl.hragency.jobdescription.api.EmploymentType;
-import com.pl.hragency.jobdescription.api.WorkMode;
 import com.pl.hragency.jobdescription.application.handler.CreateJobDescriptionHandler;
 import com.pl.hragency.jobdescription.application.port.JobDescriptionRepository;
 import com.pl.hragency.jobdescription.domain.model.JobDescriptionId;
 import com.pl.hragency.shared.rest.ExecutionContext;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -47,5 +45,10 @@ public class JobDescriptionService implements JobDescriptionApi {
     @Override
     public boolean exists(UUID organizationId, UUID id) {
         return repository.exitsById(organizationId, new JobDescriptionId(id));
+    }
+
+    @Override
+    public Optional<JobDescriptionBase> get(UUID organizationId, UUID id) {
+        return repository.findById(organizationId, new JobDescriptionId(id)).map( jb -> new JobDescriptionBase(jb.id().value(), jb.companyId()));
     }
 }

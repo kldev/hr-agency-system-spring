@@ -14,6 +14,7 @@ public final class JobPosting {
     private final JobPostingId id;
     private final UUID organizationId;
     private final UUID jobDescriptionId;
+    private final UUID companyId;
     private final UUID recruiterId;
 
     private String title;
@@ -41,6 +42,7 @@ public final class JobPosting {
             JobPostingId id,
             UUID organizationId,
             UUID jobDescriptionId,
+            UUID companyId,
             UUID recruiterId,
             String title,
             String summary,
@@ -62,6 +64,7 @@ public final class JobPosting {
         this.organizationId = Objects.requireNonNull(organizationId);
         this.jobDescriptionId = Objects.requireNonNull(jobDescriptionId);
         this.recruiterId = Objects.requireNonNull(recruiterId);
+        this.companyId = Objects.requireNonNull(companyId);
 
         this.title = requireText(title, "Title");
         this.summary = summary;
@@ -88,6 +91,7 @@ public final class JobPosting {
     public static JobPosting draft(
             UUID organizationId,
             UUID jobDescriptionId,
+            UUID companyId,
             UUID recruiterId,
             String title,
             String summary,
@@ -108,6 +112,7 @@ public final class JobPosting {
                 JobPostingId.newId(),
                 organizationId,
                 jobDescriptionId,
+                companyId,
                 recruiterId,
                 title,
                 summary,
@@ -131,6 +136,7 @@ public final class JobPosting {
             JobPostingId id,
             UUID organizationId,
             UUID jobDescriptionId,
+            UUID companyId,
             UUID recruiterId,
             String title,
             String summary,
@@ -152,6 +158,7 @@ public final class JobPosting {
                 id,
                 organizationId,
                 jobDescriptionId,
+                companyId,
                 recruiterId,
                 title,
                 summary,
@@ -282,6 +289,8 @@ public final class JobPosting {
     public UUID jobDescriptionId() {
         return jobDescriptionId;
     }
+
+    public UUID companyId() { return  companyId;}
 
     public UUID recruiterId() {
         return recruiterId;

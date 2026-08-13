@@ -8,6 +8,6 @@ public record CurrentIntegrationClient(UUID clientId,
                                        UUID organizationId,
                                        String clientName) {
     public ExecutionContext getExecutionContext() {
-        return new ExecutionContext(clientId(), organizationId(), clientName());
+        return new ExecutionContext(organizationId(), clientId(), clientName());
     }
 }

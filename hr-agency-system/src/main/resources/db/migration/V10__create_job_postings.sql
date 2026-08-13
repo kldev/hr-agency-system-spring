@@ -3,6 +3,7 @@ CREATE TABLE job_postings
     id                  UUID         NOT NULL,
     organization_id     UUID         NOT NULL,
     job_description_id  UUID         NOT NULL,
+    company_id          UUID         NOT NULL,
     recruiter_id        UUID         NOT NULL,
 
     title               VARCHAR(255) NOT NULL,
@@ -44,6 +45,9 @@ CREATE TABLE job_postings
 
 CREATE INDEX idx_job_postings_organization
     ON job_postings (organization_id);
+
+CREATE INDEX idx_job_postings_organization_company_id
+    ON job_postings (organization_id, company_id);
 
 CREATE INDEX idx_job_postings_organization_status
     ON job_postings (organization_id, status);

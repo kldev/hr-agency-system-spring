@@ -27,6 +27,7 @@ public class JobPostingDevelopmentRepository {
                 id,
                 organization_id,
                 job_description_id,
+                company_id,
                 recruiter_id,
                 title,
                 summary,
@@ -49,6 +50,7 @@ public class JobPostingDevelopmentRepository {
                 :id,
                 jd.organization_id,
                 jd.id,
+                jd.company_id,
                 :recruiterId,
                 jd.title,
                 jd.summary,
@@ -63,7 +65,7 @@ public class JobPostingDevelopmentRepository {
                 jd.salary_min,
                 jd.salary_max,
                 jd.salary_currency,
-                'DRAFT',
+                'PUBLISHED',
                 now(),
                 now()
             FROM job_descriptions jd

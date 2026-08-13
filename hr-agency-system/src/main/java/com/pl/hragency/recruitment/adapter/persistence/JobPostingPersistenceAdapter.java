@@ -2,9 +2,13 @@ package com.pl.hragency.recruitment.adapter.persistence;
 
 
 import com.pl.hragency.recruitment.application.port.JobPostingRepository;
+import com.pl.hragency.recruitment.application.query.JobPostingListQuery;
 import com.pl.hragency.recruitment.domain.model.posting.JobPosting;
 import com.pl.hragency.recruitment.domain.model.posting.JobPostingId;
 import com.pl.hragency.recruitment.domain.model.posting.JobPostingStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -45,5 +49,16 @@ public class JobPostingPersistenceAdapter implements JobPostingRepository {
     @Override
     public int updateRecruiter(UUID organizationId, JobPostingId id, UUID recruiterId) {
         return repository.updateRecruiter(id.value(), organizationId, recruiterId, Instant.now());
+    }
+
+    @Override
+    public Page<JobPosting> search(UUID organizationId, JobPostingListQuery query, Pageable pageable) {
+        Specification<JobPostingJpaEntity> specification = Specification.allOf(
+                JobPostingSpecifications.organizationId(organizationId),
+                JobPostingSpecifications.search(query.search()),
+                JobPostingSpecifications.status(query.status()),
+                JobPostingSpecifications.companyId(query.companyId())
+        );
+        return repository.findAll(specification, pageable).map(mapper::toDomain);
     }
 }

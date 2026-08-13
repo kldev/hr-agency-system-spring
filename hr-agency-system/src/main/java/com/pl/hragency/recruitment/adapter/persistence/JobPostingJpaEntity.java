@@ -30,6 +30,9 @@ public class JobPostingJpaEntity {
     @Column(name = "job_description_id", nullable = false, updatable = false)
     private UUID jobDescriptionId;
 
+    @Column(name = "company_id", nullable = false, updatable = false)
+    private UUID companyId;
+
     @Column(name = "recruiter_id", nullable = false, updatable = false)
     private UUID recruiterId;
 
@@ -99,6 +102,7 @@ public class JobPostingJpaEntity {
             UUID id,
             UUID organizationId,
             UUID jobDescriptionId,
+            UUID companyId,
             UUID recruiterId,
             String title,
             String summary,
@@ -118,6 +122,7 @@ public class JobPostingJpaEntity {
         this.id = id;
         this.organizationId = organizationId;
         this.jobDescriptionId = jobDescriptionId;
+        this.companyId = companyId;
         this.recruiterId = recruiterId;
         this.title = title;
         this.summary = summary;
@@ -148,6 +153,8 @@ public class JobPostingJpaEntity {
     public UUID getJobDescriptionId() {
         return jobDescriptionId;
     }
+
+    public UUID getCompanyId() { return companyId; }
 
     public UUID getRecruiterId() {
         return recruiterId;
