@@ -6,7 +6,8 @@ import com.pl.hragency.shared.event.UserSnapshot;
 import java.time.Instant;
 import java.util.UUID;
 
-public record SalesOpportunityActivityCreatedEvent(UUID opportunityActivityId,
+public record SalesOpportunityActivityCreatedEvent(UUID activityId,
+                                                   UUID opportunityId,
                                                    UUID organizationId,
                                                    UserSnapshot createdBy,
                                                    UUID actorId,

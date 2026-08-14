@@ -2,10 +2,7 @@ package com.pl.hragency.audit.application.handler;
 
 import com.pl.hragency.audit.application.AuditService;
 import com.pl.hragency.audit.domain.model.AuditEventType;
-import com.pl.hragency.sales.domain.event.SalesOpportunityCreatedEvent;
-import com.pl.hragency.sales.domain.event.SalesOpportunityLostEvent;
-import com.pl.hragency.sales.domain.event.SalesOpportunityStageChangedEvent;
-import com.pl.hragency.sales.domain.event.SalesOpportunityWonEvent;
+import com.pl.hragency.sales.domain.event.*;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Service;
 
@@ -67,6 +64,19 @@ public class SalesAuditHandler {
                 event.actorId(),
                 event.actorName(),
                 AuditEventType.STATUS_CHANGED,
+                event
+        );
+    }
+
+    @ApplicationModuleListener
+    void on(SalesOpportunityActivityCreatedEvent event) {
+        auditService.record(
+                "sales",
+                "SalesOpportunityActivity",
+                event.activityId(),
+                event.actorId(),
+                event.actorName(),
+                AuditEventType.CREATED,
                 event
         );
     }

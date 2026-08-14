@@ -53,7 +53,8 @@ public class CreateSalesOpportunityActivityHandler {
 
         var userSnapshot = identityApi.findUser(context.userId(), context.organizationId()).orElse(null);
 
-        var event = new SalesOpportunityActivityCreatedEvent(opportunity.id().value(),
+        var event = new SalesOpportunityActivityCreatedEvent(activity.id().value(),
+                opportunity.id().value(),
                 context.organizationId(),
                 userSnapshot,
                 context.userId(),
