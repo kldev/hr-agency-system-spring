@@ -6,9 +6,10 @@ import com.pl.hragency.company.domain.model.CompanyContactId;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface CompanyContactRepository {
     CompanyContact save(CompanyContact companyContact);
-    Optional<CompanyContact> findById(CompanyContactId id);
-    List<CompanyContact> findByCompanyId(CompanyContactCompanyId companyId);
+    Optional<CompanyContact> findById(UUID organizationId, CompanyContactId id);
+    List<CompanyContact> findByCompanyId(UUID organizationId, CompanyContactCompanyId companyId);
 }

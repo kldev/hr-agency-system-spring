@@ -31,9 +31,11 @@ public class CompanyContactController {
     }
 
     @PostMapping("{companyId}/contact")
-    public ResponseEntity<CompanyContactId> createContact(@RequestBody CreateCompanyContactCommand command, @PathVariable UUID companyId){
-        var result = createCompanyContactHandler.handle(getContext(), new CompanyContactCompanyId(companyId), command);
-        return ResponseEntity.ok(result);
+    public UUID createContact(@RequestBody CreateCompanyContactCommand command,
+                              @PathVariable UUID companyId){
+        return createCompanyContactHandler.handle(getContext(),
+                new CompanyContactCompanyId(companyId), command).value();
+
     }
 }
 

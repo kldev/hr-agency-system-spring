@@ -6,6 +6,7 @@ import com.pl.hragency.company.domain.model.CompanyContactCompanyId;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class CompanyContactQueryService {
@@ -17,8 +18,8 @@ public class CompanyContactQueryService {
 
     }
 
-    public List<CompanyContactItem> findByCompanyId(CompanyContactCompanyId companyId){
-        return companyContactPersistenceAdapter.findByCompanyId(companyId).stream().map(this::toListItem).toList();
+    public List<CompanyContactItem> findByCompanyId(UUID organizationId, CompanyContactCompanyId companyId){
+        return companyContactPersistenceAdapter.findByCompanyId(organizationId, companyId).stream().map(this::toListItem).toList();
     }
 
     private CompanyContactItem toListItem(

@@ -80,7 +80,7 @@ class SalesOpportunityCommandTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(SalesOpportunityId.class)
+                .expectBody(UUID.class)
                 .returnResult()
                 .getResponseBody();
 
@@ -91,11 +91,11 @@ class SalesOpportunityCommandTest extends BaseRestIntegrationTest {
         var salesOpportunity = salesOpportunityRepository
                 .findById(
                         organization.id(),
-                        salesOpportunityId
+                        new SalesOpportunityId(salesOpportunityId)
                 )
                 .orElseThrow();
 
-        assertThat(salesOpportunity.id())
+        assertThat(salesOpportunity.id().value())
                 .isEqualTo(salesOpportunityId);
 
         assertThat(salesOpportunity.organizationId())

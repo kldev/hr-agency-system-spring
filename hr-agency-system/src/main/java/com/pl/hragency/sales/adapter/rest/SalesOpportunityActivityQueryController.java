@@ -44,7 +44,7 @@ public class SalesOpportunityActivityQueryController {
             @RequestParam(defaultValue = "0", required = false)  int page,
             @RequestParam(defaultValue = "20", required = false) int size,
             @RequestParam(required = false) UUID salesOpportunityId,
-            @RequestParam(required = false) SalesActivityType activityType,
+            @RequestParam(required = false) SalesActivityType type,
             @RequestParam(required = false) LocalDate occurredFrom,
             @RequestParam(required = false)LocalDate occurredTo) {
 
@@ -59,7 +59,7 @@ public class SalesOpportunityActivityQueryController {
         var result = queryService.search(getContext().organizationId(),
                 new SalesOpportunityActivityQuery(
                         salesOpportunityId,
-                        activityType,
+                        type,
                         occurredFrom,
                         occurredTo, search), pageable
         );

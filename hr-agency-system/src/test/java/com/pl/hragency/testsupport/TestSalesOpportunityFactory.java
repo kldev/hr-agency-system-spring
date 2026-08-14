@@ -28,8 +28,8 @@ public class TestSalesOpportunityFactory {
     ) {
         return create(organizationId,
                 companyId,
-                faker.southPark().quotes(),
-                faker.text().text(200),
+                faker.lorem().sentence(),
+                faker.lorem().paragraph(4),
                 BigDecimal.valueOf(20_000),
                 userId);
     }

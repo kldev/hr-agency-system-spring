@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -78,7 +79,7 @@ public class CompanyContactCommandTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(CompanyContactId.class)
+                .expectBody(UUID.class)
                 .returnResult()
                 .getResponseBody();
 
@@ -87,7 +88,7 @@ public class CompanyContactCommandTest extends BaseRestIntegrationTest {
                 .isNotNull();
 
         var contact = companyContactRepository
-                .findById(contactId)
+                .findById(organization.id(), new CompanyContactId(contactId))
                 .orElse(null);
 
         assertThat(contact)
@@ -162,7 +163,7 @@ public class CompanyContactCommandTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(CompanyContactId.class)
+                .expectBody(UUID.class)
                 .returnResult()
                 .getResponseBody();
 
@@ -171,7 +172,7 @@ public class CompanyContactCommandTest extends BaseRestIntegrationTest {
                 .isNotNull();
 
         var contact = companyContactRepository
-                .findById(contactId)
+                .findById(organization.id(), new CompanyContactId(contactId))
                 .orElseThrow();
 
         assertThat(contact.primaryContact())

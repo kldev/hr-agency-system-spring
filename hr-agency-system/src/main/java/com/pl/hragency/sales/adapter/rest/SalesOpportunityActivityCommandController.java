@@ -7,6 +7,7 @@ import com.pl.hragency.sales.domain.model.SalesOpportunityId;
 import com.pl.hragency.shared.rest.ExecutionContext;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -29,7 +30,7 @@ public class SalesOpportunityActivityCommandController {
     }
 
     @PostMapping("{opportunityId}")
-    public UUID createActivity(@PathVariable UUID opportunityId, @RequestBody CreateSalesOpportunityActivityCommand command) {
+    public UUID createActivity(@PathVariable UUID opportunityId,@Validated @RequestBody CreateSalesOpportunityActivityCommand command) {
         return handler.handle(getContext(), new SalesOpportunityId(opportunityId), command).value();
     }
 }

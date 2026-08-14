@@ -67,11 +67,13 @@ public class CompanyQueryController {
     @GetMapping("{companyId}")
     public ResponseEntity<CompanyDetailsItem> getCompany(@PathVariable UUID companyId) {
 
-        ExecutionContext context =getContext();
+        var context = getContext();
         var company = companyQueryService.findOne(new CompanyId(companyId), new CompanyOrganizationId(context.organizationId()))
                 .orElseThrow(() -> new IllegalArgumentException("Company not found"));
 
-        var contacts = companyContactQueryService.findByCompanyId(new CompanyContactCompanyId(companyId));
+        var contacts = companyContactQueryService.findByCompanyId(context.organizationId(),
+                new CompanyContactCompanyId(companyId));
+
         var detailsItem = new CompanyDetailsItem(company, contacts);
 
         return ResponseEntity.ok(detailsItem);

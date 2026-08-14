@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class CompanyContactPersistenceAdapter implements CompanyContactRepository {
@@ -33,12 +34,12 @@ public class CompanyContactPersistenceAdapter implements CompanyContactRepositor
     }
 
     @Override
-    public Optional<CompanyContact> findById(CompanyContactId id) {
-        return companyContactRepository.findById(id.value()).map(mapper::toDomain);
+    public Optional<CompanyContact> findById(UUID organizationId, CompanyContactId id) {
+        return companyContactRepository.findByOrganizationIdAndId(organizationId, id.value()).map(mapper::toDomain);
     }
 
     @Override
-    public List<CompanyContact> findByCompanyId(CompanyContactCompanyId companyId) {
-        return companyContactRepository.findByCompanyId(companyId.value()).stream().map(mapper::toDomain).toList();
+    public List<CompanyContact> findByCompanyId(UUID organizationId, CompanyContactCompanyId companyId) {
+        return companyContactRepository.findByOrganizationIdAndCompanyId(organizationId, companyId.value()).stream().map(mapper::toDomain).toList();
     }
 }
