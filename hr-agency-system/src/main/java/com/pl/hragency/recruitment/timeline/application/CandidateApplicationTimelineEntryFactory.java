@@ -3,6 +3,7 @@ import java.util.Map;
 import java.util.UUID;
 
 
+import com.pl.hragency.recruitment.domain.event.CandidateHiredEvent;
 import com.pl.hragency.recruitment.domain.event.JobApplicationCreatedEvent;
 import com.pl.hragency.recruitment.domain.event.JobApplicationNoteCreatedEvent;
 import com.pl.hragency.recruitment.domain.event.JobApplicationStatusChangedEvent;
@@ -65,6 +66,24 @@ public class CandidateApplicationTimelineEntryFactory {
                 event.candidateId(),
                 event.organizationId(),
                 CandidateTimelineType.APPLICATION_NOTE_ADDED,
+                event.actorId(),
+                event.actorName(),
+                event.occurredOn(),
+                data
+        );
+    }
+
+    public CandidateTimelineEntry from(CandidateHiredEvent event){
+
+        var data = jsonMapper.valueToTree(
+                Map.of("jobTitle", event.jobTitle(),
+                        "jobApplicationId", event.jobApplicationId()));
+
+        return  new CandidateTimelineEntry(
+                UUID.randomUUID(),
+                event.candidateId(),
+                event.organizationId(),
+                CandidateTimelineType.CANDIDATE_HIRED,
                 event.actorId(),
                 event.actorName(),
                 event.occurredOn(),

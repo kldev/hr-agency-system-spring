@@ -44,6 +44,7 @@ public class CandidateInterviewTimelineEntryFactory {
         CandidateTimelineType type = null;
 
         switch (event.newStatus()) {
+            case PLANNED ->  type = CandidateTimelineType.INTERVIEW_SCHEDULED;
             case CANCELLED ->  type = CandidateTimelineType.INTERVIEW_CANCELLED;
             case COMPLETED ->  type = CandidateTimelineType.INTERVIEW_COMPLETED;
             case NO_SHOW ->    type = CandidateTimelineType.INTERVIEW_NO_SHOW;

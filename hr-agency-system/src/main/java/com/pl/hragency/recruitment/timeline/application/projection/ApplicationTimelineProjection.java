@@ -33,4 +33,9 @@ public class ApplicationTimelineProjection {
         repository.save(factory.from(event));
     }
 
+    @ApplicationModuleListener
+    public void handle(CandidateHiredEvent event) {
+        repository.save(factory.from(event));
+    }
+
 }

@@ -84,7 +84,7 @@ public class CreateJobApplicationHandler {
                 application.organizationId(),
                 application.candidateId().value(),
                 candidate.email(),
-                candidate.source().name(),
+                candidate.source(),
                 context.userId(),
                 context.fullName(),
                 Instant.now() );
