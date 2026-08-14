@@ -1,7 +1,5 @@
 package com.pl.hragency.testsupport;
 
-
-
 import com.pl.hragency.recruitment.application.command.ChangeJobPostingStatusCommand;
 import com.pl.hragency.recruitment.application.command.CreateJobPostingCommand;
 import com.pl.hragency.recruitment.application.handler.ChangeJobPostingStatusHandler;

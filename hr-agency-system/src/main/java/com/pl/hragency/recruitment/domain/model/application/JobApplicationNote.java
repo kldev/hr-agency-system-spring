@@ -41,9 +41,12 @@ public class JobApplicationNote {
                                                UUID applicationId,
                                                String content,
                                                Instant createdAt){
-        return new JobApplicationNote(
-                JobApplicationNoteId.newId(),
-                organizationId, authorId, applicationId,content, createdAt);
+        return new JobApplicationNote(id,
+                organizationId,
+                authorId,
+                applicationId,
+                content,
+                createdAt);
     }
 
 

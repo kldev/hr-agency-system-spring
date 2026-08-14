@@ -1,6 +1,7 @@
 package com.pl.hragency.recruitment.adapter.persistence;
 
 import com.pl.hragency.recruitment.application.port.JobApplicationNoteRepository;
+import com.pl.hragency.recruitment.application.query.JobApplicationNoteItem;
 import com.pl.hragency.recruitment.domain.model.application.JobApplicationNote;
 import org.springframework.stereotype.Component;
 
@@ -23,9 +24,9 @@ public class JobApplicationNotePersistenceAdapter implements JobApplicationNoteR
     }
 
     @Override
-    public List<JobApplicationNote> findAll(UUID organizationId, UUID applicationId) {
+    public List<JobApplicationNoteItem> findAll(UUID organizationId, UUID applicationId) {
         return repository
-                .findAllByOrganizationIdAndApplicationIdOrderByCreatedAtDesc(organizationId, applicationId)
-                .stream().map(mapper::toDomain).toList();
+                .getNotes(organizationId, applicationId);
+
     }
 }

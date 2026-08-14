@@ -20,7 +20,6 @@ public class GetJobApplicationNotesQueryHandler {
 
     public List<JobApplicationNoteItem> getJobApplicationNotes(UUID organizationId,
                                                                @Param("id") JobApplicationId applicationId) {
-        return repository.findAll(organizationId, applicationId.value())
-                .stream().map(JobApplicationNoteItem::from).toList();
+        return repository.findAll(organizationId, applicationId.value());
     }
 }

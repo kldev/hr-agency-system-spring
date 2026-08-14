@@ -9,13 +9,6 @@ public record JobApplicationNoteItem(UUID id,
                                      UUID applicationId,
                                      UUID authorId,
                                      String content,
+                                     String authorName,
                                      Instant createdAt) {
-
-    public static JobApplicationNoteItem from(JobApplicationNote note) {
-        return new JobApplicationNoteItem(note.id().value(),
-                note.applicationId(),
-                note.authorId(),
-                note.content(),
-                note.createdAt());
-    }
 }
