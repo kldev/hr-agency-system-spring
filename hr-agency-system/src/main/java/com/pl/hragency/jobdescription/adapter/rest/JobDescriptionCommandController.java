@@ -43,7 +43,7 @@ public class JobDescriptionCommandController {
         return createHandler.handle(getContext(), command).value();
     }
 
-    @PostMapping("{jobDescriptionId}/status")
+    @PutMapping("{jobDescriptionId}/status")
     public ApiResult updateStatusJobDescription(@PathVariable UUID jobDescriptionId,
                                                                  @Valid @RequestBody ChangeJobDescriptionStatusCommand command) {
 

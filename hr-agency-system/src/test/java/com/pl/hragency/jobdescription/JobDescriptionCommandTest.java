@@ -2,20 +2,20 @@ package com.pl.hragency.jobdescription;
 
 import com.pl.hragency.BaseRestIntegrationTest;
 import com.pl.hragency.identity.domain.model.OrganizationRole;
+import com.pl.hragency.jobdescription.application.command.ChangeJobDescriptionStatusCommand;
 import com.pl.hragency.jobdescription.application.command.CreateJobDescriptionCommand;
 import com.pl.hragency.jobdescription.api.EmploymentType;
 import com.pl.hragency.jobdescription.domain.model.JobDescriptionId;
 import com.pl.hragency.jobdescription.api.WorkMode;
 import com.pl.hragency.jobdescription.application.port.JobDescriptionRepository;
-import com.pl.hragency.testsupport.AuthenticationTestClient;
-import com.pl.hragency.testsupport.TestCompanyFactory;
-import com.pl.hragency.testsupport.TestOrganizationFactory;
-import com.pl.hragency.testsupport.TestUserFactory;
+import com.pl.hragency.jobdescription.domain.model.JobDescriptionStatus;
+import com.pl.hragency.testsupport.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,6 +36,77 @@ class JobDescriptionCommandTest extends BaseRestIntegrationTest {
 
     @Autowired
     private JobDescriptionRepository jobDescriptionRepository;
+
+    private UUID createJobDescription(UUID organizationId, UUID companyId, TestUser user)
+    {
+        var command = new CreateJobDescriptionCommand(
+                companyId,
+                "Senior Java Developer",
+                "Experienced Java developer for backend development.",
+                "We are looking for an experienced Java developer to join our team.",
+                List.of(
+                        "Develop backend applications",
+                        "Review code"
+                ),
+                List.of(
+                        "At least 5 years of Java experience",
+                        "Experience with Spring Boot"
+                ),
+                List.of(
+                        "Java",
+                        "Spring Boot",
+                        "PostgreSQL"
+                ),
+                "Opole",
+                "PL",
+                EmploymentType.FULL_TIME,
+                WorkMode.HYBRID,
+                BigDecimal.valueOf(12000),
+                BigDecimal.valueOf(18000),
+                "PLN"
+        );
+
+        var token = authenticationClient.login(user);
+
+        // when
+        return restTestClient
+                .post()
+                .uri(url("/api/job-description"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(
+                        "Authorization",
+                        "Bearer " + token
+                )
+                .body(command)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(UUID.class)
+                .returnResult()
+                .getResponseBody();
+    }
+
+    private void changeStatus(
+            UUID jobDescriptionId,
+            JobDescriptionStatus status,
+            String token
+    ) {
+        var command = new ChangeJobDescriptionStatusCommand(status);
+
+        restTestClient
+                .put()
+                .uri(url("/api/job-description/%s/status"
+                        .formatted(jobDescriptionId)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(
+                        "Authorization",
+                        "Bearer " + token
+                )
+                .body(command)
+                .exchange()
+                .expectStatus()
+                .isOk();
+    }
 
     @Test
     void shouldCreateJobDescription() {
@@ -507,6 +578,270 @@ class JobDescriptionCommandTest extends BaseRestIntegrationTest {
         restTestClient
                 .post()
                 .uri(url("/api/job-description"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(
+                        "Authorization",
+                        "Bearer " + token
+                )
+                .body(command)
+                .exchange()
+                .expectStatus()
+                .isBadRequest();
+    }
+
+    @Test
+    void shouldOpenDraftJobDescription() {
+        // given
+        var organization = organizationFactory.create();
+
+        var user = userFactory.create(
+                organization,
+                "admin@test.com",
+                "Password123!",
+                OrganizationRole.ADMIN
+        );
+
+        var companyId = companyFactory.create(
+                organization.id()
+        );
+
+        var token = authenticationClient.login(user);
+
+        var jobDescriptionId = createJobDescription(
+                organization.id(),
+                companyId,
+                user
+        );
+
+        var command = new ChangeJobDescriptionStatusCommand(
+                JobDescriptionStatus.OPEN
+        );
+
+        // when
+        restTestClient
+                .put()
+                .uri(url("/api/job-description/%s/status"
+                        .formatted(jobDescriptionId)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(
+                        "Authorization",
+                        "Bearer " + token
+                )
+                .body(command)
+                .exchange()
+                .expectStatus()
+                .isOk();
+
+        // then
+        var jobDescription = jobDescriptionRepository
+                .findById(
+                        organization.id(),
+                        new JobDescriptionId(jobDescriptionId)
+                )
+                .orElseThrow();
+
+        assertThat(jobDescription.status())
+                .isEqualTo(JobDescriptionStatus.OPEN);
+    }
+
+    @Test
+    void shouldPutOpenJobDescriptionOnHold() {
+        // given
+        var organization = organizationFactory.create();
+
+        var user = userFactory.create(
+                organization,
+                "admin@test.com",
+                "Password123!",
+                OrganizationRole.ADMIN
+        );
+
+        var companyId = companyFactory.create(
+                organization.id()
+        );
+
+        var token = authenticationClient.login(user);
+
+        var jobDescriptionId = createJobDescription(
+                organization.id(),
+                companyId,
+                user
+        );
+
+        changeStatus(jobDescriptionId, JobDescriptionStatus.OPEN, token);
+
+        // when
+        changeStatus(jobDescriptionId, JobDescriptionStatus.ON_HOLD, token);
+
+        // then
+        var jobDescription = jobDescriptionRepository
+                .findById(
+                        organization.id(),
+                        new JobDescriptionId(jobDescriptionId)
+                )
+                .orElseThrow();
+
+        assertThat(jobDescription.status())
+                .isEqualTo(JobDescriptionStatus.ON_HOLD);
+    }
+
+    @Test
+    void shouldReopenJobDescriptionFromOnHold() {
+        // given
+        var organization = organizationFactory.create();
+
+        var user = userFactory.create(
+                organization,
+                "admin@test.com",
+                "Password123!",
+                OrganizationRole.ADMIN
+        );
+
+        var companyId = companyFactory.create(
+                organization.id()
+        );
+
+        var token = authenticationClient.login(user);
+
+        var jobDescriptionId = createJobDescription(
+                organization.id(),
+                companyId,
+                user
+        );
+
+        changeStatus(jobDescriptionId, JobDescriptionStatus.OPEN, token);
+        changeStatus(jobDescriptionId, JobDescriptionStatus.ON_HOLD, token);
+
+        // when
+        changeStatus(jobDescriptionId, JobDescriptionStatus.OPEN, token);
+
+        // then
+        var jobDescription = jobDescriptionRepository
+                .findById(
+                        organization.id(),
+                        new JobDescriptionId(jobDescriptionId)
+                )
+                .orElseThrow();
+
+        assertThat(jobDescription.status())
+                .isEqualTo(JobDescriptionStatus.OPEN);
+    }
+
+    @Test
+    void shouldCloseOpenJobDescription() {
+        // given
+        var organization = organizationFactory.create();
+
+        var user = userFactory.create(
+                organization,
+                "admin@test.com",
+                "Password123!",
+                OrganizationRole.ADMIN
+        );
+
+        var companyId = companyFactory.create(
+                organization.id()
+        );
+
+        var token = authenticationClient.login(user);
+
+        var jobDescriptionId = createJobDescription(
+                organization.id(),
+                companyId,
+                user
+        );
+
+        changeStatus(jobDescriptionId, JobDescriptionStatus.OPEN, token);
+
+        // when
+        changeStatus(jobDescriptionId, JobDescriptionStatus.CLOSED, token);
+
+        // then
+        var jobDescription = jobDescriptionRepository
+                .findById(
+                        organization.id(),
+                        new JobDescriptionId(jobDescriptionId)
+                )
+                .orElseThrow();
+
+        assertThat(jobDescription.status())
+                .isEqualTo(JobDescriptionStatus.CLOSED);
+    }
+
+    @Test
+    void shouldCancelOpenJobDescription() {
+        // given
+        var organization = organizationFactory.create();
+
+        var user = userFactory.create(
+                organization,
+                "admin@test.com",
+                "Password123!",
+                OrganizationRole.ADMIN
+        );
+
+        var companyId = companyFactory.create(
+                organization.id()
+        );
+
+        var token = authenticationClient.login(user);
+
+        var jobDescriptionId = createJobDescription(
+                organization.id(),
+                companyId,
+                user
+        );
+
+        changeStatus(jobDescriptionId, JobDescriptionStatus.OPEN, token);
+
+        // when
+        changeStatus(jobDescriptionId, JobDescriptionStatus.CANCELLED, token);
+
+        // then
+        var jobDescription = jobDescriptionRepository
+                .findById(
+                        organization.id(),
+                        new JobDescriptionId(jobDescriptionId)
+                )
+                .orElseThrow();
+
+        assertThat(jobDescription.status())
+                .isEqualTo(JobDescriptionStatus.CANCELLED);
+    }
+
+    @Test
+    void shouldNotPutDraftJobDescriptionOnHold() {
+        // given
+        var organization = organizationFactory.create();
+
+        var user = userFactory.create(
+                organization,
+                "admin@test.com",
+                "Password123!",
+                OrganizationRole.ADMIN
+        );
+
+        var companyId = companyFactory.create(
+                organization.id()
+        );
+
+        var token = authenticationClient.login(user);
+
+        var jobDescriptionId = createJobDescription(
+                organization.id(),
+                companyId,
+                user
+        );
+
+        var command = new ChangeJobDescriptionStatusCommand(
+                JobDescriptionStatus.ON_HOLD
+        );
+
+        // when / then
+        restTestClient
+                .put()
+                .uri(url("/api/job-description/%s/status"
+                        .formatted(jobDescriptionId)))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(
                         "Authorization",

@@ -68,7 +68,7 @@ public class GlobalExceptionHandler {
             IllegalStateException ex) {
 
         return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
+                .status(HttpStatus.BAD_REQUEST)
                 .body(
                         new ApiError(ex.getMessage())
                 );

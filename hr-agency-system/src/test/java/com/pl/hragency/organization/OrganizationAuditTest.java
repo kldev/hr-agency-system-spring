@@ -28,8 +28,6 @@ class OrganizationAuditTest extends BaseIntegrationTest {
                 "acmeOrg"
         );
 
-        var context = new ExecutionContext(UUID.randomUUID(), UUID.randomUUID(), "Test");
-
         // when
         var organizationId = handler.handle( command);
 

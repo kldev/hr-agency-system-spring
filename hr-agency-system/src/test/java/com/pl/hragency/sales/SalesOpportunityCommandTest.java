@@ -263,7 +263,7 @@ class SalesOpportunityCommandTest extends BaseRestIntegrationTest {
                 .body(command)
                 .exchange()
                 .expectStatus()
-                .isNoContent();
+                .isBadRequest();
 
         var salesOpportunity = salesOpportunityRepository
                 .findById(
