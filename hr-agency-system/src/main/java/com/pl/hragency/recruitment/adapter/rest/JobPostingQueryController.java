@@ -42,11 +42,8 @@ public class JobPostingQueryController {
             @RequestParam(required = false) JobPostingStatus status,
             @RequestParam(required = false) UUID companyId,
             @RequestParam(required = false) UUID jobDescriptionId,
-            @RequestParam(defaultValue = "0")
-            int page,
-
-            @RequestParam(defaultValue = "20")
-            int size) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
 
         var pageable = PageRequest.of(
                 page,
@@ -69,6 +66,5 @@ public class JobPostingQueryController {
                 result.getTotalPages()
         );
     }
-
 
 }

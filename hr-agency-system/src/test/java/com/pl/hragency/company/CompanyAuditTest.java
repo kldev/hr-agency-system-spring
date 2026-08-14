@@ -57,7 +57,7 @@ public class CompanyAuditTest extends BaseRestIntegrationTest {
                 .body(jsonMapper.writeValueAsString(command))
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(CompanyId.class)
+                .expectBody(UUID.class)
                 .returnResult();
 
         var companyId = response.getResponseBody();
@@ -66,7 +66,7 @@ public class CompanyAuditTest extends BaseRestIntegrationTest {
 
 
         var auditEntries = awaitAuditEntries("Company",
-                companyId.value(), 1);
+                companyId, 1);
 
 
         var audit = auditEntries.getFirst();
@@ -75,7 +75,7 @@ public class CompanyAuditTest extends BaseRestIntegrationTest {
                 .isEqualTo("Company");
 
         assertThat(audit.getAggregateId())
-                .isEqualTo(companyId.value());
+                .isEqualTo(companyId);
 
         assertThat(audit.getEventType())
                 .isEqualTo(AuditEventType.CREATED);
@@ -135,7 +135,7 @@ public class CompanyAuditTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(CompanyId.class)
+                .expectBody(UUID.class)
                 .returnResult()
                 .getResponseBody();
 
@@ -144,18 +144,18 @@ public class CompanyAuditTest extends BaseRestIntegrationTest {
         // when
         assignSalesOwner(
                 token,
-                companyId.value(),
+                companyId,
                 sales1.id()
         );
 
         assignSalesOwner(
                 token,
-                companyId.value(),
+                companyId,
                 sales2.id()
         );
 
         // then
-        var auditEntries = awaitAuditEntries("Company", companyId.value(),3);
+        var auditEntries = awaitAuditEntries("Company", companyId,3);
 
         assertThat(auditEntries)
                 .hasSize(3);
@@ -166,7 +166,7 @@ public class CompanyAuditTest extends BaseRestIntegrationTest {
                 .isEqualTo("Company");
 
         assertThat(audit.getAggregateId())
-                .isEqualTo(companyId.value());
+                .isEqualTo(companyId);
 
         assertThat(audit.getModule())
                 .isEqualTo("company");

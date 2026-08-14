@@ -2,6 +2,7 @@ package com.pl.hragency.sales.adapter.rest;
 
 import com.pl.hragency.identity.api.CurrentUser;
 import com.pl.hragency.identity.api.IdentityApi;
+import com.pl.hragency.sales.application.query.SalesOpportunityItem;
 import com.pl.hragency.sales.application.query.SalesOpportunityQueryService;
 import com.pl.hragency.sales.domain.model.SalesOpportunityStage;
 import com.pl.hragency.shared.rest.ExecutionContext;
@@ -35,7 +36,7 @@ public class SalesOpportunityQueryController {
     }
 
     @GetMapping
-    public PageResponse<?> findAll(
+    public PageResponse<SalesOpportunityItem> findAll(
             @RequestParam(defaultValue = "0")
             int page,
 
@@ -64,7 +65,7 @@ public class SalesOpportunityQueryController {
     }
 
     @GetMapping("/company/{companyId}")
-    public PageResponse<?> findByCompany(
+    public PageResponse<SalesOpportunityItem> findByCompany(
             @PathVariable UUID companyId,
 
             @RequestParam(defaultValue = "0")

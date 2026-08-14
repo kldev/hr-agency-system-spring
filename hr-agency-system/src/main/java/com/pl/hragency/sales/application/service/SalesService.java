@@ -5,7 +5,12 @@ import com.pl.hragency.sales.api.ChangeSalesOpportunityStageInput;
 import com.pl.hragency.sales.api.CreateSalesOpportunityInput;
 import com.pl.hragency.sales.api.SalesApi;
 import com.pl.hragency.sales.application.command.ChangeSalesOpportunityStageCommand;
+import com.pl.hragency.sales.application.command.CreateSalesOpportunityActivityCommand;
 import com.pl.hragency.sales.application.command.CreateSalesOpportunityCommand;
+import com.pl.hragency.sales.application.handler.ChangeSalesOpportunityStageHandler;
+import com.pl.hragency.sales.application.handler.CreateSalesOpportunityActivityHandler;
+import com.pl.hragency.sales.application.handler.CreateSalesOpportunityHandler;
+import com.pl.hragency.sales.domain.model.SalesActivityType;
 import com.pl.hragency.sales.domain.model.SalesOpportunityId;
 import com.pl.hragency.sales.domain.model.SalesOpportunityStage;
 import com.pl.hragency.shared.rest.ExecutionContext;
@@ -18,10 +23,13 @@ public class SalesService implements SalesApi {
 
     private final CreateSalesOpportunityHandler createHandler;
     private final ChangeSalesOpportunityStageHandler changeStageHandler;
+    private final CreateSalesOpportunityActivityHandler createActivityHandler;
 
-    public SalesService(CreateSalesOpportunityHandler createHandler, ChangeSalesOpportunityStageHandler changeStageHandler) {
+    public SalesService(CreateSalesOpportunityHandler createHandler,
+                        ChangeSalesOpportunityStageHandler changeStageHandler, CreateSalesOpportunityActivityHandler createActivityHandler) {
         this.createHandler = createHandler;
         this.changeStageHandler = changeStageHandler;
+        this.createActivityHandler = createActivityHandler;
     }
 
     @Override
@@ -58,5 +66,15 @@ public class SalesService implements SalesApi {
                         input.lostReason()
                 )
         );
+    }
+
+    @Override
+    public void createActivity(UUID organizationId, UUID userId, UUID salesOpportunityId, String note, String activityType) {
+        createActivityHandler.handle(new ExecutionContext(
+                        organizationId,
+                        userId,
+                        "System"
+                ), new SalesOpportunityId(salesOpportunityId),
+                new CreateSalesOpportunityActivityCommand(note, SalesActivityType.valueOf(activityType)));
     }
 }

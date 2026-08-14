@@ -15,4 +15,10 @@ public interface SalesApi {
             UUID userId,
             ChangeSalesOpportunityStageInput input
     );
+
+    void createActivity(UUID organizationId,
+                        UUID userId,
+                        UUID salesOpportunityId,
+                        String note,
+                        String activityType);
 }

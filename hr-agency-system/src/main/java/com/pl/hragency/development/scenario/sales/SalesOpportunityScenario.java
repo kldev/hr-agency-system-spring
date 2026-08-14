@@ -4,10 +4,13 @@ import com.pl.hragency.identity.api.IdentityApi;
 import com.pl.hragency.sales.api.ChangeSalesOpportunityStageInput;
 import com.pl.hragency.sales.api.CreateSalesOpportunityInput;
 import com.pl.hragency.sales.api.SalesApi;
+import net.datafaker.Faker;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.security.SecureRandom;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -16,11 +19,18 @@ public class SalesOpportunityScenario {
     private final SalesApi  salesApi;
     private final IdentityApi identityApi;
     private final CompanyApi companyApi;
+    private final SecureRandom secureRandom;
+    private final Faker faker;
 
-    public SalesOpportunityScenario(SalesApi salesApi, IdentityApi identityApi, CompanyApi companyApi) {
+    public SalesOpportunityScenario(SalesApi salesApi,
+                                    IdentityApi identityApi,
+                                    CompanyApi companyApi
+                                    ) {
         this.salesApi = salesApi;
         this.identityApi = identityApi;
         this.companyApi = companyApi;
+        this.secureRandom = new SecureRandom();
+        this.faker = new Faker();
     }
 
     public void createOpportunities(
@@ -33,6 +43,7 @@ public class SalesOpportunityScenario {
 
         UUID userId = users.get(++index % users.size()).id();
         UUID companyId = companies.get(++index % companies.size()).id();
+
 
         var qualified  = salesApi.createOpportunity(organizationId,
                 userId,
@@ -65,6 +76,8 @@ public class SalesOpportunityScenario {
                         LocalDate.now().plusDays(30),
                         userId)
         );
+
+        createActivity(organizationId, userId, proposal);
 
         salesApi.changeOpportunityStage(
                 organizationId,
@@ -105,6 +118,9 @@ public class SalesOpportunityScenario {
                         userId)
         );
 
+        createActivity(organizationId, userId, won);
+
+
         salesApi.changeOpportunityStage(
                 organizationId,
                 userId,
@@ -137,6 +153,9 @@ public class SalesOpportunityScenario {
                         userId)
         );
 
+        createActivity(organizationId, userId, lost);
+
+
         salesApi.changeOpportunityStage(
                 organizationId,
                 userId,
@@ -144,5 +163,15 @@ public class SalesOpportunityScenario {
                         "LOST",   "Client selected another recruitment agency.")
         );
 
+    }
+
+    private void createActivity(UUID organizationId, UUID userId, UUID salesOpportunityId) {
+        var activityTypes = List.of("CALL", "EMAIL", "MEETING", "NOTE", "PRESENTATION", "OTHER");
+        secureRandom.ints(secureRandom.nextInt(100)).forEach((i) ->{
+            var activityType = activityTypes.get(secureRandom.nextInt(activityTypes.size()));
+            salesApi.createActivity(organizationId, userId, salesOpportunityId,
+                    faker.text().text(50, 200),
+                    activityType);
+        });
     }
 }

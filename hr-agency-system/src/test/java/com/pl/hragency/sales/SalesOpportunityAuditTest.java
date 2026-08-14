@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -78,7 +79,7 @@ class SalesOpportunityAuditTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(SalesOpportunityId.class)
+                .expectBody(UUID.class)
                 .returnResult()
                 .getResponseBody();
 
@@ -87,7 +88,7 @@ class SalesOpportunityAuditTest extends BaseRestIntegrationTest {
                 .isNotNull();
 
         var auditEntries = awaitAuditEntries("SalesOpportunity",
-                opportunityId.value(), 1);
+                opportunityId, 1);
 
         assertThat(auditEntries)
                 .hasSize(1);
@@ -98,7 +99,7 @@ class SalesOpportunityAuditTest extends BaseRestIntegrationTest {
                 .isEqualTo("SalesOpportunity");
 
         assertThat(audit.getAggregateId())
-                .isEqualTo(opportunityId.value());
+                .isEqualTo(opportunityId);
 
         assertThat(audit.getEventType())
                 .isEqualTo(AuditEventType.CREATED);
@@ -112,7 +113,7 @@ class SalesOpportunityAuditTest extends BaseRestIntegrationTest {
         );
 
         assertThat(data.opportunityId())
-                .isEqualTo(opportunityId.value());
+                .isEqualTo(opportunityId);
 
         assertThat(data.companyId())
                 .isEqualTo(companyId);
@@ -165,7 +166,7 @@ class SalesOpportunityAuditTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(SalesOpportunityId.class)
+                .expectBody(UUID.class)
                 .returnResult()
                 .getResponseBody();
 
@@ -182,18 +183,18 @@ class SalesOpportunityAuditTest extends BaseRestIntegrationTest {
                 .patch()
                 .uri(url(
                         "/api/sales/opportunity/%s/stage"
-                                .formatted(opportunityId.value())
+                                .formatted(opportunityId)
                 ))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token)
                 .body(command)
                 .exchange()
                 .expectStatus()
-                .isNoContent();
+                .isOk();
 
         // then
         var auditEntries = awaitAuditEntries("SalesOpportunity",
-                opportunityId.value(), 2);
+                opportunityId, 2);
 
         assertThat(auditEntries)
                 .hasSize(2);
@@ -204,7 +205,7 @@ class SalesOpportunityAuditTest extends BaseRestIntegrationTest {
                 .isEqualTo("SalesOpportunity");
 
         assertThat(audit.getAggregateId())
-                .isEqualTo(opportunityId.value());
+                .isEqualTo(opportunityId);
 
         assertThat(audit.getModule())
                 .isEqualTo("sales");
@@ -218,7 +219,7 @@ class SalesOpportunityAuditTest extends BaseRestIntegrationTest {
         );
 
         assertThat(data.salesOpportunityId())
-                .isEqualTo(opportunityId.value());
+                .isEqualTo(opportunityId);
 
         assertThat(data.companyId())
                 .isEqualTo(companyId);

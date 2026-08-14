@@ -1,4 +1,4 @@
-package com.pl.hragency.sales.application.service;
+package com.pl.hragency.sales.application.handler;
 
 import com.pl.hragency.company.api.CompanyApi;
 import com.pl.hragency.identity.api.IdentityApi;

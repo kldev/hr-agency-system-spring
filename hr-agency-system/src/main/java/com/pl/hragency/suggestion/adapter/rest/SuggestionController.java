@@ -2,7 +2,6 @@ package com.pl.hragency.suggestion.adapter.rest;
 
 import com.pl.hragency.company.api.CompanyApi;
 import com.pl.hragency.company.api.CompanySuggestion;
-import com.pl.hragency.identity.api.CurrentUser;
 import com.pl.hragency.identity.api.IdentityApi;
 import com.pl.hragency.identity.api.UserSuggestion;
 import com.pl.hragency.shared.rest.ExecutionContext;
@@ -29,7 +28,7 @@ public class SuggestionController {
     }
 
     private ExecutionContext getContext() {
-        CurrentUser currentUser = identityApi.getCurrentUser();
+        var currentUser = identityApi.getCurrentUser();
         return currentUser.getExecutionContext();
     }
 

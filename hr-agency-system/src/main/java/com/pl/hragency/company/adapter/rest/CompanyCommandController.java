@@ -39,20 +39,20 @@ public class CompanyCommandController {
     }
 
     @PostMapping
-    public ResponseEntity<CompanyId> save(@RequestBody @Valid CreateCompanyCommand command) {
+    public UUID save(@RequestBody @Valid CreateCompanyCommand command) {
         ExecutionContext context =getContext();
 
         var companyId = createCompanyHandler.handle(context, command, identityApi.isCurrentUserSales());
 
-        return ResponseEntity.ok(companyId);
+        return companyId.value();
     }
 
     @PostMapping("{companyId}/assign-sales")
-    public ResponseEntity<ApiResult> assignSales(@PathVariable UUID companyId, @Valid @RequestBody AssignSalesOwnerCommand command) {
+    public ApiResult assignSales(@PathVariable UUID companyId, @Valid @RequestBody AssignSalesOwnerCommand command) {
 
         assignSalesPersonHandler.handle(getContext(), new CompanyId(companyId), command);
 
-        return ResponseEntity.ok(new ApiResult("Sales person assigned successfully", true));
+        return new ApiResult("Sales person assigned successfully", true);
     }
 
 

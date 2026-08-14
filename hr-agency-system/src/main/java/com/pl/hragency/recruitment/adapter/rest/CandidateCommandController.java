@@ -17,14 +17,14 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/recruitment/candidates")
 @Tag(name = "Recruitment")
-public class CandidateController {
+public class CandidateCommandController {
     private final CreateCandidateHandler createCandidateHandler;
     private final UpdateCandidateHandler updateCandidateHandler;
     private final IdentityApi  identityApi;
 
-    public CandidateController(CreateCandidateHandler createCandidateHandler,
-                               UpdateCandidateHandler updateCandidateHandler,
-                               IdentityApi identityApi) {
+    public CandidateCommandController(CreateCandidateHandler createCandidateHandler,
+                                      UpdateCandidateHandler updateCandidateHandler,
+                                      IdentityApi identityApi) {
         this.createCandidateHandler = createCandidateHandler;
         this.updateCandidateHandler = updateCandidateHandler;
         this.identityApi = identityApi;
@@ -35,9 +35,9 @@ public class CandidateController {
     }
 
     @PostMapping
-    public CandidateId createCandidate(@Validated @RequestBody CreateCandidateCommand command) {
+    public UUID createCandidate(@Validated @RequestBody CreateCandidateCommand command) {
 
-        return createCandidateHandler.handle(getExecutionContext(), command).id();
+        return createCandidateHandler.handle(getExecutionContext(), command).id().value();
     }
 
     @PutMapping("{candidateId}")

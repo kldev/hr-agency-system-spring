@@ -99,7 +99,7 @@ class JobDescriptionCommandTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(JobDescriptionId.class)
+                .expectBody(UUID.class)
                 .returnResult()
                 .getResponseBody();
 
@@ -108,10 +108,10 @@ class JobDescriptionCommandTest extends BaseRestIntegrationTest {
                 .isNotNull();
 
         var jobDescription = jobDescriptionRepository
-                .findById(organization.id(), jobDescriptionId)
+                .findById(organization.id(), new JobDescriptionId(jobDescriptionId))
                 .orElseThrow();
 
-        assertThat(jobDescription.id())
+        assertThat(jobDescription.id().value())
                 .isEqualTo(jobDescriptionId);
 
         assertThat(jobDescription.organizationId())
@@ -236,7 +236,7 @@ class JobDescriptionCommandTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(JobDescriptionId.class)
+                .expectBody(UUID.class)
                 .returnResult()
                 .getResponseBody();
 
@@ -245,7 +245,7 @@ class JobDescriptionCommandTest extends BaseRestIntegrationTest {
                 .isNotNull();
 
         var jobDescription = jobDescriptionRepository
-                .findById(organization.id(), jobDescriptionId)
+                .findById(organization.id(), new JobDescriptionId(jobDescriptionId))
                 .orElseThrow();
 
         assertThat(jobDescription.employmentType())

@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
@@ -51,7 +53,7 @@ public class UserAuditTest extends BaseRestIntegrationTest {
                 .body(jsonMapper.writeValueAsString(command))
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(UserId.class)
+                .expectBody(UUID.class)
                 .returnResult();
 
         var userId = response.getResponseBody();
@@ -59,7 +61,7 @@ public class UserAuditTest extends BaseRestIntegrationTest {
         assertThat(userId).isNotNull();
 
 
-        var auditEntries = awaitAuditEntries("User", userId.value(),1);
+        var auditEntries = awaitAuditEntries("User", userId,1);
 
         assertThat(auditEntries)
                 .hasSize(1);
@@ -70,7 +72,7 @@ public class UserAuditTest extends BaseRestIntegrationTest {
                 .isEqualTo("User");
 
         assertThat(audit.getAggregateId())
-                .isEqualTo(userId.value());
+                .isEqualTo(userId);
 
         assertThat(audit.getEventType())
                 .isEqualTo(AuditEventType.CREATED);

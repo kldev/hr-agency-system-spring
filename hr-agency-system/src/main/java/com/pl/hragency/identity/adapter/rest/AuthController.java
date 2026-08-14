@@ -21,9 +21,8 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<LoginResult> login(@RequestBody LoginCommand request) {
+    public LoginResult login(@RequestBody LoginCommand request) {
 
-        return ResponseEntity.ok(handler.handle(request));
-
+        return handler.handle(request);
     }
 }

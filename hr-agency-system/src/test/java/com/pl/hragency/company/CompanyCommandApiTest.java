@@ -14,9 +14,11 @@ import com.pl.hragency.testsupport.TestUserFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.testcontainers.shaded.org.checkerframework.checker.units.qual.C;
 
 
 import java.util.Objects;
+import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -36,7 +38,7 @@ public class CompanyCommandApiTest extends BaseRestIntegrationTest {
     @Autowired
     private CompanyRepository companyRepository;
 
-    private CompanyId createCompany(
+    private UUID createCompany(
             String token,
             CreateCompanyCommand command) {
 
@@ -49,7 +51,7 @@ public class CompanyCommandApiTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(CompanyId.class)
+                .expectBody(UUID.class)
                 .returnResult()
                 .getResponseBody();
     }
@@ -91,7 +93,7 @@ public class CompanyCommandApiTest extends BaseRestIntegrationTest {
                 .isNotNull();
 
         var company = companyRepository.findById(
-                companyId, organization.id()
+                new CompanyId(companyId), organization.id()
         ).orElse(null);
 
         assertThat(company)
@@ -137,7 +139,7 @@ public class CompanyCommandApiTest extends BaseRestIntegrationTest {
                 .isNotNull();
 
         var company = companyRepository.findById(
-                companyId, organization.id()
+                new CompanyId(companyId), organization.id()
         ).orElseThrow();
 
         assertThat(company.salesOwnerId())
@@ -215,7 +217,7 @@ public class CompanyCommandApiTest extends BaseRestIntegrationTest {
 
         // then
         var company = companyRepository.findById(
-                companyId, organization.id()
+                new CompanyId(companyId), organization.id()
         ).orElseThrow();
 
         assertThat(company).isNotNull();

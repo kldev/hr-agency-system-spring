@@ -48,8 +48,8 @@ public class JobPostingCommandController {
 
 
     @PostMapping("")
-    public JobPostingId createJobPosting(@RequestBody CreateJobPostingCommand command) {
-        return createJobPostingHandler.handle(getExecutionContext(), command);
+    public UUID createJobPosting(@RequestBody CreateJobPostingCommand command) {
+        return createJobPostingHandler.handle(getExecutionContext(), command).value();
     }
 
     @PutMapping("{jobPostingId}")

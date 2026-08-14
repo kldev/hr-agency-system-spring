@@ -25,6 +25,7 @@ import org.springframework.http.MediaType;
 
 import java.math.BigDecimal;
 import java.util.Set;
+import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -96,14 +97,14 @@ public class RecruitmentIntegrationTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(JobPostingId.class)
+                .expectBody(UUID.class)
                 .returnResult()
                 .getResponseBody();
 
         assertThat(postingId).isNotNull();
 
         restTestClient.put()
-                .uri(url("/api/recruitment/job-posting/%s/status".formatted(postingId.value())))
+                .uri(url("/api/recruitment/job-posting/%s/status".formatted(postingId)))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token)
                 .body(new ChangeJobPostingStatusCommand(JobPostingStatus.PUBLISHED))
@@ -112,7 +113,7 @@ public class RecruitmentIntegrationTest extends BaseRestIntegrationTest {
                 .isOk()
                 .expectBody(ApiResult.class);
 
-        return postingId;
+        return new JobPostingId(postingId);
     }
 
     private IntegrationClientResult createIntegrationClient(

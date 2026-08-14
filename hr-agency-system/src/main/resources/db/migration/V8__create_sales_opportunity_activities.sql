@@ -1,15 +1,15 @@
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
 CREATE TABLE sales_opportunity_activities
 (
     id                  UUID         NOT NULL,
     organization_id     UUID         NOT NULL,
 
     sales_opportunity_id UUID        NOT NULL,
-    contact_id          UUID,
 
     type                VARCHAR(30)  NOT NULL,
 
-    subject             VARCHAR(255),
-    description         VARCHAR(4000),
+    note             VARCHAR(500) NOT NULL,
 
     occurred_at         TIMESTAMP WITH TIME ZONE NOT NULL,
 
@@ -64,3 +64,7 @@ CREATE INDEX idx_sales_opportunity_activities_organization_type
                                      organization_id,
                                      type
         );
+
+CREATE INDEX idx_sales_opportunity_activities_note_trgm
+    ON sales_opportunity_activities
+    USING GIN (lower(note) gin_trgm_ops);

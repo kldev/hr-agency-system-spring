@@ -4,7 +4,6 @@ import com.pl.hragency.company.application.command.CreateCompanyContactCommand;
 import com.pl.hragency.company.application.handler.CreateCompanyContactHandler;
 import com.pl.hragency.company.domain.model.CompanyContactCompanyId;
 import com.pl.hragency.company.domain.model.CompanyContactId;
-import com.pl.hragency.identity.api.CurrentUser;
 import com.pl.hragency.identity.api.IdentityApi;
 import com.pl.hragency.shared.rest.ExecutionContext;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +26,7 @@ public class CompanyContactController {
     }
 
     private ExecutionContext getContext() {
-        CurrentUser currentUser = identityApi.getCurrentUser();
+        var currentUser = identityApi.getCurrentUser();
         return currentUser.getExecutionContext();
     }
 

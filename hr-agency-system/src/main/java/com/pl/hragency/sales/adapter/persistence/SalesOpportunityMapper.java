@@ -2,13 +2,15 @@ package com.pl.hragency.sales.adapter.persistence;
 
 import com.pl.hragency.sales.domain.model.SalesOpportunity;
 import com.pl.hragency.sales.domain.model.SalesOpportunityId;
+import org.springframework.stereotype.Component;
 
-public final class SalesOpportunityMapper {
+@Component
+public class SalesOpportunityMapper {
 
-    private SalesOpportunityMapper() {
+    protected SalesOpportunityMapper() {
     }
 
-    public static SalesOpportunityJpaEntity toEntity(
+    public SalesOpportunityJpaEntity toEntity(
             SalesOpportunity opportunity
     ) {
         return new SalesOpportunityJpaEntity(
@@ -27,7 +29,7 @@ public final class SalesOpportunityMapper {
         );
     }
 
-    public static SalesOpportunity toDomain(
+    public SalesOpportunity toDomain(
             SalesOpportunityJpaEntity entity
     ) {
         return SalesOpportunity.rehydrate(

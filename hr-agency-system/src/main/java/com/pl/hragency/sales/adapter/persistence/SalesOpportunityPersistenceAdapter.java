@@ -17,11 +17,14 @@ public class SalesOpportunityPersistenceAdapter
         implements SalesOpportunityRepository {
 
     private final SpringDataSalesOpportunityRepository repository;
+    private final SalesOpportunityMapper mapper;
 
     public SalesOpportunityPersistenceAdapter(
-            SpringDataSalesOpportunityRepository repository
+            SpringDataSalesOpportunityRepository repository,
+            SalesOpportunityMapper mapper
     ) {
         this.repository = repository;
+        this.mapper = mapper;
     }
 
     @Override
@@ -29,7 +32,7 @@ public class SalesOpportunityPersistenceAdapter
             SalesOpportunity opportunity
     ) {
         repository.save(
-                SalesOpportunityMapper.toEntity(opportunity)
+                mapper.toEntity(opportunity)
         );
     }
 
@@ -44,7 +47,7 @@ public class SalesOpportunityPersistenceAdapter
                         entity.getOrganizationId()
                                 .equals(organizationId)
                 )
-                .map(SalesOpportunityMapper::toDomain);
+                .map(mapper::toDomain);
     }
 
     @Override
@@ -64,7 +67,7 @@ public class SalesOpportunityPersistenceAdapter
                         specification,
                         pageable
                 )
-                .map(SalesOpportunityMapper::toDomain);
+                .map(mapper::toDomain);
     }
 
     @Override
@@ -86,7 +89,7 @@ public class SalesOpportunityPersistenceAdapter
                         specification,
                         pageable
                 )
-                .map(SalesOpportunityMapper::toDomain);
+                .map(mapper::toDomain);
     }
 
     @Override

@@ -7,7 +7,6 @@ import com.pl.hragency.identity.application.port.UserRepository;
 import com.pl.hragency.identity.application.result.LoginResult;
 import com.pl.hragency.identity.domain.exception.InvalidLoginCommandException;
 import com.pl.hragency.identity.domain.exception.InvalidPasswordException;
-import com.pl.hragency.identity.domain.model.User;
 import com.pl.hragency.identity.domain.model.UserOrganizationId;
 import com.pl.hragency.organization.api.OrganizationApi;
 import org.springframework.stereotype.Service;
@@ -31,10 +30,13 @@ public class LoginHandler {
     }
 
     public LoginResult handle(LoginCommand command) {
-        UserOrganizationId organizationId =
-                new UserOrganizationId(organizationApi.findBySlug(command.orgSlug()).id());
 
-        User user =
+        var organization = organizationApi.findBySlug(command.orgSlug());
+
+        var organizationId =
+                new UserOrganizationId(organization.id());
+
+        var user =
                 repository.findByEmailAndOrganizationId(
                                 command.email(), organizationId)
                         .orElseThrow(() -> new InvalidLoginCommandException("Invalid email or password"));
@@ -47,7 +49,7 @@ public class LoginHandler {
                     "Invalid password");
         }
 
-        String token = tokenGenerator.generate(user);
+        var token = tokenGenerator.generate(user);
 
         return new LoginResult(token);
     }

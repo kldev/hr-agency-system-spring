@@ -1,6 +1,5 @@
 package com.pl.hragency.organization.api;
 
-
 import java.util.UUID;
 
 public interface OrganizationApi {

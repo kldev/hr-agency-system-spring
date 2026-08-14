@@ -1,4 +1,4 @@
-package com.pl.hragency.sales.application.service;
+package com.pl.hragency.sales.application.handler;
 
 import com.pl.hragency.sales.application.command.ChangeSalesOpportunityStageCommand;
 import com.pl.hragency.sales.application.port.SalesOpportunityRepository;

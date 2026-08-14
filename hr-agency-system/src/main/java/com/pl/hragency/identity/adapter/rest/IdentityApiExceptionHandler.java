@@ -31,7 +31,6 @@ public class IdentityApiExceptionHandler {
                 .body(new ApiError(
                         ex.getMessage()));
     }
-    //InvalidIntegrationCredentialsException
 
     @ExceptionHandler(InvalidIntegrationCredentialsException.class)
     ResponseEntity<ApiError> handleInvalidIntegrationCredentialsException(

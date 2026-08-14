@@ -167,7 +167,7 @@ class SalesOpportunityCommandTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(SalesOpportunityId.class)
+                .expectBody(UUID.class)
                 .returnResult()
                 .getResponseBody();
 
@@ -178,7 +178,7 @@ class SalesOpportunityCommandTest extends BaseRestIntegrationTest {
         var salesOpportunity = salesOpportunityRepository
                 .findById(
                         organization.id(),
-                        salesOpportunityId
+                        new SalesOpportunityId(salesOpportunityId)
                 )
                 .orElseThrow();
 
@@ -233,7 +233,7 @@ class SalesOpportunityCommandTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(SalesOpportunityId.class)
+                .expectBody(UUID.class)
                 .returnResult()
                 .getResponseBody();
 
@@ -251,7 +251,7 @@ class SalesOpportunityCommandTest extends BaseRestIntegrationTest {
                 .uri(
                         url(
                                 "/api/sales/opportunity/"
-                                        + opportunityId.value()
+                                        + opportunityId
                                         + "/stage"
                         )
                 )
@@ -268,7 +268,7 @@ class SalesOpportunityCommandTest extends BaseRestIntegrationTest {
         var salesOpportunity = salesOpportunityRepository
                 .findById(
                         organization.id(),
-                        opportunityId
+                        new SalesOpportunityId(opportunityId)
                 )
                 .orElseThrow();
 
@@ -320,7 +320,7 @@ class SalesOpportunityCommandTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(SalesOpportunityId.class)
+                .expectBody(UUID.class)
                 .returnResult()
                 .getResponseBody();
 
@@ -335,7 +335,7 @@ class SalesOpportunityCommandTest extends BaseRestIntegrationTest {
                 .uri(
                         url(
                                 "/api/sales/opportunity/"
-                                        + opportunityId.value()
+                                        + opportunityId
                                         + "/stage"
                         )
                 )
@@ -347,12 +347,12 @@ class SalesOpportunityCommandTest extends BaseRestIntegrationTest {
                 .body(command)
                 .exchange()
                 .expectStatus()
-                .isNoContent();
+                .isOk();
 
         var salesOpportunity = salesOpportunityRepository
                 .findById(
                         organization.id(),
-                        opportunityId
+                        new SalesOpportunityId(opportunityId)
                 )
                 .orElseThrow();
 

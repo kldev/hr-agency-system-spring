@@ -1,6 +1,5 @@
 package com.pl.hragency.jobdescription.adapter.rest;
 
-import com.pl.hragency.identity.api.CurrentUser;
 import com.pl.hragency.identity.api.IdentityApi;
 import com.pl.hragency.jobdescription.application.command.ChangeJobDescriptionStatusCommand;
 import com.pl.hragency.jobdescription.application.command.CreateJobDescriptionCommand;
@@ -12,7 +11,6 @@ import com.pl.hragency.shared.rest.ExecutionContext;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -35,22 +33,21 @@ public class JobDescriptionCommandController {
     }
 
     private ExecutionContext getContext() {
-        CurrentUser currentUser = identityApi.getCurrentUser();
+        var currentUser = identityApi.getCurrentUser();
         return currentUser.getExecutionContext();
     }
 
     @PostMapping
-    public ResponseEntity<JobDescriptionId>  createJobDescription(@Valid @RequestBody CreateJobDescriptionCommand command) {
+    public UUID createJobDescription(@Valid @RequestBody CreateJobDescriptionCommand command) {
 
-        var result = createHandler.handle(getContext(), command);
-        return ResponseEntity.ok(result);
+        return createHandler.handle(getContext(), command).value();
     }
 
     @PostMapping("{jobDescriptionId}/status")
-    public ResponseEntity<ApiResult>  updateStatusJobDescription(@PathVariable UUID jobDescriptionId,
+    public ApiResult updateStatusJobDescription(@PathVariable UUID jobDescriptionId,
                                                                  @Valid @RequestBody ChangeJobDescriptionStatusCommand command) {
 
         changeStatusHandler.handle(getContext(),new JobDescriptionId(jobDescriptionId), command);
-        return ResponseEntity.ok(new ApiResult("Status updated", true));
+        return new ApiResult("Status updated", true);
     }
 }
