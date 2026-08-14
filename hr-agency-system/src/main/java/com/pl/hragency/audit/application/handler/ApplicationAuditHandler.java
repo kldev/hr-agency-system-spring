@@ -3,6 +3,7 @@ package com.pl.hragency.audit.application.handler;
 import com.pl.hragency.audit.application.AuditService;
 import com.pl.hragency.audit.domain.model.AuditEventType;
 import com.pl.hragency.recruitment.domain.event.JobApplicationCreatedEvent;
+import com.pl.hragency.recruitment.domain.event.JobApplicationNoteCreatedEvent;
 import com.pl.hragency.recruitment.domain.event.JobApplicationStatusChangedEvent;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,19 @@ public class ApplicationAuditHandler {
                 event.actorId(),
                 event.actorName(),
                 AuditEventType.STATUS_CHANGED,
+                event
+        );
+    }
+
+    @ApplicationModuleListener
+    void on(JobApplicationNoteCreatedEvent event) {
+        auditService.record(
+                "recruitment",
+                "ApplicationNote",
+                event.applicationId(),
+                event.actorId(),
+                event.actorName(),
+                AuditEventType.CREATED,
                 event
         );
     }

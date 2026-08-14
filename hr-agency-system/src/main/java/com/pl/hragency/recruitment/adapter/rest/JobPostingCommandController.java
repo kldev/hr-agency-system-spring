@@ -28,7 +28,6 @@ public class JobPostingCommandController {
     private final ChangeJobPostingStatusHandler changeJobPostingStatusHandler;
     private final IdentityApi identityApi;
 
-
     private ExecutionContext getExecutionContext() {
         return identityApi.getCurrentUser().getExecutionContext();
     }

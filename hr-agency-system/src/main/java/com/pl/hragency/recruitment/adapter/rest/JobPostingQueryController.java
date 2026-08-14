@@ -1,11 +1,9 @@
 package com.pl.hragency.recruitment.adapter.rest;
 
 import com.pl.hragency.identity.api.IdentityApi;
-import com.pl.hragency.jobdescription.application.query.JobDescriptionItem;
-import com.pl.hragency.jobdescription.application.query.JobDescriptionListQuery;
 import com.pl.hragency.recruitment.application.query.JobPostingItem;
 import com.pl.hragency.recruitment.application.query.JobPostingListQuery;
-import com.pl.hragency.recruitment.application.query.JobPostingQueryService;
+import com.pl.hragency.recruitment.application.query.GetJobPostingQueryHandler;
 import com.pl.hragency.recruitment.domain.model.posting.JobPostingStatus;
 import com.pl.hragency.shared.rest.ExecutionContext;
 import com.pl.hragency.shared.rest.PageResponse;
@@ -23,11 +21,11 @@ import java.util.UUID;
 @RequestMapping("/api/recruitment/job-posting")
 @Tag(name = "Recruitment")
 public class JobPostingQueryController {
-    private final JobPostingQueryService queryService;
+    private final GetJobPostingQueryHandler queryService;
 
     private final IdentityApi identityApi;
 
-    public JobPostingQueryController(JobPostingQueryService queryService, IdentityApi identityApi) {
+    public JobPostingQueryController(GetJobPostingQueryHandler queryService, IdentityApi identityApi) {
         this.queryService = queryService;
         this.identityApi = identityApi;
     }

@@ -1,6 +1,5 @@
 package com.pl.hragency.recruitment.application.query;
 
-import com.pl.hragency.jobdescription.application.query.JobDescriptionItem;
 import com.pl.hragency.recruitment.application.port.JobPostingRepository;
 import com.pl.hragency.recruitment.domain.model.posting.JobPostingId;
 import com.pl.hragency.shared.rest.EntityNotFoundException;
@@ -14,10 +13,10 @@ import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
-public class JobPostingQueryService {
+public class GetJobPostingQueryHandler {
     private final JobPostingRepository repository;
 
-    public JobPostingQueryService(
+    public GetJobPostingQueryHandler(
             JobPostingRepository repository
     ) {
         this.repository = repository;

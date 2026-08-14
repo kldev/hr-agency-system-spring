@@ -5,7 +5,7 @@ CREATE TABLE application_notes
     application_id   UUID         NOT NULL,
     author_id        UUID         NOT NULL,
 
-    content          TEXT         NOT NULL,
+    content           VARCHAR(500)         NOT NULL,
 
     created_at       TIMESTAMP WITH TIME ZONE NOT NULL,
 
