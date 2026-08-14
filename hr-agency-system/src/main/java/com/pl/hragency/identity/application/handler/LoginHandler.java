@@ -45,8 +45,7 @@ public class LoginHandler {
                 command.password(),
                 user.passwordHash()
         )){
-            throw new InvalidPasswordException(
-                    "Invalid password");
+            throw new InvalidLoginCommandException("Invalid email or password");
         }
 
         var token = tokenGenerator.generate(user);

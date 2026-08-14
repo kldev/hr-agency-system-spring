@@ -3,6 +3,7 @@ package com.pl.hragency.identity.adapter.rest;
 import com.pl.hragency.identity.domain.exception.InvalidIntegrationCredentialsException;
 import com.pl.hragency.identity.domain.exception.InvalidLoginCommandException;
 import com.pl.hragency.identity.domain.exception.InvalidPasswordException;
+import com.pl.hragency.identity.domain.exception.TooManyLoginAttemptsException;
 import com.pl.hragency.shared.rest.ApiError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,5 +41,15 @@ public class IdentityApiExceptionHandler {
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(new ApiError(
                         ex.getMessage()));
+    }
+
+    @ExceptionHandler(TooManyLoginAttemptsException.class)
+    ResponseEntity<ApiError> handleTooManyLoginRequestException(
+            TooManyLoginAttemptsException ex) {
+
+        return ResponseEntity
+                .status(HttpStatus.TOO_MANY_REQUESTS)
+                .body(new ApiError(
+                        "Too many login attempts"));
     }
 }
