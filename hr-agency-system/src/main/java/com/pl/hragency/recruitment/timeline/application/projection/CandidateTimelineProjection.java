@@ -21,11 +21,6 @@ public class CandidateTimelineProjection {
 
     @ApplicationModuleListener
     public void handle(CandidateCreatedEvent event) {
-
-        System.out.println(
-                ">>> CANDIDATE TIMELINE HANDLER: " + event.candidateId()
-        );
-
         repository.save(factory.from(event));
     }
 
