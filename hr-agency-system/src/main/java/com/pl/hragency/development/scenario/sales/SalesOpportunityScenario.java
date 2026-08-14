@@ -170,7 +170,7 @@ public class SalesOpportunityScenario {
         secureRandom.ints(secureRandom.nextInt(100)).forEach((i) ->{
             var activityType = activityTypes.get(secureRandom.nextInt(activityTypes.size()));
             salesApi.createActivity(organizationId, userId, salesOpportunityId,
-                    faker.text().text(50, 200),
+                    faker.lorem().sentence(),
                     activityType);
         });
     }
