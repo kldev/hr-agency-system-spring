@@ -1,19 +1,16 @@
-package com.pl.hragency.jobdescription;
+package com.pl.hragency.recruitment.posting;
 
 import com.pl.hragency.BaseRestIntegrationTest;
-import com.pl.hragency.audit.adapter.persistence.AuditJpaEntity;
 import com.pl.hragency.audit.domain.model.AuditEventType;
 import com.pl.hragency.identity.domain.model.OrganizationRole;
-import com.pl.hragency.jobdescription.application.command.ChangeJobDescriptionStatusCommand;
-import com.pl.hragency.jobdescription.domain.model.JobDescriptionStatus;
+import com.pl.hragency.recruitment.domain.model.posting.JobPostingStatus;
 import com.pl.hragency.testsupport.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class JobDescriptionAuditTest extends BaseRestIntegrationTest {
+class JobPostingAuditTest extends BaseRestIntegrationTest {
 
     @Autowired
     private TestOrganizationFactory organizationFactory;
@@ -30,55 +27,11 @@ public class JobDescriptionAuditTest extends BaseRestIntegrationTest {
     @Autowired
     private TestJobDescriptionFactory jobDescriptionFactory;
 
-    @Test
-    void shouldCreateAuditEntryWhenJobDescriptionIsCreated() {
-        // given
-        var organization = organizationFactory.create();
-
-        var user = userFactory.create(
-                organization,
-                "recruiter@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
-
-        var companyId = companyFactory.create(
-                organization.id()
-        );
-
-        var jobDescriptionId = jobDescriptionFactory.create(organization.id(), companyId, user.id());
-
-        // then
-        assertThat(jobDescriptionId)
-                .isNotNull();
-
-        var auditEntries = awaitAuditEntries(
-                "JobDescription",
-                jobDescriptionId,
-                1
-        );
-
-        assertThat(auditEntries)
-                .hasSize(1);
-
-        assertThat(auditEntries)
-                .singleElement()
-                .satisfies(entry -> {
-                    assertThat(entry.getModule())
-                            .isEqualTo("job-description");
-                    assertThat(entry.getAggregateType())
-                            .isEqualTo("JobDescription");
-
-                    assertThat(entry.getAggregateId())
-                            .isEqualTo(jobDescriptionId);
-
-                    assertThat(entry.getActorId())
-                            .isEqualTo(user.id());
-                });
-    }
+    @Autowired
+    private TestJobPostingFactory jobPostingFactory;
 
     @Test
-    void shouldCreateAuditEntryWhenJobDescriptionStatusIsChanged() {
+    void shouldCreateAuditEntryWhenJobPostingIsCreated() {
         // given
         var organization = organizationFactory.create();
 
@@ -99,31 +52,84 @@ public class JobDescriptionAuditTest extends BaseRestIntegrationTest {
                 user.id()
         );
 
-        var command = new ChangeJobDescriptionStatusCommand(
-                JobDescriptionStatus.OPEN
+        // when
+        var jobPostingId = jobPostingFactory.create(
+                organization.id(),
+                jobDescriptionId,
+                companyId,
+                user.id()
         );
 
-        var token = authenticationClient.login(user);
+        // then
+        assertThat(jobPostingId)
+                .isNotNull();
 
-        // when
-        restTestClient
-                .put()
-                .uri(url("/api/job-description/%s/status"
-                        .formatted(jobDescriptionId)))
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(
-                        "Authorization",
-                        "Bearer " + token
-                )
-                .body(command)
-                .exchange()
-                .expectStatus()
-                .isOk();
+        var auditEntries = awaitAuditEntries(
+                "JobPosting",
+                jobPostingId,
+                1
+        );
+
+        assertThat(auditEntries)
+                .hasSize(1);
+
+        assertThat(auditEntries)
+                .singleElement()
+                .satisfies(entry -> {
+                    assertThat(entry.getModule())
+                            .isEqualTo("recruitment");
+
+                    assertThat(entry.getAggregateType())
+                            .isEqualTo("JobPosting");
+
+                    assertThat(entry.getAggregateId())
+                            .isEqualTo(jobPostingId);
+
+                    assertThat(entry.getActorId())
+                            .isEqualTo(user.id());
+                });
+    }
+
+    @Test
+    void shouldCreateAuditEntryWhenJobPostingStatusIsChanged() {
+        // given
+        var organization = organizationFactory.create();
+
+        var user = userFactory.create(
+                organization,
+                "recruiter@test.com",
+                "Password123!",
+                OrganizationRole.RECRUITER
+        );
+
+        var companyId = companyFactory.create(
+                organization.id()
+        );
+
+        var jobDescriptionId = jobDescriptionFactory.create(
+                organization.id(),
+                companyId,
+                user.id()
+        );
+
+        var jobPostingId = jobPostingFactory.create(
+                organization.id(),
+                jobDescriptionId,
+                companyId,
+                user.id()
+        );
+
+        jobPostingFactory.updateStatus(
+                organization.id(),
+                user.id(),
+                jobPostingId,
+                JobPostingStatus.PUBLISHED
+        );
 
         // then
         var auditEntries = awaitAuditEntries(
-                "JobDescription",
-                jobDescriptionId,
+                "JobPosting",
+                jobPostingId,
                 2
         );
 
@@ -132,27 +138,20 @@ public class JobDescriptionAuditTest extends BaseRestIntegrationTest {
 
         assertThat(auditEntries)
                 .anySatisfy(entry -> {
+                    assertThat(entry.getModule())
+                            .isEqualTo("recruitment");
+
                     assertThat(entry.getAggregateType())
-                            .isEqualTo("JobDescription");
+                            .isEqualTo("JobPosting");
 
                     assertThat(entry.getAggregateId())
-                            .isEqualTo(jobDescriptionId);
+                            .isEqualTo(jobPostingId);
 
                     assertThat(entry.getActorId())
                             .isEqualTo(user.id());
 
-                    assertThat(entry.getModule())
-                            .isEqualTo("job-description");
-
                     assertThat(entry.getEventType())
                             .isEqualTo(AuditEventType.STATUS_CHANGED);
                 });
-
-        assertThat(auditEntries)
-                .extracting(AuditJpaEntity::getEventType)
-                .contains(
-                        AuditEventType.CREATED,
-                        AuditEventType.STATUS_CHANGED
-                );
     }
 }
