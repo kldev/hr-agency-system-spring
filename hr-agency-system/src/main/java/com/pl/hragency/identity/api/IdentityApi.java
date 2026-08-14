@@ -15,11 +15,9 @@ public interface IdentityApi {
     void requireRole(String role);
     boolean isCurrentUserSales();
     boolean isCurrentUserRecruiter();
-    boolean existsInOrganization(
-            UUID userId,
-            UUID organizationId
-    );
     Optional<UserSnapshot> findUser(UUID userId, UUID organizationId);
     List<UserSuggestion> findUserSuggestions(UUID organizationId, String search, Set<String> roles);
+
+    boolean existsInOrganization(String email, UUID organizationId);
 };
 

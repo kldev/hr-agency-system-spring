@@ -6,8 +6,9 @@ import java.util.UUID;
 
 public record CurrentIntegrationClient(UUID clientId,
                                        UUID organizationId,
-                                       String clientName) {
+                                       String clientName,
+                                       UUID organizationUserId) {
     public ExecutionContext getExecutionContext() {
-        return new ExecutionContext(organizationId(), clientId(), clientName());
+        return new ExecutionContext(organizationId(), organizationUserId(), clientName());
     }
 }

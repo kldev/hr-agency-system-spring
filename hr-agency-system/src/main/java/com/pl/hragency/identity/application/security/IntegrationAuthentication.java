@@ -14,7 +14,8 @@ public record IntegrationAuthentication(
         UUID clientId,
         UUID organizationId,
         String clientName,
-        Set<IntegrationScope> scopes
+        Set<IntegrationScope> scopes,
+        UUID organizationUserId
 ) implements Authentication {
 
     public IntegrationAuthentication {
@@ -30,6 +31,11 @@ public record IntegrationAuthentication(
         if (scopes == null) {
             throw new IllegalArgumentException("Scopes are required");
         }
+
+        if (organizationUserId == null) {
+            throw new IllegalArgumentException("OrganizationUser Id is required");
+        }
+
         scopes = Set.copyOf(scopes);
     }
 

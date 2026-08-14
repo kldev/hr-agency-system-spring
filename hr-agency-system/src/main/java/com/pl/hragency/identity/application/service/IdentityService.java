@@ -11,8 +11,11 @@ import com.pl.hragency.identity.application.query.UserSuggestionsQuery;
 import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.identity.domain.model.PlatformOwner;
 import com.pl.hragency.identity.domain.model.PlatformRole;
+import com.pl.hragency.identity.domain.model.UserOrganizationId;
 import com.pl.hragency.shared.event.UserSnapshot;
 import com.pl.hragency.shared.rest.ExecutionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -20,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class IdentityService implements IdentityApi {
+    private final Logger logger = LoggerFactory.getLogger(IdentityService.class);
     private final UserRepository userRepository;
     private final CurrentPrincipalProvider currentUserProvider;
     private final AuthorizationService authorizationService;
@@ -55,6 +59,7 @@ public class IdentityService implements IdentityApi {
     @Override
     public UUID createUser(String email, String firstName, String lastName, String role, UUID organizationId, String password) {
 
+        logger.info(  "Create user with internal api: {} and role {}", email, role);
         var command = new CreateUserCommand(email, password, firstName, lastName, OrganizationRole.from(role));
         var context = new ExecutionContext(organizationId, UUID.randomUUID(), "System");
 
@@ -91,11 +96,7 @@ public class IdentityService implements IdentityApi {
         return user.role() == OrganizationRole.RECRUITER;
     }
 
-    @Override
-    public boolean existsInOrganization(UUID userId, UUID organizationId) {
-        return userRepository.existsInOrganization(userId, organizationId);
 
-    }
 
     @Override
     public Optional<UserSnapshot> findUser(UUID userId, UUID organizationId) {
@@ -109,5 +110,10 @@ public class IdentityService implements IdentityApi {
         Set<OrganizationRole> mappedRoles = roles.stream().map(OrganizationRole::from).collect(Collectors.toSet());
 
         return userSuggestionsQuery.find(organizationId, search, mappedRoles);
+    }
+
+    @Override
+    public boolean existsInOrganization(String email, UUID organizationId) {
+        return userRepository.findByEmailAndOrganizationId(email, new UserOrganizationId(organizationId)).isPresent();
     }
 }

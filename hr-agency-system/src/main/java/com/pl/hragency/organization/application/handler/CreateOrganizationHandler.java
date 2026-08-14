@@ -12,7 +12,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Service
-@Transactional
+
 public class CreateOrganizationHandler {
     private final OrganizationRepository repository;
     private final EventPublisher publisher;
@@ -24,6 +24,7 @@ public class CreateOrganizationHandler {
         this.publisher = publisher;
     }
 
+    @Transactional
     public UUID handle(CreateOrganizationCommand command) {
 
         if (repository.existsBySlug(command.slug())) {

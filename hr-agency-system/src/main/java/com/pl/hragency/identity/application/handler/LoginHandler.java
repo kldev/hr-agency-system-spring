@@ -7,6 +7,7 @@ import com.pl.hragency.identity.application.port.UserRepository;
 import com.pl.hragency.identity.application.result.LoginResult;
 import com.pl.hragency.identity.domain.exception.InvalidLoginCommandException;
 import com.pl.hragency.identity.domain.exception.InvalidPasswordException;
+import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.identity.domain.model.UserOrganizationId;
 import com.pl.hragency.organization.api.OrganizationApi;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,9 @@ public class LoginHandler {
                 repository.findByEmailAndOrganizationId(
                                 command.email(), organizationId)
                         .orElseThrow(() -> new InvalidLoginCommandException("Invalid email or password"));
+
+        if (user.role() == OrganizationRole.SYSTEM)
+            throw new InvalidLoginCommandException("Not allowed to use system organization");
 
         if(!passwordHasher.matches(
                 command.password(),

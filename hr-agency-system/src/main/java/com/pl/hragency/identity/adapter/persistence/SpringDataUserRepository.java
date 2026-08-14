@@ -17,11 +17,6 @@ public interface SpringDataUserRepository extends JpaRepository<UserJpaEntity, U
             UUID organizationId,
             Pageable pageable);
 
-    Page<UserJpaEntity> findAllByOrganizationIdAndRole(
-            UUID organizationId,
-            OrganizationRole role,
-            Pageable pageable);
-
     Page<UserJpaEntity> findAllByOrganizationIdAndEmailContainingIgnoreCase(
             UUID organizationId,
             String email,

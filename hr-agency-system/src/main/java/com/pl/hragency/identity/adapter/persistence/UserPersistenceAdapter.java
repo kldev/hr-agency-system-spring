@@ -3,9 +3,11 @@ package com.pl.hragency.identity.adapter.persistence;
 import com.pl.hragency.identity.application.port.UserRepository;
 import com.pl.hragency.identity.domain.model.User;
 import com.pl.hragency.identity.domain.model.UserOrganizationId;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -38,12 +40,13 @@ public class UserPersistenceAdapter implements UserRepository {
     }
 
     @Override
-    public boolean existsInOrganization(UUID userId, UUID organizationId) {
-        return userRepository.existsByIdAndOrganizationId(userId, organizationId);
+    public Optional<User> findUser(UUID userId, UUID organizationId) {
+        return userRepository.findByIdAndOrganizationId(userId, organizationId).map(mapper::toDomain);
     }
 
     @Override
-    public Optional<User> findUser(UUID userId, UUID organizationId) {
-        return userRepository.findByIdAndOrganizationId(userId, organizationId).map(mapper::toDomain);
+    public List<User> findByOrganizationId(UUID organizationId) {
+        return userRepository.findAllByOrganizationId(organizationId, PageRequest.of(0, 999))
+                .map(mapper::toDomain).stream().toList();
     }
 }

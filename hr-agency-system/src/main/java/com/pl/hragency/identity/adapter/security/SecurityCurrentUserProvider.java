@@ -40,7 +40,9 @@ public class SecurityCurrentUserProvider implements CurrentPrincipalProvider {
         return new CurrentIntegrationClient(
                 integration.clientId(),
                 integration.organizationId(),
-                integration.getName());
+                integration.getName(),
+                integration.organizationUserId()
+        );
     }
 
     private Authentication getAuthentication() {

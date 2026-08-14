@@ -5,8 +5,6 @@ import com.pl.hragency.recruitment.application.command.CreateJobApplicationComma
 import com.pl.hragency.recruitment.application.handler.CreateJobApplicationHandler;
 
 import com.pl.hragency.recruitment.domain.result.ApplyForPostingResult;
-import com.pl.hragency.shared.rest.ApiResult;
-import com.pl.hragency.shared.rest.ExecutionContext;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

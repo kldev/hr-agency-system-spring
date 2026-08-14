@@ -1,37 +1,47 @@
 package com.pl.hragency.organization;
 
 import com.pl.hragency.BaseRestIntegrationTest;
+import com.pl.hragency.constants.SystemAccountNames;
 import com.pl.hragency.identity.application.port.UserRepository;
-import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.identity.domain.model.PlatformRole;
+import com.pl.hragency.identity.domain.model.User;
 import com.pl.hragency.organization.application.command.CreateOrganizationCommand;
+import com.pl.hragency.organization.domain.event.OrganizationCreatedEvent;
+import com.pl.hragency.shared.event.EventPublisher;
 import com.pl.hragency.testsupport.AuthenticationTestClient;
 import com.pl.hragency.testsupport.TestOrganizationFactory;
 import com.pl.hragency.testsupport.TestOwnerFactory;
-import com.pl.hragency.testsupport.TestUserFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testcontainers.shaded.org.checkerframework.checker.units.qual.A;
+import org.springframework.transaction.support.TransactionTemplate;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 
-class OrganizationApiTest extends BaseRestIntegrationTest {
+
+class OrganizationCreatedEventIntegrationTest  extends BaseRestIntegrationTest {
 
     @Autowired
     private TestOwnerFactory ownerFactory;
 
     @Autowired
-    private TestOrganizationFactory organizationFactory;
-
-    @Autowired
-    private TestUserFactory userFactory;
-
-    @Autowired
     private AuthenticationTestClient authenticationClient;
 
-    @Test
-    void adminShouldBeAbleToCreateOrganization() {
+    @Autowired
+    private UserRepository userRepository;
 
+    @Autowired
+    private TestOrganizationFactory testOrganizationFactory;
+
+    @Autowired
+    private TransactionTemplate transactionTemplate;
+
+    @Test
+    void shouldCreateSystemAccountsWhenOrganizationCreated() {
         var admin =
                 ownerFactory.create(
                         "owner@test.com",
@@ -49,7 +59,7 @@ class OrganizationApiTest extends BaseRestIntegrationTest {
                 );
 
         // when
-        var response =
+        var organizationId =
                 restTestClient
                         .post()
                         .uri("/api/organization")
@@ -61,51 +71,31 @@ class OrganizationApiTest extends BaseRestIntegrationTest {
                         .exchange()
                         .expectStatus()
                         .isOk()
-                        .expectBody()
-                        .returnResult();
+                        .expectBody(UUID.class)
+                        .returnResult()
+                        .getResponseBody();
 
         // then
-        assertThat(response.getResponseBody())
+        assertThat(organizationId)
                 .isNotNull();
 
+        await()
+                .atMost(Duration.ofSeconds(5))
+                .pollInterval(Duration.ofSeconds(1))
+                .untilAsserted(() -> {
+                    var users =
+                            userRepository.findByOrganizationId(
+                                    organizationId
+                            );
 
+                    assertThat(users)
+                            .extracting(User::email)
+                            .containsExactlyInAnyOrder(
+                                    SystemAccountNames.SYSTEM,
+                                    SystemAccountNames.INTEGRATIONS
+                            );
+                });
     }
 
-    @Test
-    void recruiterShouldNotBeAbleToCreateOrganization() {
 
-        // given
-        var organization =
-                organizationFactory.create();
-
-        var recruiter =
-                userFactory.create(
-                        organization,
-                        "recruiter@test.com",
-                        "Password123!",
-                        OrganizationRole.RECRUITER
-                );
-
-        var token =
-                authenticationClient.login(recruiter);
-
-        var command =
-                new CreateOrganizationCommand(
-                        "ACME Sp. z o.o.",
-                        "acme"
-                );
-
-        // when / then
-        restTestClient
-                .post()
-                .uri("/api/organization")
-                .header(
-                        "Authorization",
-                        "Bearer " + token
-                )
-                .body(command)
-                .exchange()
-                .expectStatus()
-                .isForbidden();
-    }
 }

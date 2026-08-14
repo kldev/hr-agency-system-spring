@@ -1,10 +1,14 @@
 package com.pl.hragency.identity.application.security;
 
+import com.pl.hragency.constants.SystemAccountNames;
 import com.pl.hragency.identity.application.port.IntegrationApiKeyHasher;
 import com.pl.hragency.identity.application.port.IntegrationClientRepository;
+import com.pl.hragency.identity.application.port.UserRepository;
 import com.pl.hragency.identity.domain.exception.InvalidIntegrationCredentialsException;
 import com.pl.hragency.identity.domain.model.IntegrationClient;
 
+import com.pl.hragency.identity.domain.model.User;
+import com.pl.hragency.identity.domain.model.UserOrganizationId;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -14,12 +18,14 @@ public class IntegrationClientAuthenticator {
 
     private final IntegrationClientRepository repository;
     private final IntegrationApiKeyHasher apiKeyHasher;
+    private final UserRepository userRepository;
 
     public IntegrationClientAuthenticator(
             IntegrationClientRepository repository,
-            IntegrationApiKeyHasher apiKeyHasher) {
+            IntegrationApiKeyHasher apiKeyHasher, UserRepository userRepository) {
         this.repository = repository;
         this.apiKeyHasher = apiKeyHasher;
+        this.userRepository = userRepository;
     }
 
     public IntegrationAuthentication authenticate(String apiKey) {
@@ -39,11 +45,15 @@ public class IntegrationClientAuthenticator {
             throw new InvalidIntegrationCredentialsException();
         }
 
+        User user = userRepository.findByEmailAndOrganizationId(SystemAccountNames.INTEGRATIONS, new UserOrganizationId(client.organizationId()))
+                .orElseThrow(InvalidIntegrationCredentialsException::new);
+
         return new IntegrationAuthentication(
                 client.id().value(),
                 client.organizationId(),
                 client.name(),
-                client.scopes()
+                client.scopes(),
+                user.id().value()
         );
     }
 

@@ -8,7 +8,8 @@ public enum OrganizationRole {
     RECRUITER,
     HIRING_MANAGER,
     INTERVIEWER,
-    SALES;
+    SALES,
+    SYSTEM;
 
     public static OrganizationRole from(String value) {
         return Arrays.stream(values())

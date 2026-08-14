@@ -3,6 +3,7 @@ package com.pl.hragency.identity.application.port;
 import com.pl.hragency.identity.domain.model.User;
 import com.pl.hragency.identity.domain.model.UserOrganizationId;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -13,7 +14,6 @@ public interface UserRepository {
 
     void save(
             User user);
-
-    boolean existsInOrganization(UUID userId, UUID organizationId);
     Optional<User> findUser(UUID userId, UUID organizationId);
+    List<User> findByOrganizationId(UUID organizationId);
 }
