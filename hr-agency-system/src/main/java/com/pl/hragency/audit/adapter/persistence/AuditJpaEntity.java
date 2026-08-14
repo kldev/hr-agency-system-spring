@@ -44,6 +44,9 @@ public class AuditJpaEntity {
     @Column(name = "event_type", nullable = false, length = 50)
     private AuditEventType eventType;
 
+    @Column(name = "organization_id", nullable = false)
+    private UUID organizationId;
+
     @Column(name = "actor_id")
     private UUID actorId;
 
@@ -68,6 +71,7 @@ public class AuditJpaEntity {
             String module,
             String aggregateType,
             UUID aggregateId,
+            UUID organizationId,
             AuditEventType eventType,
             UUID actorId,
             String actorName,
@@ -79,6 +83,7 @@ public class AuditJpaEntity {
         this.module = module;
         this.aggregateType = aggregateType;
         this.aggregateId = aggregateId;
+        this.organizationId = organizationId;
         this.eventType = eventType;
         this.actorId = actorId;
         this.actorName = actorName;
@@ -125,5 +130,9 @@ public class AuditJpaEntity {
 
     public Instant getOccurredAt() {
         return occurredAt;
+    }
+
+    public UUID getOrganizationId() {
+        return organizationId;
     }
 }

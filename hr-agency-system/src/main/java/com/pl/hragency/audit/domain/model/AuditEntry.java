@@ -13,6 +13,7 @@ public class AuditEntry {
     private final String module;
     private final String aggregateType;
     private final UUID aggregateId;
+    private final UUID organizationId;
     private final AuditEventType eventType;
 
     private final UUID actorId;
@@ -28,6 +29,7 @@ public class AuditEntry {
             String module,
             String aggregateType,
             UUID aggregateId,
+            UUID organizationId,
             AuditEventType eventType,
             UUID actorId,
             String actorName,
@@ -39,6 +41,7 @@ public class AuditEntry {
         this.module = module;
         this.aggregateType = aggregateType;
         this.aggregateId = aggregateId;
+        this.organizationId = organizationId;
         this.eventType = eventType;
         this.actorId = actorId;
         this.actorName = actorName;
@@ -51,6 +54,7 @@ public class AuditEntry {
             String module,
             String aggregateType,
             UUID aggregateId,
+            UUID organizationId,
             AuditEventType eventType,
             UUID actorId,
             String actorName,
@@ -63,6 +67,7 @@ public class AuditEntry {
                 module,
                 aggregateType,
                 aggregateId,
+                organizationId,
                 eventType,
                 actorId,
                 actorName,
@@ -87,6 +92,8 @@ public class AuditEntry {
     public UUID aggregateId() {
         return aggregateId;
     }
+
+    public UUID organizationId() { return organizationId; }
 
     public AuditEventType eventType() {
         return eventType;

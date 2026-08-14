@@ -20,6 +20,7 @@ public class AuditPersistenceAdapter {
                 entry.module(),
                 entry.aggregateType(),
                 entry.aggregateId(),
+                entry.organizationId(),
                 entry.eventType(),
                 entry.actorId(),
                 entry.actorName(),

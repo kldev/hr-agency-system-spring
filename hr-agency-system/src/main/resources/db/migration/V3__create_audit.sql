@@ -5,6 +5,7 @@ CREATE TABLE audit_entries
     aggregate_type  VARCHAR(100) NOT NULL,
     aggregate_id    UUID         NOT NULL,
     event_type      VARCHAR(50)  NOT NULL,
+    organization_id UUID         NOT NULL,
     actor_id        UUID,
     actor_name      VARCHAR(255),
     description     VARCHAR(1000),

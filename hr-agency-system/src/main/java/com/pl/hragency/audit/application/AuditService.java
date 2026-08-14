@@ -4,6 +4,7 @@ import com.pl.hragency.audit.adapter.persistence.AuditPersistenceAdapter;
 import com.pl.hragency.audit.domain.model.AuditEntry;
 import com.pl.hragency.audit.domain.model.AuditEventType;
 import com.pl.hragency.identity.api.IdentityApi;
+import com.pl.hragency.shared.event.DomainEvent;
 import org.springframework.stereotype.Service;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.json.JsonMapper;
@@ -33,12 +34,13 @@ public class AuditService {
             UUID actorId,
             String actorName,
             AuditEventType eventType,
-            Object data) {
+            DomainEvent data) {
 
         var auditEntry = AuditEntry.create(
                 module,
                 aggregateType,
                 aggregateId,
+                data.organizationId(),
                 eventType,
                 actorId,
                 actorName,

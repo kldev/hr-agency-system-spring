@@ -11,7 +11,8 @@ import org.springframework.modulith.ApplicationModule;
                 "company :: event",
                 "jobdescription :: event",
                 "sales :: event",
-                "recruitment :: event"
+                "recruitment :: event",
+                "shared :: event"
         })
 public class AuditModule {
 }
