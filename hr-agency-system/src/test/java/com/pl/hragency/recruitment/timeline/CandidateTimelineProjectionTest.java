@@ -141,7 +141,7 @@ class CandidateTimelineProjectionTest extends BaseIntegrationTest {
                             candidateId,
                             applicationId,
                             userId,
-                            LocalDateTime.now(),
+                            Instant.now(),
                             "",
                             occurredAt
                     )

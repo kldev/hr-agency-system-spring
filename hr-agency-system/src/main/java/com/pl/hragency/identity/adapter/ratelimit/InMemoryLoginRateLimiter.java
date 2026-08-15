@@ -5,11 +5,17 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import com.pl.hragency.identity.application.port.LoginRateLimiter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 
 @Component
+@ConditionalOnProperty(
+        prefix = "app.rate-limit",
+        name = "enabled",
+        havingValue = "true"
+)
 public class InMemoryLoginRateLimiter implements LoginRateLimiter {
 
     private final Cache<String, Bucket> ipBuckets =

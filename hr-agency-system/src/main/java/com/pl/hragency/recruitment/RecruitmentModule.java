@@ -5,6 +5,7 @@ import org.springframework.modulith.ApplicationModule;
 @ApplicationModule(
         displayName = "Recruitment", allowedDependencies = {
                 "shared :: event", "identity :: api", "shared :: rest",
-                "jobdescription :: api"})
+                "jobdescription :: api",
+                "identity :: persistence"})
 public class RecruitmentModule {
 }

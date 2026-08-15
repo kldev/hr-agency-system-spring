@@ -126,7 +126,7 @@ class UserQueryApiTest extends BaseRestIntegrationTest {
         assertThat(page).isNotNull();
         assertThat(page.size()).isEqualTo(2);
 
-        assertThat(page.totalElements()).isEqualTo(4);
+        assertThat(page.totalElements()).isEqualTo(6);
         assertThat(page.totalPages()).isEqualTo(2);
 
     }
@@ -233,7 +233,7 @@ class UserQueryApiTest extends BaseRestIntegrationTest {
 
         // then
         assertThat(page).isNotNull();
-        assertThat(page.totalElements()).isEqualTo(2);
+        assertThat(page.totalElements()).isEqualTo(4);
 
         assertThat(page.content())
                 .extracting(UserListItem::email)

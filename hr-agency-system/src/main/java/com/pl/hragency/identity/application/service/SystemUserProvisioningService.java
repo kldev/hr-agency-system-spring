@@ -1,4 +1,4 @@
-package com.pl.hragency.organization.application.service;
+package com.pl.hragency.identity.application.service;
 
 
 import com.pl.hragency.constants.SystemAccountNames;

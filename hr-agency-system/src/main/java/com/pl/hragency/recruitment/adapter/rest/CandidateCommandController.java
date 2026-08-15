@@ -22,6 +22,10 @@ public class CandidateCommandController {
     private final UpdateCandidateHandler updateCandidateHandler;
     private final IdentityApi  identityApi;
 
+    private ExecutionContext getExecutionContext() {
+        return identityApi.getCurrentUser().getExecutionContext();
+    }
+
     public CandidateCommandController(CreateCandidateHandler createCandidateHandler,
                                       UpdateCandidateHandler updateCandidateHandler,
                                       IdentityApi identityApi) {
@@ -30,9 +34,7 @@ public class CandidateCommandController {
         this.identityApi = identityApi;
     }
 
-    private ExecutionContext getExecutionContext() {
-        return identityApi.getCurrentUser().getExecutionContext();
-    }
+
 
     @PostMapping
     public UUID createCandidate(@Validated @RequestBody CreateCandidateCommand command) {

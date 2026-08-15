@@ -9,7 +9,6 @@ import com.pl.hragency.identity.domain.exception.TooManyLoginAttemptsException;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,6 +33,7 @@ public class AuthController {
                              HttpServletRequest httpRequest) {
 
         String ip = httpRequest.getRemoteAddr();
+
 
         if (!rateLimiter.tryConsumeIp(ip)) {
             throw new TooManyLoginAttemptsException();

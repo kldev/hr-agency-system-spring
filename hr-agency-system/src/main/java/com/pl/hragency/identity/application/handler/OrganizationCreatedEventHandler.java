@@ -1,6 +1,6 @@
-package com.pl.hragency.organization.application.handler;
+package com.pl.hragency.identity.application.handler;
 
-import com.pl.hragency.organization.application.service.SystemUserProvisioningService;
+import com.pl.hragency.identity.application.service.SystemUserProvisioningService;
 import com.pl.hragency.organization.domain.event.OrganizationCreatedEvent;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Service;

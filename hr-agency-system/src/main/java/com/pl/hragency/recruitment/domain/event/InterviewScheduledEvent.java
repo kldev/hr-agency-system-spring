@@ -11,7 +11,7 @@ public record InterviewScheduledEvent(UUID interviewId,
                                       UUID candidateId,
                                       UUID applicationId,
                                       UUID actorId,
-                                      LocalDateTime interviewDate,
+                                      Instant interviewDate,
                                       String actorName,
                                       Instant occurredOn
                                       ) implements DomainEvent {
