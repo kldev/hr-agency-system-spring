@@ -87,6 +87,20 @@ public class JwtAuthenticationFilter
                 .getContext()
                 .setAuthentication(authentication);
     }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+
+        return isPublicEndpoint(path);
+    }
+
+    private boolean isPublicEndpoint(String path) {
+        return path.startsWith("/actuator/health")
+                || path.startsWith("/api/public/")
+                || path.startsWith("/swagger-ui/")
+                || path.startsWith("/v3/api-docs");
+    }
 }
 
 

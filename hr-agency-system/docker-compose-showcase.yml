@@ -1,0 +1,97 @@
+name: hr-agency-showcase
+
+services:
+
+  # ===================
+  # Infrastructure
+  # ===================
+
+  postgres:
+    image: postgres:17
+    container_name: hr-agency-showcase-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: hr_app
+      POSTGRES_USER: hr_app
+      POSTGRES_PASSWORD: hr_app
+
+    command:
+      - postgres
+      - -c
+      - max_connections=100
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - showcase_postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hr_app -d hr_app"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  rustfs:
+    image: rustfs/rustfs:latest
+    container_name: hr-agency-showcase-s3
+    restart: unless-stopped
+
+    environment:
+      RUSTFS_ACCESS_KEY: admin
+      RUSTFS_SECRET_KEY: password
+      RUSTFS_ADDRESS: ":9000"
+      RUSTFS_CONSOLE_ADDRESS: ":9001"
+      RUSTFS_CONSOLE_ENABLE: "true"
+
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+    volumes:
+      - showcase_files_data:/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9000/health/ready || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  # ===================
+  # Application
+  # ===================
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: hr-agency-showcase-app
+    restart: unless-stopped
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rustfs:
+        condition: service_healthy
+
+    environment:
+      SPRING_PROFILES_ACTIVE: showcase
+
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hr_app
+      SPRING_DATASOURCE_USERNAME: hr_app
+      SPRING_DATASOURCE_PASSWORD: hr_app
+
+      RUSTFS_ENDPOINT: http://rustfs:9000
+      RUSTFS_ACCESS_KEY: admin
+      RUSTFS_SECRET_KEY: password
+      RUSTFS_BUCKET: jobs-feed
+
+    ports:
+      - "8080:8080"
+
+volumes:
+  showcase_postgres_data:
+  showcase_files_data:
