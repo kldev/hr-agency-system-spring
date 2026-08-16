@@ -40,7 +40,7 @@ public class OrganizationService implements OrganizationApi {
     @Override
     public UUID create(String name, String slug) {
                return handler.handle(
-                new CreateOrganizationCommand(name, slug));
+                new CreateOrganizationCommand(name, slug)).id();
     }
 
     @Override

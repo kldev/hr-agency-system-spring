@@ -20,7 +20,7 @@ public class GetFeedFileHandler {
     private final S3Client s3Client;
     private final String bucketName;
 
-    public GetFeedFileHandler(@Value("${rustfs.bucket:jobs-feed}")
+    public GetFeedFileHandler(@Value("${rustfs.feeds.bucket:jobs-feed}")
                               String bucketName,
                               OrganizationApi api,
                               S3Client s3Client) {

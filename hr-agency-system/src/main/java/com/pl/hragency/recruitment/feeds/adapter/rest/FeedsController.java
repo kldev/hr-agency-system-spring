@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import java.util.Locale;
+
 @RestController
 @Tag(name = "Feeds")
 @RequestMapping("api/public/feeds")
@@ -26,7 +28,7 @@ public class FeedsController {
             produces = MediaType.APPLICATION_XML_VALUE
     )
     public ResponseEntity<StreamingResponseBody> feedXml(@PathVariable String slug) {
-        return handler.handle(slug, FeedType.xml);
+        return handler.handle(slug.toLowerCase(Locale.ROOT), FeedType.xml);
     }
 
     @GetMapping(
@@ -34,6 +36,6 @@ public class FeedsController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<StreamingResponseBody> feedJson(@PathVariable String slug) {
-        return handler.handle(slug, FeedType.json);
+        return handler.handle(slug.toLowerCase(Locale.ROOT), FeedType.json);
     }
 }

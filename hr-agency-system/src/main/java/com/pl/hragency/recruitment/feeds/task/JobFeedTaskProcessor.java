@@ -26,7 +26,7 @@ public class JobFeedTaskProcessor {
     private final JobFeedGenerator generator;
 
     public JobFeedTaskProcessor(
-            @Value("${rustfs.bucket:jobs-feed}") String bucketName,
+            @Value("${rustfs.feeds.bucket:jobs-feed}") String bucketName,
             S3Client s3Client,
             JobFeedGenerator generator
     ) {

@@ -79,15 +79,17 @@ services:
 
     environment:
       SPRING_PROFILES_ACTIVE: showcase
-
+      JPA_SHOW_SQL: false
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hr_app
       SPRING_DATASOURCE_USERNAME: hr_app
       SPRING_DATASOURCE_PASSWORD: hr_app
+      PLATFORM_USER: admin@hr-agency.app
+      PLATFORM_PASSWORD: hr12345
 
       RUSTFS_ENDPOINT: http://rustfs:9000
       RUSTFS_ACCESS_KEY: admin
       RUSTFS_SECRET_KEY: password
-      RUSTFS_BUCKET: jobs-feed
+      RUSTFS_FEEDS_BUCKET: jobs-feed
 
     ports:
       - "8080:8080"

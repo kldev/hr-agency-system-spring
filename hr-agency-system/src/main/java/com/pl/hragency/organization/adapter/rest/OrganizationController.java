@@ -2,6 +2,7 @@ package com.pl.hragency.organization.adapter.rest;
 
 import com.pl.hragency.organization.application.command.CreateOrganizationCommand;
 import com.pl.hragency.organization.application.handler.CreateOrganizationHandler;
+import com.pl.hragency.organization.application.result.CreateOrganizationResult;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,7 +26,7 @@ public class OrganizationController {
     }
 
     @PostMapping
-    public UUID createOrganization(@RequestBody CreateOrganizationCommand command) {
+    public CreateOrganizationResult createOrganization(@RequestBody CreateOrganizationCommand command) {
 
         return handler.handle(command);
     }

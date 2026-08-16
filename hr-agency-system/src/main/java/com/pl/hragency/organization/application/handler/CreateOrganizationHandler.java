@@ -1,6 +1,7 @@
 package com.pl.hragency.organization.application.handler;
 
 import com.pl.hragency.organization.application.command.CreateOrganizationCommand;
+import com.pl.hragency.organization.application.result.CreateOrganizationResult;
 import com.pl.hragency.organization.domain.event.OrganizationCreatedEvent;
 import com.pl.hragency.organization.domain.model.Organization;
 import com.pl.hragency.organization.application.port.OrganizationRepository;
@@ -25,7 +26,7 @@ public class CreateOrganizationHandler {
     }
 
     @Transactional
-    public UUID handle(CreateOrganizationCommand command) {
+    public CreateOrganizationResult handle(CreateOrganizationCommand command) {
 
         if (repository.existsBySlug(command.slug())) {
             throw new IllegalStateException(
@@ -49,6 +50,8 @@ public class CreateOrganizationHandler {
 
         publisher.publish(event);
 
-        return organization.id().value();
+        return new CreateOrganizationResult(organization.id().value(),
+                organization.name(),
+                organization.slug().value());
     }
 }

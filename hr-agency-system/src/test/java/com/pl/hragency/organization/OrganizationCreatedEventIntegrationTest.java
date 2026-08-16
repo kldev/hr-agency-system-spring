@@ -6,6 +6,7 @@ import com.pl.hragency.identity.application.port.UserRepository;
 import com.pl.hragency.identity.domain.model.PlatformRole;
 import com.pl.hragency.identity.domain.model.User;
 import com.pl.hragency.organization.application.command.CreateOrganizationCommand;
+import com.pl.hragency.organization.application.result.CreateOrganizationResult;
 import com.pl.hragency.organization.domain.event.OrganizationCreatedEvent;
 import com.pl.hragency.shared.event.EventPublisher;
 import com.pl.hragency.testsupport.AuthenticationTestClient;
@@ -71,7 +72,7 @@ class OrganizationCreatedEventIntegrationTest  extends BaseRestIntegrationTest {
                         .exchange()
                         .expectStatus()
                         .isOk()
-                        .expectBody(UUID.class)
+                        .expectBody(CreateOrganizationResult.class)
                         .returnResult()
                         .getResponseBody();
 
@@ -79,13 +80,22 @@ class OrganizationCreatedEventIntegrationTest  extends BaseRestIntegrationTest {
         assertThat(organizationId)
                 .isNotNull();
 
+        assertThat(organizationId.id())
+                .isNotNull();
+
+        assertThat(organizationId.slug())
+                .isEqualTo("acme");
+
+        assertThat(organizationId.name())
+                .isEqualTo("ACME Sp. z o.o.");
+
         await()
                 .atMost(Duration.ofSeconds(5))
                 .pollInterval(Duration.ofSeconds(1))
                 .untilAsserted(() -> {
                     var users =
                             userRepository.findByOrganizationId(
-                                    organizationId
+                                    organizationId.id()
                             );
 
                     assertThat(users)

@@ -29,7 +29,7 @@ class OrganizationAuditTest extends BaseIntegrationTest {
         );
 
         // when
-        var organizationId = handler.handle( command);
+        var organizationId = handler.handle( command).id();
 
         // then
         var auditEntries = awaitAuditEntries("Organization",

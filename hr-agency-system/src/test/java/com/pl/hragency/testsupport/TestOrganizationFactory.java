@@ -25,7 +25,7 @@ public class TestOrganizationFactory {
 
         var slug = "test-" + suffix;
 
-        var id = handler.handle(
+        var result = handler.handle(
                 new CreateOrganizationCommand(
                         "Test Organization " + suffix,
                         slug
@@ -33,7 +33,7 @@ public class TestOrganizationFactory {
         );
 
         return new TestOrganization(
-                id,
+                result.id(),
                 slug
         );
     }
