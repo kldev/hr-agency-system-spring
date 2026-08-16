@@ -1,5 +1,6 @@
 package com.pl.hragency.organization.api;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface OrganizationApi {
@@ -10,4 +11,6 @@ public interface OrganizationApi {
     UUID create(String name, String slug);
 
     boolean existsBySlug(String slug);
+
+    List<OrganizationSummary> findAllActive();
 }

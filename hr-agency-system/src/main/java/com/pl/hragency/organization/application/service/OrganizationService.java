@@ -8,6 +8,7 @@ import com.pl.hragency.organization.application.port.OrganizationRepository;
 import com.pl.hragency.organization.domain.model.Organization;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -38,8 +39,7 @@ public class OrganizationService implements OrganizationApi {
 
     @Override
     public UUID create(String name, String slug) {
-       // var context= new ExecutionContext(UUID.randomUUID(), UUID.randomUUID(), "System");
-        return handler.handle(
+               return handler.handle(
                 new CreateOrganizationCommand(name, slug));
     }
 
@@ -48,13 +48,19 @@ public class OrganizationService implements OrganizationApi {
         return repository.existsBySlug(slug);
     }
 
+    @Override
+    public List<OrganizationSummary> findAllActive() {
+        return repository.findAllActive()
+                .stream().map(this::toSummary).toList();
+    }
+
     private OrganizationSummary toSummary(
             Organization organization) {
 
         return new OrganizationSummary(
                 organization.id().value(),
                 organization.name(),
-                organization.slug()
+                organization.slug().value()
         );
     }
 }

@@ -1,6 +1,6 @@
 package com.pl.hragency.recruitment.feeds.adapter.persistence;
 
-import com.pl.hragency.recruitment.feeds.model.JobFeedTaskStatus;
+import com.pl.hragency.recruitment.feeds.domain.model.JobFeedTaskStatus;
 import jakarta.persistence.*;
 
 import java.time.Instant;
@@ -38,9 +38,6 @@ public class JobFeedTaskJpaEntity {
     @Column(name = "completed_at", nullable = false)
     private Instant completedAt;
 
-    @Column(name = "next_attempt_at", nullable = false)
-    private Instant nextAttemptAt;
-
     @Column(name = "error_message")
     private String errorMessage;
 
@@ -54,7 +51,6 @@ public class JobFeedTaskJpaEntity {
             Instant createdAt,
             Instant startedAt,
             Instant completedAt,
-            Instant nextAttemptAt,
             String errorMessage
     ) {
        this.id = id;
@@ -64,7 +60,6 @@ public class JobFeedTaskJpaEntity {
        this.createdAt = createdAt;
        this.startedAt = startedAt;
        this.completedAt = completedAt;
-       this.nextAttemptAt = nextAttemptAt;
        this.errorMessage = errorMessage;
 
     }
@@ -95,10 +90,6 @@ public class JobFeedTaskJpaEntity {
 
     public Instant getCompletedAt() {
         return completedAt;
-    }
-
-    public Instant getNextAttemptAt() {
-        return nextAttemptAt;
     }
 
     public String getErrorMessage() {

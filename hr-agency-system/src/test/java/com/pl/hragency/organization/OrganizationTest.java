@@ -20,7 +20,7 @@ class OrganizationTest {
         assertThat(organization.name())
                 .isEqualTo("Acme");
 
-        assertThat(organization.slug())
+        assertThat(organization.slug().value())
                 .isEqualTo("acme");
 
         assertThat(organization.id())

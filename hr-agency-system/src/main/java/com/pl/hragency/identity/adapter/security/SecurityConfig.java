@@ -57,7 +57,8 @@ public class SecurityConfig {
                                 "/swagger-resources/**"
                         ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/integrations/job-applications")
-                        .hasAuthority("SCOPE_APPLICATION_WRITE")
+                            .hasAuthority("SCOPE_APPLICATION_WRITE")
+                        .requestMatchers(HttpMethod.GET,"/api/public/feeds/**").permitAll()
                         .anyRequest()
                         .authenticated())
                 //.httpBasic(Customizer.withDefaults())

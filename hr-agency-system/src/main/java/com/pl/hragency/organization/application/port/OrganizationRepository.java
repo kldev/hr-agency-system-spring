@@ -2,6 +2,7 @@ package com.pl.hragency.organization.application.port;
 
 import com.pl.hragency.organization.domain.model.Organization;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -15,4 +16,6 @@ public interface OrganizationRepository {
     boolean existsBySlug(String slug);
 
     boolean existsById(UUID id);
+
+    List<Organization> findAllActive();
 }

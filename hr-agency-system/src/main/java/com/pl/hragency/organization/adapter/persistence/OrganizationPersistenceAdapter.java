@@ -3,6 +3,7 @@ package com.pl.hragency.organization.adapter.persistence;
 import com.pl.hragency.organization.domain.model.Organization;
 import com.pl.hragency.organization.application.port.OrganizationRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -54,5 +55,11 @@ public class OrganizationPersistenceAdapter implements OrganizationRepository {
     @Override
     public boolean existsById(UUID id) {
         return repository.existsById(id);
+    }
+
+    @Override
+    public List<Organization> findAllActive() {
+        return repository.findAll().stream()
+                .map(mapper::toDomain).toList();
     }
 }

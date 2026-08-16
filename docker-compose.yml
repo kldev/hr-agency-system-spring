@@ -11,6 +11,7 @@ services:
       POSTGRES_DB: hr_app
       POSTGRES_USER: hr_app
       POSTGRES_PASSWORD: hr_app
+    command: ["postgres", "-c", "max_connections=100"]      
     ports:
       - "5432:5432"
     volumes:
@@ -20,6 +21,28 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+  rustfs:
+    image: rustfs/rustfs:latest
+    container_name: hr-agency-s3
+    restart: unless-stopped
+    environment:
+      RUSTFS_ACCESS_KEY: admin
+      RUSTFS_SECRET_KEY: password
+      RUSTFS_ADDRESS: ":9000"
+      RUSTFS_CONSOLE_ADDRESS: ":9001"
+      RUSTFS_CONSOLE_ENABLE: true
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - files_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9000/health/ready || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: "10s"            
 
 volumes:
   postgres_data:
+  files_data:

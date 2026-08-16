@@ -11,8 +11,6 @@ CREATE TABLE job_feed_tasks
     started_at      TIMESTAMPTZ,
     completed_at    TIMESTAMPTZ,
 
-    next_attempt_at TIMESTAMPTZ,
-
     error_message   TEXT
 );
 

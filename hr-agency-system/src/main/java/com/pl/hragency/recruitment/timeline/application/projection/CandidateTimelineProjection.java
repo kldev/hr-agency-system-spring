@@ -3,7 +3,7 @@ package com.pl.hragency.recruitment.timeline.application.projection;
 import com.pl.hragency.recruitment.domain.event.CandidateCreatedEvent;
 import com.pl.hragency.recruitment.domain.event.CandidateStatusChangedEvent;
 import com.pl.hragency.recruitment.domain.event.CandidateUpdatedEvent;
-import com.pl.hragency.recruitment.timeline.application.CandidateTimelineEntryFactory;
+import com.pl.hragency.recruitment.timeline.application.application.factory.CandidateTimelineEntryFactory;
 import com.pl.hragency.recruitment.timeline.application.port.CandidateTimelineRepository;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Service;

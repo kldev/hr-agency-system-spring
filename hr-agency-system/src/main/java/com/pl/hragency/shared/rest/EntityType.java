@@ -4,6 +4,7 @@ public enum EntityType {
     JobDescription,
     Candidate,
     JobPosting,
+    JobFeed,
     JobApplication,
     Organization,
     SalesOpportunity,

@@ -52,6 +52,8 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-impl:0.13.0'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.13.0'
 
+	// xml
+	implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
 	implementation 'net.datafaker:datafaker:2.7.0'
 
 	runtimeOnly 'org.postgresql:postgresql'

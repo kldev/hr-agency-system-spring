@@ -10,7 +10,7 @@ import com.pl.hragency.recruitment.domain.model.application.JobApplication;
 import com.pl.hragency.recruitment.domain.model.candidate.Candidate;
 import com.pl.hragency.recruitment.domain.model.candidate.CandidateSource;
 import com.pl.hragency.recruitment.domain.model.posting.JobPosting;
-import com.pl.hragency.recruitment.domain.result.ApplyForPostingResult;
+import com.pl.hragency.recruitment.application.result.ApplyForPostingResult;
 import com.pl.hragency.recruitment.application.port.JobPostingRepository;
 import com.pl.hragency.recruitment.domain.model.posting.JobPostingId;
 import com.pl.hragency.shared.event.EventPublisher;

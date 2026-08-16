@@ -12,10 +12,10 @@ public class OrganizationScenario {
         this.api = api;
     }
 
-    public OrganizationResult create() {
-       UUID uuid = api.create("HR Agency z.o.o", "hr-agency");
+    public OrganizationResult create(String organizationName, String slug) {
+        UUID uuid = api.create(organizationName, slug);
 
-       return new OrganizationResult(uuid, "HR Agency z.o.o");
+        return new OrganizationResult(uuid, organizationName);
     }
 
     public record OrganizationResult(

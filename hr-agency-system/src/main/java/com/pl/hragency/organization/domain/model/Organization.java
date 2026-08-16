@@ -8,13 +8,13 @@ public class Organization {
 
     private final OrganizationId id;
     private String name;
-    private String slug;
+    private OrganizationSlug slug;
     private final Instant createdAt;
 
     private Organization(
             OrganizationId id,
             String name,
-            String slug,
+            OrganizationSlug slug,
             Instant createdAt) {
 
         this.id = Objects.requireNonNull(id);
@@ -40,7 +40,7 @@ public class Organization {
         return new Organization(
                 OrganizationId.newId(),
                 name.trim(),
-                slug.trim().toLowerCase(),
+                new OrganizationSlug(slug.trim().toLowerCase()),
                 Instant.now()
         );
     }
@@ -54,7 +54,7 @@ public class Organization {
         return new Organization(
                 new OrganizationId(id),
                 name,
-                slug,
+                new OrganizationSlug(slug),
                 createdAt
         );
     }
@@ -67,7 +67,7 @@ public class Organization {
         return name;
     }
 
-    public String slug() {
+    public OrganizationSlug slug() {
         return slug;
     }
 

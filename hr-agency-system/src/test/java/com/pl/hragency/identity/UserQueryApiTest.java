@@ -71,8 +71,8 @@ class UserQueryApiTest extends BaseRestIntegrationTest {
 
         // then
         assertThat(page).isNotNull();
-        assertThat(page.totalElements()).isEqualTo(3);
-        assertThat(page.content()).hasSize(3);
+        assertThat(page.totalElements()).isEqualTo(5);
+        assertThat(page.content()).hasSize(5);
     }
 
     @Test
@@ -127,7 +127,7 @@ class UserQueryApiTest extends BaseRestIntegrationTest {
         assertThat(page.size()).isEqualTo(2);
 
         assertThat(page.totalElements()).isEqualTo(6);
-        assertThat(page.totalPages()).isEqualTo(2);
+        assertThat(page.totalPages()).isEqualTo(3);
 
     }
 

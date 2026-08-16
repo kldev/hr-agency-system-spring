@@ -42,7 +42,7 @@ public class CreateOrganizationHandler {
         var event = new OrganizationCreatedEvent(
                 organization.id().value(),
                 organization.name(),
-                organization.slug(),
+                organization.slug().value(),
                 null,
                 null,
                 Instant.now());

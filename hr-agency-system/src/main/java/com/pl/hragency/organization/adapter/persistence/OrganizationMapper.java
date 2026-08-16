@@ -12,7 +12,7 @@ public class OrganizationMapper {
         return new OrganizationJpaEntity(
                 organization.id().value(),
                 organization.name(),
-                organization.slug(),
+                organization.slug().toString(),
                 organization.createdAt()
         );
     }

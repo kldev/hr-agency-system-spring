@@ -34,7 +34,7 @@ class OrganizationApiTest extends BaseRestIntegrationTest {
 
         var admin =
                 ownerFactory.create(
-                        "owner@test.com",
+                        "hr-owner@test.com",
                         "Password123!",
                         PlatformRole.OWNER
                 );
