@@ -116,4 +116,11 @@ public class IdentityService implements IdentityApi {
     public boolean existsInOrganization(String email, UUID organizationId) {
         return userRepository.findByEmailAndOrganizationId(email, new UserOrganizationId(organizationId)).isPresent();
     }
+
+    @Override
+    public Optional<UserSnapshot> findByEmail(String email, UUID organizationId) {
+        return userRepository.findByEmailAndOrganizationId(email, new UserOrganizationId(organizationId)).map(
+                c->new UserSnapshot(c.id().value(), c.firstName() + " " + c.lastName(), c.email()));
+
+    }
 }

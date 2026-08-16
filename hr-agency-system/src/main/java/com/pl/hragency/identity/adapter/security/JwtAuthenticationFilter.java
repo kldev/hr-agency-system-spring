@@ -97,6 +97,7 @@ public class JwtAuthenticationFilter
 
     private boolean isPublicEndpoint(String path) {
         return path.startsWith("/actuator/health")
+                | path.startsWith("/public/")
                 || path.startsWith("/api/public/")
                 || path.startsWith("/swagger-ui/")
                 || path.startsWith("/v3/api-docs");

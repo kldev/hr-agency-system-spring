@@ -19,5 +19,7 @@ public interface IdentityApi {
     List<UserSuggestion> findUserSuggestions(UUID organizationId, String search, Set<String> roles);
 
     boolean existsInOrganization(String email, UUID organizationId);
+
+    Optional<UserSnapshot> findByEmail(String email, UUID organizationId);
 };
 

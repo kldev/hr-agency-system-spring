@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="pl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${organizationName + ' | Oferty pracy'}">
+        Oferty pracy | Careers
+    </title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="min-h-screen bg-slate-50 text-slate-900 antialiased">
+
+<header class="border-b border-slate-200 bg-white">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-8">
+
+        <a href="/"
+           class="flex items-center gap-3">
+
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 text-sm font-bold text-white">
+                HR
+            </div>
+
+            <div>
+                <div class="text-sm font-semibold tracking-tight text-slate-900"
+                     th:text="${organizationName}">
+                    HR Agency
+                </div>
+
+                <div class="text-xs text-slate-500">
+                    Oferty pracy
+                </div>
+            </div>
+        </a>
+
+        <span class="hidden text-sm text-slate-500 sm:block">
+            Aktualne oferty pracy
+        </span>
+    </div>
+</header>
+
+
+<main>
+
+    <!-- Hero -->
+    <section class="border-b border-slate-200 bg-white">
+        <div class="mx-auto max-w-7xl px-6 py-14 lg:px-8 lg:py-20">
+
+            <div class="max-w-3xl">
+
+                <span class="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600 ring-1 ring-inset ring-slate-200">
+                    Kariera
+                </span>
+
+                <h1 class="mt-5 text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl">
+                    Znajdź swoją kolejną pracę
+                </h1>
+
+                <p class="mt-5 text-lg leading-8 text-slate-600">
+                    Przeglądaj aktualne oferty pracy i wybierz stanowisko,
+                    które najlepiej pasuje do Twojego doświadczenia.
+                </p>
+
+                <div class="mt-8">
+                    <div class="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                        <svg class="h-5 w-5 text-slate-400"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             aria-hidden="true">
+                            <circle cx="11" cy="11" r="7"></circle>
+                            <path d="m20 20-4-4"></path>
+                        </svg>
+
+                        <input id="search"
+                               type="search"
+                               placeholder="Szukaj po nazwie stanowiska..."
+                               class="w-full border-0 bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Jobs -->
+    <section class="mx-auto max-w-7xl px-6 py-10 lg:px-8 lg:py-14">
+
+        <div class="mb-7 flex items-end justify-between gap-4">
+
+            <div>
+                <h2 class="text-2xl font-bold tracking-tight text-slate-950">
+                    Aktualne oferty
+                </h2>
+
+                <p id="resultCount"
+                   class="mt-1 text-sm text-slate-500">
+                    Ładowanie ofert...
+                </p>
+            </div>
+
+            <div id="loading"
+                 class="text-sm text-slate-400">
+                Pobieranie...
+            </div>
+        </div>
+
+
+        <!-- Error -->
+        <div id="error"
+             class="hidden rounded-2xl border border-red-200 bg-red-50 p-6 text-red-700">
+
+            <p class="font-semibold">
+                Nie udało się pobrać ofert pracy.
+            </p>
+
+            <p class="mt-1 text-sm text-red-600">
+                Spróbuj ponownie za chwilę.
+            </p>
+        </div>
+
+
+        <!-- Empty -->
+        <div id="empty"
+             class="hidden rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm">
+
+            <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
+                <svg class="h-6 w-6 text-slate-400"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     aria-hidden="true">
+                    <path d="M9 11l3 3L22 4"></path>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                </svg>
+            </div>
+
+            <h3 class="mt-5 text-lg font-bold text-slate-900">
+                Brak aktualnych ofert
+            </h3>
+
+            <p class="mt-2 text-sm text-slate-500">
+                W tej chwili nie mamy żadnych aktywnych stanowisk.
+            </p>
+        </div>
+
+
+        <!-- Job list -->
+        <div id="jobs"
+             class="grid gap-5 md:grid-cols-2">
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer class="border-t border-slate-200 bg-white">
+    <div class="mx-auto max-w-7xl px-6 py-8 text-center text-sm text-slate-500">
+        © 2026
+        <span th:text="${organizationName}">
+            HR Agency
+        </span>
+    </div>
+</footer>
+
+
+<script th:inline="javascript">
+    const organizationSlug = /*[[${slug}]]*/ '';
+
+    const jobsContainer = document.getElementById('jobs');
+    const resultCount = document.getElementById('resultCount');
+    const loading = document.getElementById('loading');
+    const error = document.getElementById('error');
+    const empty = document.getElementById('empty');
+    const search = document.getElementById('search');
+
+    let jobs = [];
+
+    async function loadJobs() {
+        try {
+            const response = await fetch(
+                `/api/public/feeds/${encodeURIComponent(organizationSlug)}.json`
+            );
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            jobs = Array.isArray(data)
+                ? data
+                : data.jobs ?? [];
+
+            loading.classList.add('hidden');
+
+            renderJobs();
+
+        } catch (e) {
+            console.error('Failed to load job feed', e);
+
+            loading.classList.add('hidden');
+            error.classList.remove('hidden');
+
+            resultCount.textContent = 'Nie udało się pobrać ofert';
+        }
+    }
+
+    function renderJobs() {
+        const query = search.value.trim().toLowerCase();
+
+        const filteredJobs = jobs.filter(job =>
+            !query ||
+            job.title?.toLowerCase().includes(query) ||
+            job.summary?.toLowerCase().includes(query) ||
+            job.location?.toLowerCase().includes(query) ||
+            job.skills?.some(skill =>
+                skill.toLowerCase().includes(query)
+            )
+        );
+
+        jobsContainer.innerHTML = '';
+
+        if (filteredJobs.length === 0) {
+            empty.classList.remove('hidden');
+
+            resultCount.textContent =
+                query
+                    ? 'Brak ofert spełniających kryteria'
+                    : 'Brak aktualnych ofert';
+
+            return;
+        }
+
+        empty.classList.add('hidden');
+
+        resultCount.textContent =
+            `${filteredJobs.length} ${
+                filteredJobs.length === 1
+                    ? 'oferta'
+                    : filteredJobs.length < 5
+                        ? 'oferty'
+                        : 'ofert'
+            }`;
+
+        filteredJobs.forEach(job => {
+            jobsContainer.appendChild(createJobCard(job));
+        });
+    }
+
+    function createJobCard(job) {
+        const card = document.createElement('article');
+
+        card.className = [
+            'group',
+            'rounded-2xl',
+            'border',
+            'border-slate-200',
+            'bg-white',
+            'p-6',
+            'shadow-sm',
+            'transition',
+            'hover:-translate-y-0.5',
+            'hover:border-slate-300',
+            'hover:shadow-md'
+        ].join(' ');
+
+        const location = job.location
+            ? `<span class="inline-flex items-center gap-1.5">
+                   <span>📍</span>
+                   ${escapeHtml(job.location)}
+               </span>`
+            : '';
+
+        const salary =
+            job.salaryMin != null || job.salaryMax != null
+                ? `
+                    <div class="mt-5 rounded-xl bg-slate-50 p-4">
+                        <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                            Wynagrodzenie
+                        </div>
+
+                        <div class="mt-1 text-base font-bold text-slate-950">
+                            ${formatSalary(job)}
+                        </div>
+                    </div>
+                  `
+                : '';
+
+        const skills =
+            Array.isArray(job.skills) && job.skills.length
+                ? `
+                    <div class="mt-5 flex flex-wrap gap-2">
+                        ${job.skills.slice(0, 5).map(skill => `
+                            <span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 ring-1 ring-inset ring-slate-200">
+                                ${escapeHtml(skill)}
+                            </span>
+                        `).join('')}
+                    </div>
+                  `
+                : '';
+
+        /*
+         * Obecnie używamy UUID.
+         *
+         * Po dodaniu slugPosition:
+         *
+         * /public/{organizationSlug}/apply/{slugPosition}
+         *
+         * wystarczy zmienić href poniżej.
+         */
+        const applyUrl =
+            `/public/${encodeURIComponent(organizationSlug)}/apply/${encodeURIComponent(job.id)}`;
+
+        card.innerHTML = `
+            <div class="flex h-full flex-col">
+
+                <div class="flex-1">
+
+                    <div class="flex items-start justify-between gap-4">
+
+                        <div>
+                            <h3 class="text-xl font-bold tracking-tight text-slate-950 transition group-hover:text-slate-700">
+                                ${escapeHtml(job.title ?? '')}
+                            </h3>
+
+                            ${
+            job.summary
+                ? `
+                                        <p class="mt-2 text-sm leading-6 text-slate-500">
+                                            ${escapeHtml(job.summary)}
+                                        </p>
+                                      `
+                : ''
+        }
+                        </div>
+
+                        <span class="shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+                            Aktywna
+                        </span>
+
+                    </div>
+
+
+                    <div class="mt-5 flex flex-wrap gap-2 text-sm text-slate-600">
+
+                        ${
+            location
+                ? `
+                                    <span class="rounded-lg bg-slate-50 px-3 py-2">
+                                        ${location}
+                                    </span>
+                                  `
+                : ''
+        }
+
+                        ${
+            job.employmentType
+                ? `
+                                    <span class="rounded-lg bg-slate-50 px-3 py-2">
+                                        ${escapeHtml(job.employmentType)}
+                                    </span>
+                                  `
+                : ''
+        }
+
+                        ${
+            job.workMode
+                ? `
+                                    <span class="rounded-lg bg-slate-50 px-3 py-2">
+                                        ${escapeHtml(job.workMode)}
+                                    </span>
+                                  `
+                : ''
+        }
+
+                    </div>
+
+                    ${salary}
+
+                    ${skills}
+
+                </div>
+
+
+                <div class="mt-6 border-t border-slate-100 pt-5">
+
+                    <a href="${applyUrl}"
+                       class="flex w-full items-center justify-center rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800">
+
+                        Zobacz ofertę i aplikuj
+
+                        <svg class="ml-2 h-4 w-4"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             aria-hidden="true">
+                            <path d="M5 12h14"></path>
+                            <path d="m12 5 7 7-7 7"></path>
+                        </svg>
+
+                    </a>
+
+                </div>
+
+            </div>
+        `;
+
+        return card;
+    }
+
+    function formatSalary(job) {
+        const min = job.salaryMin != null
+            ? new Intl.NumberFormat('pl-PL').format(job.salaryMin)
+            : null;
+
+        const max = job.salaryMax != null
+            ? new Intl.NumberFormat('pl-PL').format(job.salaryMax)
+            : null;
+
+        const currency = job.salaryCurrency
+            ? ` ${escapeHtml(job.salaryCurrency)}`
+            : '';
+
+        if (min && max) {
+            return `${min} – ${max}${currency}`;
+        }
+
+        return `${min ?? max}${currency}`;
+    }
+
+    function escapeHtml(value) {
+        return String(value)
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
+    }
+
+    search.addEventListener('input', renderJobs);
+
+    loadJobs();
+</script>
+
+</body>
+</html>
+
