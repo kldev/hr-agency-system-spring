@@ -28,7 +28,8 @@ public class TestOrganizationFactory {
         var result = handler.handle(
                 new CreateOrganizationCommand(
                         "Test Organization " + suffix,
-                        slug
+                        slug,
+                        null
                 )
         );
 

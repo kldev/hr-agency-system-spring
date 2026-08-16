@@ -45,7 +45,7 @@ class OrganizationApiTest extends BaseRestIntegrationTest {
         var command =
                 new CreateOrganizationCommand(
                         "ACME Sp. z o.o.",
-                        "acme"
+                        "acme", null
                 );
 
         // when
@@ -92,7 +92,7 @@ class OrganizationApiTest extends BaseRestIntegrationTest {
         var command =
                 new CreateOrganizationCommand(
                         "ACME Sp. z o.o.",
-                        "acme"
+                        "acme", null
                 );
 
         // when / then

@@ -56,7 +56,7 @@ class OrganizationCreatedEventIntegrationTest  extends BaseRestIntegrationTest {
         var command =
                 new CreateOrganizationCommand(
                         "ACME Sp. z o.o.",
-                        "acme"
+                        "acme", null
                 );
 
         // when

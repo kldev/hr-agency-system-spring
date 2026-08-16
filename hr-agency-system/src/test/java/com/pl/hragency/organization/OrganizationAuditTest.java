@@ -25,7 +25,7 @@ class OrganizationAuditTest extends BaseIntegrationTest {
         // given
         var command = new CreateOrganizationCommand(
                 "ACME Sp. z o.o.",
-                "acmeOrg"
+                "acmeOrg", null
         );
 
         // when
