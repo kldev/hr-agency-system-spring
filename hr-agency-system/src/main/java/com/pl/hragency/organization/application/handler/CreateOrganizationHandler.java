@@ -1,8 +1,8 @@
 package com.pl.hragency.organization.application.handler;
 
-import com.pl.hragency.identity.api.IdentityApi;
 import com.pl.hragency.organization.application.command.CreateOrganizationCommand;
 import com.pl.hragency.organization.application.result.CreateOrganizationResult;
+import com.pl.hragency.organization.domain.event.OrganizationCreateAdminEvent;
 import com.pl.hragency.organization.domain.event.OrganizationCreatedEvent;
 import com.pl.hragency.organization.domain.model.Organization;
 import com.pl.hragency.organization.application.port.OrganizationRepository;
@@ -11,20 +11,18 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @Service
 public class CreateOrganizationHandler {
     private final OrganizationRepository repository;
     private final EventPublisher publisher;
-    private final IdentityApi identityApi;
 
     public CreateOrganizationHandler(
-            OrganizationRepository repository, EventPublisher publisher, IdentityApi identityApi) {
+            OrganizationRepository repository,
+            EventPublisher publisher) {
 
         this.repository = repository;
         this.publisher = publisher;
-        this.identityApi = identityApi;
     }
 
     @Transactional
@@ -49,20 +47,18 @@ public class CreateOrganizationHandler {
                 null,
                 null,
                 Instant.now());
+        publisher.publish(event);
 
         if (command.organizationAdmin() != null) {
-            var admin = command.organizationAdmin();
-            identityApi.createUser(
-                    admin.email(),
-                    admin.firstName(),
-                    admin.latName(),
-                    "ADMIN",
-                    organization.id().value(),
-                    admin.password());
+            var createAdminEvent = new OrganizationCreateAdminEvent(organization.id().value(),
+                    command.organizationAdmin().email(),
+                    command.organizationAdmin().firstName(),
+                    command.organizationAdmin().latName(),
+                    command.organizationAdmin().password(),
+                    null, "SYSTEM", Instant.now());
+            publisher.publish(createAdminEvent);
+
         }
-
-
-        publisher.publish(event);
 
         return new CreateOrganizationResult(organization.id().value(),
                 organization.name(),

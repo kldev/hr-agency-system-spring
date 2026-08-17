@@ -56,7 +56,7 @@ class OrganizationCreatedEventIntegrationTest  extends BaseRestIntegrationTest {
         var command =
                 new CreateOrganizationCommand(
                         "ACME Sp. z o.o.",
-                        "acme", null
+                        "acme3", null
                 );
 
         // when
@@ -84,7 +84,7 @@ class OrganizationCreatedEventIntegrationTest  extends BaseRestIntegrationTest {
                 .isNotNull();
 
         assertThat(organizationId.slug())
-                .isEqualTo("acme");
+                .isEqualTo("acme3");
 
         assertThat(organizationId.name())
                 .isEqualTo("ACME Sp. z o.o.");

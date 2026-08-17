@@ -1,5 +1,6 @@
 package com.pl.hragency.recruitment.feeds.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.pl.hragency.jobdescription.api.EmploymentType;
@@ -16,6 +17,7 @@ public record JobFeedItem(
         String summary,
         String description,
 
+        @JsonProperty("responsibilities")
         @JacksonXmlElementWrapper(localName = "responsibilities")
         @JacksonXmlProperty(localName = "responsibility")
         List<String> responsibilities,
