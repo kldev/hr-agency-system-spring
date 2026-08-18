@@ -53,6 +53,7 @@ public class DevelopmentScenario {
         create("Demo Jobs z.o.o", "demo");
         create("We Help .inc", "we-help");
 
+        logger.info("Seed successfully completed");
         // seedExtra();
 
     }
