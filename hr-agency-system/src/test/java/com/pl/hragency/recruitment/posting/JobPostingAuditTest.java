@@ -13,19 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class JobPostingAuditTest extends BaseRestIntegrationTest {
 
     @Autowired
-    private TestOrganizationFactory organizationFactory;
-
-    @Autowired
-    private TestUserFactory userFactory;
-
-    @Autowired
-    private TestCompanyFactory companyFactory;
-
-    @Autowired
-    private AuthenticationTestClient authenticationClient;
-
-    @Autowired
-    private TestJobDescriptionFactory jobDescriptionFactory;
+    private TestJobApplicationScenario scenario;
 
     @Autowired
     private TestJobPostingFactory jobPostingFactory;
@@ -33,24 +21,12 @@ class JobPostingAuditTest extends BaseRestIntegrationTest {
     @Test
     void shouldCreateAuditEntryWhenJobPostingIsCreated() {
         // given
-        var organization = organizationFactory.create();
+        var test = scenario.create();
+        var organization = test.organization();
 
-        var user = userFactory.create(
-                organization,
-                "recruiter@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
-
-        var companyId = companyFactory.create(
-                organization.id()
-        );
-
-        var jobDescriptionId = jobDescriptionFactory.create(
-                organization.id(),
-                companyId,
-                user.id()
-        );
+        var user =  test.recruiter();
+        var companyId = test.companyId();
+        var jobDescriptionId =  test.jobDescriptionId();
 
         // when
         var jobPostingId = jobPostingFactory.create(
@@ -93,24 +69,12 @@ class JobPostingAuditTest extends BaseRestIntegrationTest {
     @Test
     void shouldCreateAuditEntryWhenJobPostingStatusIsChanged() {
         // given
-        var organization = organizationFactory.create();
+        var test = scenario.create();
+        var organization = test.organization();
 
-        var user = userFactory.create(
-                organization,
-                "recruiter@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
-
-        var companyId = companyFactory.create(
-                organization.id()
-        );
-
-        var jobDescriptionId = jobDescriptionFactory.create(
-                organization.id(),
-                companyId,
-                user.id()
-        );
+        var user =  test.recruiter();
+        var companyId = test.companyId();
+        var jobDescriptionId =  test.jobDescriptionId();
 
         var jobPostingId = jobPostingFactory.create(
                 organization.id(),

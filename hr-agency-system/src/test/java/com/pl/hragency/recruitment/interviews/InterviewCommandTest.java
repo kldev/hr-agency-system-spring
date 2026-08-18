@@ -1,19 +1,12 @@
 package com.pl.hragency.recruitment.interviews;
 
 import com.pl.hragency.BaseRestIntegrationTest;
-import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.recruitment.application.command.CreateInterviewCommand;
 import com.pl.hragency.recruitment.application.port.InterviewRepository;
 import com.pl.hragency.recruitment.domain.model.interview.InterviewId;
 import com.pl.hragency.recruitment.domain.model.interview.InterviewStatus;
-import com.pl.hragency.recruitment.domain.model.posting.JobPostingStatus;
 import com.pl.hragency.testsupport.AuthenticationTestClient;
-import com.pl.hragency.testsupport.TestCompanyFactory;
-import com.pl.hragency.testsupport.TestJobApplicationFactory;
-import com.pl.hragency.testsupport.TestJobDescriptionFactory;
-import com.pl.hragency.testsupport.TestJobPostingFactory;
-import com.pl.hragency.testsupport.TestOrganizationFactory;
-import com.pl.hragency.testsupport.TestUserFactory;
+import com.pl.hragency.testsupport.TestJobApplicationScenario;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -28,22 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class InterviewCommandTest extends BaseRestIntegrationTest {
 
     @Autowired
-    private TestOrganizationFactory organizationFactory;
-
-    @Autowired
-    private TestUserFactory userFactory;
-
-    @Autowired
-    private TestCompanyFactory companyFactory;
-
-    @Autowired
-    private TestJobDescriptionFactory jobDescriptionFactory;
-
-    @Autowired
-    private TestJobPostingFactory jobPostingFactory;
-
-    @Autowired
-    private TestJobApplicationFactory jobApplicationFactory;
+    private TestJobApplicationScenario scenario;
 
     @Autowired
     private AuthenticationTestClient authenticationClient;
@@ -54,43 +32,7 @@ class InterviewCommandTest extends BaseRestIntegrationTest {
     @Test
     void shouldScheduleInterviewForJobApplication() {
         // given
-        var organization = organizationFactory.create();
-
-        var recruiter = userFactory.create(
-                organization,
-                "recruiter@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
-
-        var companyId = companyFactory.create(organization.id());
-
-        var jobDescriptionId = jobDescriptionFactory.create(
-                organization.id(),
-                companyId,
-                recruiter.id()
-        );
-
-        var jobPostingId = jobPostingFactory.create(
-                organization.id(),
-                jobDescriptionId,
-                companyId,
-                recruiter.id()
-        );
-
-        jobPostingFactory.updateStatus(
-                organization.id(),
-                recruiter.id(),
-                jobPostingId,
-                JobPostingStatus.PUBLISHED
-        );
-
-        var jobApplicationId = jobApplicationFactory.create(
-                organization.id(),
-                recruiter.id(),
-                jobPostingId
-        );
-
+        var test = scenario.create();
         var scheduledAt = LocalDateTime.of(
                 2026,
                 9,
@@ -110,13 +52,13 @@ class InterviewCommandTest extends BaseRestIntegrationTest {
                 .atZone(scheduledTimezone)
                 .toInstant();
 
-        var token = authenticationClient.login(recruiter);
+        var token = authenticationClient.login(test.recruiter());
 
         // when
         var interviewId = restTestClient.post()
                 .uri(url(
                         "/api/recruitment/job-applications/%s/schedule-interview"
-                                .formatted(jobApplicationId)
+                                .formatted(test.jobApplicationId())
                 ))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token)
@@ -132,11 +74,11 @@ class InterviewCommandTest extends BaseRestIntegrationTest {
         assertThat(interviewId).isNotNull();
 
         var interview = interviewRepository
-                .findById(organization.id(), new InterviewId(interviewId))
+                .findById(test.organization().id(), new InterviewId(interviewId))
                 .orElseThrow();
 
         assertThat(interview.id().value()).isEqualTo(interviewId);
-        assertThat(interview.applicationId()).isEqualTo(jobApplicationId);
+        assertThat(interview.applicationId()).isEqualTo(test.jobApplicationId());
         assertThat(interview.scheduledAt()).isEqualTo(expectedScheduledAt);
         assertThat(interview.status()).isEqualTo(InterviewStatus.PLANNED);
     }
@@ -144,42 +86,7 @@ class InterviewCommandTest extends BaseRestIntegrationTest {
     @Test
     void shouldScheduleInterviewUsingProvidedTimezone() {
         // given
-        var organization = organizationFactory.create();
-
-        var recruiter = userFactory.create(
-                organization,
-                "recruiter@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
-
-        var companyId = companyFactory.create(organization.id());
-
-        var jobDescriptionId = jobDescriptionFactory.create(
-                organization.id(),
-                companyId,
-                recruiter.id()
-        );
-
-        var jobPostingId = jobPostingFactory.create(
-                organization.id(),
-                jobDescriptionId,
-                companyId,
-                recruiter.id()
-        );
-
-        jobPostingFactory.updateStatus(
-                organization.id(),
-                recruiter.id(),
-                jobPostingId,
-                JobPostingStatus.PUBLISHED
-        );
-
-        var jobApplicationId = jobApplicationFactory.create(
-                organization.id(),
-                recruiter.id(),
-                jobPostingId
-        );
+        var test = scenario.create();
 
         var scheduledAt = LocalDateTime.of(
                 2026,
@@ -200,13 +107,13 @@ class InterviewCommandTest extends BaseRestIntegrationTest {
                 .atZone(scheduledTimezone)
                 .toInstant();
 
-        var token = authenticationClient.login(recruiter);
+        var token = authenticationClient.login(test.recruiter());
 
         // when
         var interviewId = restTestClient.post()
                 .uri(url(
                         "/api/recruitment/job-applications/%s/schedule-interview"
-                                .formatted(jobApplicationId)
+                                .formatted(test.jobApplicationId())
                 ))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token)
@@ -222,11 +129,11 @@ class InterviewCommandTest extends BaseRestIntegrationTest {
         assertThat(interviewId).isNotNull();
 
         var interview = interviewRepository
-                .findById(organization.id(), new InterviewId(interviewId))
+                .findById(test.organization().id(), new InterviewId(interviewId))
                 .orElseThrow();
 
         assertThat(interview.applicationId())
-                .isEqualTo(jobApplicationId);
+                .isEqualTo(test.jobApplicationId());
 
         assertThat(interview.scheduledAt())
                 .isEqualTo(expectedScheduledAt);

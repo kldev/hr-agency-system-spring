@@ -18,7 +18,6 @@ class OrganizationAuditTest extends BaseIntegrationTest {
     @Autowired
     private CreateOrganizationHandler handler;
 
-
     @Test
     void shouldCreateAuditLogWhenOrganizationIsCreated() {
 

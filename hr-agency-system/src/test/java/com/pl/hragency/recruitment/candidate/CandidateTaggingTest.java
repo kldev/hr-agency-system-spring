@@ -1,7 +1,6 @@
 package com.pl.hragency.recruitment.candidate;
 
 import com.pl.hragency.BaseRestIntegrationTest;
-import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.recruitment.application.command.TagCandidateCommand;
 import com.pl.hragency.recruitment.application.port.CandidateTaggingRepository;
 import com.pl.hragency.recruitment.application.query.CandidateTagItem;
@@ -20,20 +19,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class CandidateTaggingTest extends BaseRestIntegrationTest {
-    @Autowired
-    private TestOrganizationFactory organizationFactory;
 
     @Autowired
-    private TestUserFactory userFactory;
+    private TestCandidateScenario candidateScenario;
 
     @Autowired
     private AuthenticationTestClient authenticationClient;
 
     @Autowired
     private CandidateTaggingRepository  candidateTaggingRepository;
-
-    @Autowired
-    private TestCandidateFactory candidateFactory;
 
     private ApiResult tagCandidate(UUID candidateId, TagCandidateCommand command, TestUser user) {
 
@@ -55,21 +49,14 @@ public class CandidateTaggingTest extends BaseRestIntegrationTest {
                 .getResponseBody();
     }
 
+
     @Test
     void shouldTagCandidate() {
         UUID tagID = UUID.fromString("20000000-0000-0000-0000-000000000017");
 
-        var organization = organizationFactory.create();
-
-        var recruiter = userFactory.create(
-                organization,
-                "recruiter@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
-
-        var candidate = candidateFactory.create(organization.id(), "john.connor@sky.net");
-
+        var scenario = candidateScenario.create("john.connor@sky.net");
+        var candidate = scenario.candidate();
+        var recruiter = scenario.recruiter();
         var command = new TagCandidateCommand(tagID);
 
         var response = tagCandidate(candidate.id(), command, recruiter);
@@ -90,18 +77,11 @@ public class CandidateTaggingTest extends BaseRestIntegrationTest {
 
     @Test
     void whenTagNotExitsReturn404() {
-        UUID tagID = UUID.randomUUID();
+        var tagID = UUID.randomUUID();
 
-        var organization = organizationFactory.create();
-
-        var recruiter = userFactory.create(
-                organization,
-                "recruiter@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
-
-        var candidate = candidateFactory.create(organization.id(), "alex.smith@sky.net");
+        var scenario = candidateScenario.create("john.connor@sky.net");
+        var candidate = scenario.candidate();
+        var recruiter = scenario.recruiter();
 
         var command = new TagCandidateCommand(tagID);
 
@@ -123,18 +103,11 @@ public class CandidateTaggingTest extends BaseRestIntegrationTest {
 
     @Test
     void shouldTagAndRemoveTagForCandidate() {
-        UUID tagID = UUID.fromString("20000000-0000-0000-0000-000000000017");
+        var tagID = UUID.fromString("20000000-0000-0000-0000-000000000017");
 
-        var organization = organizationFactory.create();
-
-        var recruiter = userFactory.create(
-                organization,
-                "recruiter@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
-
-        var candidate = candidateFactory.create(organization.id(), "john.connor@sky.net");
+        var scenario = candidateScenario.create("john.connor@sky.net");
+        var candidate = scenario.candidate();
+        var recruiter = scenario.recruiter();
 
         var command = new TagCandidateCommand(tagID);
 
@@ -158,16 +131,9 @@ public class CandidateTaggingTest extends BaseRestIntegrationTest {
     void shouldTagCandidateOnlyOnce() {
         UUID tagID = UUID.fromString("20000000-0000-0000-0000-000000000017");
 
-        var organization = organizationFactory.create();
-
-        var recruiter = userFactory.create(
-                organization,
-                "recruiter@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
-
-        var candidate = candidateFactory.create(organization.id(), "john.connor@sky.net");
+        var scenario = candidateScenario.create("john.connor@sky.net");
+        var candidate = scenario.candidate();
+        var recruiter = scenario.recruiter();
 
         var command = new TagCandidateCommand(tagID);
 
@@ -201,16 +167,9 @@ public class CandidateTaggingTest extends BaseRestIntegrationTest {
 
         var tags = List.of(tagId, tagId2, tagId3, tagId4, tagId5);
 
-        var organization = organizationFactory.create();
-
-        var recruiter = userFactory.create(
-                organization,
-                "recruiter@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
-
-        var candidate = candidateFactory.create(organization.id(), "john.connor@sky.net");
+        var scenario = candidateScenario.create("john.connor@sky.net");
+        var candidate = scenario.candidate();
+        var recruiter = scenario.recruiter();
 
         for (var tag : tags) {
             var command = new TagCandidateCommand(tag);
@@ -237,5 +196,4 @@ public class CandidateTaggingTest extends BaseRestIntegrationTest {
                 .hasSize(5);
 
     }
-
 }

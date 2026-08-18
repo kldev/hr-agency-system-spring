@@ -4,116 +4,25 @@ import com.pl.hragency.BaseRestIntegrationTest;
 import com.pl.hragency.identity.application.command.CreateIntegrationClientCommand;
 import com.pl.hragency.identity.application.result.IntegrationClientResult;
 import com.pl.hragency.identity.domain.model.IntegrationScope;
-import com.pl.hragency.identity.domain.model.OrganizationRole;
-import com.pl.hragency.jobdescription.api.EmploymentType;
-import com.pl.hragency.jobdescription.api.WorkMode;
-import com.pl.hragency.recruitment.application.command.ChangeJobPostingStatusCommand;
 import com.pl.hragency.recruitment.application.command.CreateJobApplicationCommand;
-import com.pl.hragency.recruitment.application.command.CreateJobPostingCommand;
-import com.pl.hragency.recruitment.application.port.JobPostingRepository;
 import com.pl.hragency.recruitment.domain.model.candidate.CandidateSource;
-import com.pl.hragency.recruitment.domain.model.posting.JobPostingId;
-import com.pl.hragency.recruitment.domain.model.posting.JobPostingStatus;
 import com.pl.hragency.recruitment.application.result.ApplyForPostingResult;
-import com.pl.hragency.shared.rest.ApiResult;
 import com.pl.hragency.testsupport.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
-import java.math.BigDecimal;
 import java.util.Set;
-import java.util.UUID;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class RecruitmentIntegrationTest extends BaseRestIntegrationTest {
-    @Autowired
-    private TestOrganizationFactory organizationFactory;
 
     @Autowired
-    private TestUserFactory userFactory;
-
-    @Autowired
-    private TestCompanyFactory companyFactory;
-
-    @Autowired
-    private TestJobDescriptionFactory jobDescriptionFactory;
+    private TestJobApplicationScenario scenario;
 
     @Autowired
     private AuthenticationTestClient authenticationClient;
 
-    @Autowired
-    private JobPostingRepository jobPostingRepository;
-
-    private JobPostingId createJobPosting(
-            TestOrganization organization,
-            TestUser user
-    ) {
-        var companyId = companyFactory.create(organization.id());
-
-        var jobDescriptionId = jobDescriptionFactory.create(
-                organization.id(),
-                companyId,
-                user.id()
-        );
-
-        var command = new CreateJobPostingCommand(
-                jobDescriptionId,
-                user.id(),
-                "Java Developer",
-                "Java Developer for recruitment project",
-                "We are looking for an experienced Java Developer.",
-                java.util.List.of("Develop backend applications",
-                        "Participate in code reviews",
-                        "Cooperate with frontend developers"),
-                java.util.List.of("3+ years of Java experience",
-                        "Spring Boot experience",
-                        "Good English"),
-                java.util.List.of(   "Java",
-                        "Spring Boot",
-                        "PostgreSQL",
-                        "Docker"),
-                "Opole",
-                "PL",
-                EmploymentType.FULL_TIME,
-                WorkMode.HYBRID,
-                new BigDecimal("12000.00"),
-                new BigDecimal("18000.00"),
-                "PLN"
-        );
-
-        var token = authenticationClient.login(user);
-
-
-        var postingId = restTestClient
-                .post()
-                .uri(url("/api/recruitment/job-posting"))
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + token)
-                .body(command)
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody(UUID.class)
-                .returnResult()
-                .getResponseBody();
-
-        assertThat(postingId).isNotNull();
-
-        restTestClient.put()
-                .uri(url("/api/recruitment/job-posting/%s/status".formatted(postingId)))
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + token)
-                .body(new ChangeJobPostingStatusCommand(JobPostingStatus.PUBLISHED))
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody(ApiResult.class);
-
-        return new JobPostingId(postingId);
-    }
 
     private IntegrationClientResult createIntegrationClient(
             TestUser user
@@ -154,12 +63,11 @@ public class RecruitmentIntegrationTest extends BaseRestIntegrationTest {
     @Test
     public void shouldApplyForJobPosting(){
         // given
-        var organization = organizationFactory.create();
-        var user = userFactory.create(organization, "admin@hr-app.com", "pass123", OrganizationRole.ADMIN);
-        var jobPostingId = createJobPosting(organization, user);
-        var key = createIntegrationClient(user);
+        var test = scenario.create();
+        var jobPostingId = test.jobPostingId();
+        var key = createIntegrationClient(test.admin());
 
-        var command =  new CreateJobApplicationCommand(jobPostingId.value(), "test@gmail.com", "Test", "User","", CandidateSource.FACEBOOK);
+        var command =  new CreateJobApplicationCommand(jobPostingId, "test@gmail.com", "Test", "User","", CandidateSource.FACEBOOK);
         var result = applyForJobPosting(key.apiKey(), command);
 
         Assertions.assertNotNull(result);
@@ -168,14 +76,15 @@ public class RecruitmentIntegrationTest extends BaseRestIntegrationTest {
     @Test
     public void shouldNotApplyForJobPostingWhenAnotherOrganization(){
         // given
-        var organizationA = organizationFactory.create();
-        var organizationB = organizationFactory.create();
-        var userA = userFactory.create(organizationA, "admin@org-one.io", "pass123", OrganizationRole.ADMIN);
-        var userB = userFactory.create(organizationB, "admin@org-two.io", "pass123", OrganizationRole.ADMIN);
-        var jobPostingId = createJobPosting(organizationA, userA);
+        var test = scenario.create();
+        var test2 = scenario.create();
+
+        var userB = test2.admin();
+        var jobPostingId = test.jobPostingId();
+
         var key = createIntegrationClient(userB);
 
-        var command =  new CreateJobApplicationCommand(jobPostingId.value(), "test@gmail.com", "Test", "User","", CandidateSource.OLX);
+        var command =  new CreateJobApplicationCommand(jobPostingId, "test@gmail.com", "Test", "User","", CandidateSource.OLX);
 
         restTestClient
                 .post()

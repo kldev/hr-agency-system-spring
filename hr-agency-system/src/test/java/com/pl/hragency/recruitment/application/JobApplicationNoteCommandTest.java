@@ -1,17 +1,9 @@
 package com.pl.hragency.recruitment.application;
 
 import com.pl.hragency.BaseRestIntegrationTest;
-import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.recruitment.application.command.CreateJobApplicationNoteCommand;
 import com.pl.hragency.recruitment.application.port.JobApplicationNoteRepository;
-import com.pl.hragency.recruitment.domain.model.posting.JobPostingStatus;
-import com.pl.hragency.testsupport.AuthenticationTestClient;
-import com.pl.hragency.testsupport.TestCompanyFactory;
-import com.pl.hragency.testsupport.TestJobApplicationFactory;
-import com.pl.hragency.testsupport.TestJobDescriptionFactory;
-import com.pl.hragency.testsupport.TestJobPostingFactory;
-import com.pl.hragency.testsupport.TestOrganizationFactory;
-import com.pl.hragency.testsupport.TestUserFactory;
+import com.pl.hragency.testsupport.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -19,26 +11,10 @@ import org.springframework.http.MediaType;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 class JobApplicationNoteCommandTest extends BaseRestIntegrationTest {
 
     @Autowired
-    private TestOrganizationFactory organizationFactory;
-
-    @Autowired
-    private TestUserFactory userFactory;
-
-    @Autowired
-    private TestCompanyFactory companyFactory;
-
-    @Autowired
-    private TestJobDescriptionFactory jobDescriptionFactory;
-
-    @Autowired
-    private TestJobPostingFactory jobPostingFactory;
-
-    @Autowired
-    private TestJobApplicationFactory jobApplicationFactory;
+    private TestJobApplicationScenario jobApplicationScenario;
 
     @Autowired
     private AuthenticationTestClient authenticationClient;
@@ -49,48 +25,18 @@ class JobApplicationNoteCommandTest extends BaseRestIntegrationTest {
     @Test
     void shouldCreateJobApplicationNote() {
         // given
-        var organization = organizationFactory.create();
-
-        var recruiter = userFactory.create(
-                organization,
-                "recruiter@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
-
-        var companyId = companyFactory.create(organization.id());
-
-        var jobDescriptionId = jobDescriptionFactory.create(
-                organization.id(),
-                companyId,
-                recruiter.id()
-        );
-
-        var jobPostingId = jobPostingFactory.create(
-                organization.id(),
-                jobDescriptionId,
-                companyId,
-                recruiter.id()
-        );
-
-        jobPostingFactory.updateStatus(organization.id(), recruiter.id(), jobPostingId, JobPostingStatus.PUBLISHED);
-
-        var jobApplicationId = jobApplicationFactory.create(
-                organization.id(),
-                recruiter.id(),
-                jobPostingId
-        );
+        var scenario = jobApplicationScenario.create();
 
         var content = "Strong candidate. Proceed with the offer.";
         var command = new CreateJobApplicationNoteCommand(content);
 
-        var token = authenticationClient.login(recruiter);
+        var token = authenticationClient.login(scenario.recruiter());
 
         // when
         var noteId = restTestClient.post()
                 .uri(url(
                         "/api/recruitment/job-applications/%s/notes"
-                                .formatted(jobApplicationId)
+                                .formatted(scenario.jobApplicationId())
                 ))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token)
@@ -106,8 +52,8 @@ class JobApplicationNoteCommandTest extends BaseRestIntegrationTest {
         assertThat(noteId).isNotNull();
 
         var notes = jobApplicationNoteRepository.findAll(
-                organization.id(),
-                jobApplicationId
+                scenario.organization().id(),
+                scenario.jobApplicationId()
         );
 
         assertThat(notes)
@@ -115,8 +61,10 @@ class JobApplicationNoteCommandTest extends BaseRestIntegrationTest {
                 .first()
                 .satisfies(note -> {
                     assertThat(note.id()).isEqualTo(noteId);
-                    assertThat(note.applicationId()).isEqualTo(jobApplicationId);
-                    assertThat(note.content()).isEqualTo(content);
+                    assertThat(note.applicationId())
+                            .isEqualTo(scenario.jobApplicationId());
+                    assertThat(note.content())
+                            .isEqualTo(content);
                 });
     }
 }

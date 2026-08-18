@@ -1,17 +1,8 @@
 package com.pl.hragency.recruitment.application;
 
 import com.pl.hragency.BaseRestIntegrationTest;
-import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.recruitment.application.query.JobApplicationNoteItem;
-import com.pl.hragency.recruitment.domain.model.posting.JobPostingStatus;
-import com.pl.hragency.testsupport.AuthenticationTestClient;
-import com.pl.hragency.testsupport.TestCompanyFactory;
-import com.pl.hragency.testsupport.TestJobApplicationFactory;
-import com.pl.hragency.testsupport.TestJobApplicationNoteFactory;
-import com.pl.hragency.testsupport.TestJobDescriptionFactory;
-import com.pl.hragency.testsupport.TestJobPostingFactory;
-import com.pl.hragency.testsupport.TestOrganizationFactory;
-import com.pl.hragency.testsupport.TestUserFactory;
+import com.pl.hragency.testsupport.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -24,88 +15,43 @@ import static org.assertj.core.api.Assertions.assertThat;
 class JobApplicationNoteQueryTest extends BaseRestIntegrationTest {
 
     @Autowired
-    private TestOrganizationFactory organizationFactory;
-
-    @Autowired
-    private TestUserFactory userFactory;
-
-    @Autowired
-    private TestCompanyFactory companyFactory;
-
-    @Autowired
-    private TestJobDescriptionFactory jobDescriptionFactory;
-
-    @Autowired
-    private TestJobPostingFactory jobPostingFactory;
-
-    @Autowired
-    private TestJobApplicationFactory jobApplicationFactory;
-
-    @Autowired
-    private TestJobApplicationNoteFactory jobApplicationNoteFactory;
+    private TestJobApplicationScenario scenario;
 
     @Autowired
     private AuthenticationTestClient authenticationClient;
 
+    @Autowired
+    private TestJobApplicationNoteFactory  jobApplicationNoteFactory;
+
     @Test
     void shouldReturnNotesForJobApplication() {
         // given
-        var organization = organizationFactory.create();
-
-        var recruiter = userFactory.create(
-                organization,
-                "recruiter@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
-
-        var companyId = companyFactory.create(organization.id());
-
-        var jobDescriptionId = jobDescriptionFactory.create(
-                organization.id(),
-                companyId,
-                recruiter.id()
-        );
-
-        var jobPostingId = jobPostingFactory.create(
-                organization.id(),
-                jobDescriptionId,
-                companyId,
-                recruiter.id()
-        );
-
-        jobPostingFactory.updateStatus(organization.id(), recruiter.id(), jobPostingId, JobPostingStatus.PUBLISHED);
-
-        var jobApplicationId = jobApplicationFactory.create(
-                organization.id(),
-                recruiter.id(),
-                jobPostingId
-        );
+        var test = scenario.create();
 
         var firstContent = "Strong candidate. Proceed with the offer.";
         var secondContent = "Candidate confirmed availability.";
 
         var firstNoteId = jobApplicationNoteFactory.create(
-                organization.id(),
-                recruiter.id(),
-                jobApplicationId,
+                test.organization().id(),
+                test.recruiter().id(),
+                test.jobApplicationId(),
                 firstContent
         );
 
         var secondNoteId = jobApplicationNoteFactory.create(
-                organization.id(),
-                recruiter.id(),
-                jobApplicationId,
+                test.organization().id(),
+                test.recruiter().id(),
+                test.jobApplicationId(),
                 secondContent
         );
 
-        var token = authenticationClient.login(recruiter);
+        var token = authenticationClient.login(test.recruiter());
 
         // when
         var notes = restTestClient.get()
                 .uri(url(
                         "/api/recruitment/job-applications/%s/notes"
-                                .formatted(jobApplicationId)
+                                .formatted(test.jobApplicationId())
                 ))
                 .header("Authorization", "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON)
@@ -138,45 +84,16 @@ class JobApplicationNoteQueryTest extends BaseRestIntegrationTest {
     @Test
     void shouldReturnEmptyListWhenJobApplicationHasNoNotes() {
         // given
-        var organization = organizationFactory.create();
+        var test = scenario.create();
 
-        var recruiter = userFactory.create(
-                organization,
-                "recruiter@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
 
-        var companyId = companyFactory.create(organization.id());
-
-        var jobDescriptionId = jobDescriptionFactory.create(
-                organization.id(),
-                companyId,
-                recruiter.id()
-        );
-
-        var jobPostingId = jobPostingFactory.create(
-                organization.id(),
-                jobDescriptionId,
-                companyId,
-                recruiter.id()
-        );
-
-        jobPostingFactory.updateStatus(organization.id(), recruiter.id(), jobPostingId, JobPostingStatus.PUBLISHED);
-
-        var jobApplicationId = jobApplicationFactory.create(
-                organization.id(),
-                recruiter.id(),
-                jobPostingId
-        );
-
-        var token = authenticationClient.login(recruiter);
+        var token = authenticationClient.login(test.recruiter());
 
         // when
         var notes = restTestClient.get()
                 .uri(url(
                         "/api/recruitment/job-applications/%s/notes"
-                                .formatted(jobApplicationId)
+                                .formatted(test.jobApplicationId())
                 ))
                 .header("Authorization", "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON)
@@ -196,59 +113,27 @@ class JobApplicationNoteQueryTest extends BaseRestIntegrationTest {
     @Test
     void shouldReturnOnlyNotesForRequestedJobApplication() {
         // given
-        var organization = organizationFactory.create();
+        var test = scenario.create();
 
-        var recruiter = userFactory.create(
-                organization,
-                "recruiter@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
 
-        var companyId = companyFactory.create(organization.id());
-
-        var jobDescriptionId = jobDescriptionFactory.create(
-                organization.id(),
-                companyId,
-                recruiter.id()
-        );
-
-        var jobPostingId = jobPostingFactory.create(
-                organization.id(),
-                jobDescriptionId,
-                companyId,
-                recruiter.id()
-        );
-
-        jobPostingFactory.updateStatus(organization.id(), recruiter.id(), jobPostingId, JobPostingStatus.PUBLISHED);
-
-        var firstApplicationId = jobApplicationFactory.create(
-                organization.id(),
-                recruiter.id(),
-                jobPostingId
-        );
-
-        var secondApplicationId = jobApplicationFactory.create(
-                organization.id(),
-                recruiter.id(),
-                jobPostingId
-        );
+        var firstApplicationId = scenario.createApplication(test);
+        var secondApplicationId  = scenario.createApplication(test);
 
         var firstNoteId = jobApplicationNoteFactory.create(
-                organization.id(),
-                recruiter.id(),
+                test.organization().id(),
+                test.recruiter().id(),
                 firstApplicationId,
                 "Note for first application"
         );
 
         jobApplicationNoteFactory.create(
-                organization.id(),
-                recruiter.id(),
+                test.organization().id(),
+                test.recruiter().id(),
                 secondApplicationId,
                 "Note for second application"
         );
 
-        var token = authenticationClient.login(recruiter);
+        var token = authenticationClient.login(test.recruiter());
 
         // when
         var notes = restTestClient.get()

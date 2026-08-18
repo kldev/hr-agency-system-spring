@@ -4,7 +4,6 @@ import com.pl.hragency.BaseRestIntegrationTest;
 import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.recruitment.application.command.CreateInterviewCommand;
 import com.pl.hragency.recruitment.application.query.InterviewItem;
-import com.pl.hragency.recruitment.domain.model.posting.JobPostingStatus;
 import com.pl.hragency.shared.rest.PageResponse;
 import com.pl.hragency.testsupport.*;
 import org.junit.jupiter.api.Test;
@@ -21,22 +20,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 class InterviewQueryTest extends BaseRestIntegrationTest {
 
     @Autowired
-    private TestOrganizationFactory organizationFactory;
+    private TestJobApplicationScenario scenario;
 
     @Autowired
     private TestUserFactory userFactory;
-
-    @Autowired
-    private TestCompanyFactory companyFactory;
-
-    @Autowired
-    private TestJobDescriptionFactory jobDescriptionFactory;
-
-    @Autowired
-    private TestJobPostingFactory jobPostingFactory;
-
-    @Autowired
-    private TestJobApplicationFactory jobApplicationFactory;
 
     @Autowired
     private AuthenticationTestClient authenticationClient;
@@ -44,24 +31,12 @@ class InterviewQueryTest extends BaseRestIntegrationTest {
     @Test
     void shouldReturnInterviews() {
         // given
-        var organization = organizationFactory.create();
+        var test = scenario.create();
 
-        var recruiter = userFactory.create(
-                organization,
-                "recruiter@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
+        var recruiter = test.recruiter();
 
-        var application1 = createJobApplication(
-                organization.id(),
-                recruiter.id()
-        );
-
-        var application2 = createJobApplication(
-                organization.id(),
-                recruiter.id()
-        );
+        var application1 = scenario.createApplication(test);
+        var application2 = scenario.createApplication(test);
 
         var interview1 = createInterview(
                 recruiter,
@@ -101,29 +76,13 @@ class InterviewQueryTest extends BaseRestIntegrationTest {
     @Test
     void shouldReturnInterviewsFromDateRange() {
         // given
-        var organization = organizationFactory.create();
+        var test = scenario.create();
+        var recruiter = test.recruiter();
 
-        var recruiter = userFactory.create(
-                organization,
-                "recruiter@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
+        var application1 = scenario.createApplication(test);
+        var application2 = scenario.createApplication(test);
+        var application3 = scenario.createApplication(test);
 
-        var application1 = createJobApplication(
-                organization.id(),
-                recruiter.id()
-        );
-
-        var application2 = createJobApplication(
-                organization.id(),
-                recruiter.id()
-        );
-
-        var application3 = createJobApplication(
-                organization.id(),
-                recruiter.id()
-        );
 
         var beforeRange = createInterview(
                 recruiter,
@@ -181,7 +140,8 @@ class InterviewQueryTest extends BaseRestIntegrationTest {
     @Test
     void shouldReturnOnlyMyInterviews() {
         // given
-        var organization = organizationFactory.create();
+        var test = scenario.create();
+        var organization = test.organization();
 
         var recruiter1 = userFactory.create(
                 organization,
@@ -197,13 +157,11 @@ class InterviewQueryTest extends BaseRestIntegrationTest {
                 OrganizationRole.RECRUITER
         );
 
-        var application1 = createJobApplication(
-                organization.id(),
-                recruiter1.id()
-        );
+        var application1 = scenario.createApplication(test, recruiter1.id());
 
-        var application2 = createJobApplication(
-                organization.id(),
+
+        var application2 = scenario.createApplication(
+                test,
                 recruiter2.id()
         );
 
@@ -249,29 +207,15 @@ class InterviewQueryTest extends BaseRestIntegrationTest {
     @Test
     void shouldReturnInterviewsInScheduledAtOrder() {
         // given
-        var organization = organizationFactory.create();
+        var test = scenario.create();
 
-        var recruiter = userFactory.create(
-                organization,
-                "recruiter@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
+        var recruiter = test.recruiter();
 
-        var application1 = createJobApplication(
-                organization.id(),
-                recruiter.id()
-        );
+        var application1 = scenario.createApplication(test);
 
-        var application2 = createJobApplication(
-                organization.id(),
-                recruiter.id()
-        );
+        var application2 = scenario.createApplication(test);
 
-        var application3 = createJobApplication(
-                organization.id(),
-                recruiter.id()
-        );
+        var application3 = scenario.createApplication(test);
 
         var lateInterview = createInterview(
                 recruiter,
@@ -345,38 +289,5 @@ class InterviewQueryTest extends BaseRestIntegrationTest {
                 .expectBody(UUID.class)
                 .returnResult()
                 .getResponseBody();
-    }
-
-    private UUID createJobApplication(
-            UUID organizationId,
-            UUID recruiterId
-    ) {
-        var companyId = companyFactory.create(organizationId);
-
-        var jobDescriptionId = jobDescriptionFactory.create(
-                organizationId,
-                companyId,
-                recruiterId
-        );
-
-        var jobPostingId = jobPostingFactory.create(
-                organizationId,
-                jobDescriptionId,
-                companyId,
-                recruiterId
-        );
-
-        jobPostingFactory.updateStatus(
-                organizationId,
-                recruiterId,
-                jobPostingId,
-                JobPostingStatus.PUBLISHED
-        );
-
-        return jobApplicationFactory.create(
-                organizationId,
-                recruiterId,
-                jobPostingId
-        );
     }
 }

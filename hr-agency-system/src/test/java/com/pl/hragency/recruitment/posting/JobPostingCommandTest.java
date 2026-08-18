@@ -1,7 +1,6 @@
 package com.pl.hragency.recruitment.posting;
 
 import com.pl.hragency.BaseRestIntegrationTest;
-import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.jobdescription.api.EmploymentType;
 import com.pl.hragency.jobdescription.api.WorkMode;
 import com.pl.hragency.recruitment.application.command.ChangeJobPostingStatusCommand;
@@ -11,6 +10,7 @@ import com.pl.hragency.recruitment.domain.model.posting.JobPostingId;
 import com.pl.hragency.recruitment.domain.model.posting.JobPostingStatus;
 import com.pl.hragency.shared.rest.ApiResult;
 import com.pl.hragency.testsupport.*;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -23,16 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class JobPostingCommandTest extends BaseRestIntegrationTest {
 
     @Autowired
-    private TestOrganizationFactory organizationFactory;
-
-    @Autowired
-    private TestUserFactory userFactory;
-
-    @Autowired
-    private TestCompanyFactory companyFactory;
-
-    @Autowired
-    private TestJobDescriptionFactory jobDescriptionFactory;
+    private TestJobDescriptionScenario scenario;
 
     @Autowired
     private AuthenticationTestClient authenticationClient;
@@ -41,17 +32,9 @@ public class JobPostingCommandTest extends BaseRestIntegrationTest {
     private JobPostingRepository jobPostingRepository;
 
     private JobPostingId createJobPosting(
-            TestOrganization organization,
-            TestUser user
+            TestUser user,
+            UUID jobDescriptionId
     ) {
-        var companyId = companyFactory.create(organization.id());
-
-        var jobDescriptionId = jobDescriptionFactory.create(
-                organization.id(),
-                companyId,
-                user.id()
-        );
-
         var command = new CreateJobPostingCommand(
                 jobDescriptionId,
                 user.id(),
@@ -106,32 +89,19 @@ public class JobPostingCommandTest extends BaseRestIntegrationTest {
         return new JobPostingId(postingId);
     }
 
+
+
     @Test
     void shouldCreateJobPosting() {
 
         // given
-        var organization = organizationFactory.create();
-
-        var user = userFactory.create(
-                organization,
-                "recruiter@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
-
-        var companyId = companyFactory.create(
-                organization.id()
-        );
-
-        var jobDescriptionId = jobDescriptionFactory.create(organization.id(), companyId, user.id());
+        var test = scenario.create();
+        var organization = test.organization();
 
         // when
-        var jobPostingId = createJobPosting(organization, user);
+        var jobPostingId = createJobPosting(test.recruiter(), test.jobDescriptionId());
 
         // then
-        assertThat(jobDescriptionId)
-                .isNotNull();
-
         var jobPosting = jobPostingRepository
                 .findById(organization.id(), jobPostingId)
                 .orElseThrow();
@@ -200,11 +170,10 @@ public class JobPostingCommandTest extends BaseRestIntegrationTest {
                 .isEqualTo("PLN");
 
         assertThat(jobPosting.recruiterId())
-                .isEqualTo(user.id());
+                .isEqualTo(test.recruiter().id());
 
         assertThat(jobPosting.organizationSlug()).isNotNull();
         assertThat(jobPosting.slug()).isNotNull().contains("java-developer");
-        ;
 
     }
 
@@ -212,18 +181,13 @@ public class JobPostingCommandTest extends BaseRestIntegrationTest {
     void shouldChangeJobPostingStatus() {
 
         // given
-        var organization = organizationFactory.create();
+        var test = scenario.create();
+        var organization = test.organization();
 
-        var user = userFactory.create(
-                organization,
-                "recruiter@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
+        // when
+        var jobPostingId = createJobPosting(test.recruiter(), test.jobDescriptionId());
 
-        var jobPostingId = createJobPosting(organization, user);
-
-        var token = authenticationClient.login(user);
+        var token = authenticationClient.login(test.recruiter());
 
         var command = new ChangeJobPostingStatusCommand(
                 JobPostingStatus.PUBLISHED
@@ -251,19 +215,13 @@ public class JobPostingCommandTest extends BaseRestIntegrationTest {
 
     @Test
     void shouldClosePublishedJobPosting() {
-
         // given
-        var organization = organizationFactory.create();
+        var test = scenario.create();
+        var organization = test.organization();
 
-        var user = userFactory.create(
-                organization,
-                "recruiter@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
-
-        var jobPostingId = createJobPosting(organization, user);
-        var token = authenticationClient.login(user);
+        // when
+        var jobPostingId = createJobPosting(test.recruiter(), test.jobDescriptionId());
+        var token = authenticationClient.login(test.recruiter());
 
         restTestClient
                 .put()
@@ -303,52 +261,15 @@ public class JobPostingCommandTest extends BaseRestIntegrationTest {
     void shouldRejectJobPostingWhenJobDescriptionBelongsToAnotherOrganization() {
 
         // given
-        var organizationA = organizationFactory.create();
+        var testA = scenario.create();
+        var testB = scenario.create();
 
-        var userA = userFactory.create(
-                organizationA,
-                "recruiter-a@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
+        // when
+        createJobPosting(testA.recruiter(), testA.jobDescriptionId());
 
-        var organizationB = organizationFactory.create();
+        var userA  = testA.recruiter();
 
-        var userB = userFactory.create(
-                organizationB,
-                "recruiter-b@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
-
-        var companyB = companyFactory.create(
-                organizationB.id()
-        );
-
-        var jobDescriptionFromAnotherOrganization =
-                jobDescriptionFactory.create(
-                        organizationB.id(),
-                        companyB,
-                        userB.id()
-                );
-
-        var command = new CreateJobPostingCommand(
-                jobDescriptionFromAnotherOrganization,
-                userA.id(),
-                "Java Developer",
-                "Summary",
-                "Description",
-                java.util.List.of("Development"),
-                java.util.List.of("Java"),
-                java.util.List.of("Spring"),
-                "Opole",
-                "PL",
-                EmploymentType.FULL_TIME,
-                WorkMode.HYBRID,
-                new BigDecimal("12000"),
-                new BigDecimal("18000"),
-                "PLN"
-        );
+        var command = getCommand(testB.jobDescriptionId(), userA);
 
         var token = authenticationClient.login(userA);
 
@@ -365,6 +286,27 @@ public class JobPostingCommandTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isNotFound();
+    }
+
+    private static @NonNull CreateJobPostingCommand getCommand(UUID jobDescriptionFromAnotherOrganizationId, TestUser userA) {
+
+       return new CreateJobPostingCommand(
+                jobDescriptionFromAnotherOrganizationId,
+                userA.id(),
+                "Java Developer",
+                "Summary",
+                "Description",
+                java.util.List.of("Development"),
+                java.util.List.of("Java"),
+                java.util.List.of("Spring"),
+                "Opole",
+                "PL",
+                EmploymentType.FULL_TIME,
+                WorkMode.HYBRID,
+                new BigDecimal("12000"),
+                new BigDecimal("18000"),
+                "PLN"
+        );
     }
 }
 

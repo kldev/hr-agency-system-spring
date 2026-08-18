@@ -20,10 +20,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 class JobPostingQueryTest extends BaseRestIntegrationTest {
 
     @Autowired
-    private TestOrganizationFactory organizationFactory;
+    private TestJobDescriptionScenario scenario;
 
     @Autowired
-    private TestUserFactory userFactory;
+    private TestJobPostingFactory jobPostingFactory;
 
     @Autowired
     private TestCompanyFactory companyFactory;
@@ -32,43 +32,20 @@ class JobPostingQueryTest extends BaseRestIntegrationTest {
     private TestJobDescriptionFactory jobDescriptionFactory;
 
     @Autowired
-    private TestJobPostingFactory jobPostingFactory;
-
-    @Autowired
     private AuthenticationTestClient authenticationClient;
 
     @Test
     void shouldReturnJobPostingsForCurrentOrganization() {
         // given
-        var organization = organizationFactory.create();
+        var test = scenario.create();
+        var organization = test.organization();
 
-        var user = userFactory.create(
-                organization,
-                "admin@test.com",
-                "Password123!",
-                OrganizationRole.ADMIN
-        );
+        var user = test.recruiter();
 
-        var companyId = companyFactory.create(organization.id());
+        var companyId = test.companyId();
 
-        var jobDescriptionId = jobDescriptionFactory.create(
-                organization.id(),
-                companyId,
-                "Java Developer",
-                "Java backend developer",
-                "Develop backend applications",
-                List.of("Develop backend applications"),
-                List.of("3+ years of Java experience"),
-                List.of("Java", "Spring Boot"),
-                "Opole",
-                "PL",
-                EmploymentType.FULL_TIME,
-                WorkMode.HYBRID,
-                new BigDecimal("12000"),
-                new BigDecimal("18000"),
-                "PLN",
-                user.id()
-        );
+        var jobDescriptionId = test.jobDescriptionId();
+
 
         jobPostingFactory.create(
                 organization.id(),
@@ -144,35 +121,14 @@ class JobPostingQueryTest extends BaseRestIntegrationTest {
     @Test
     void shouldReturnMultipleJobPostingsForSingleJobDescription() {
         // given
-        var organization = organizationFactory.create();
+        var test = scenario.create();
+        var organization = test.organization();
 
-        var user = userFactory.create(
-                organization,
-                "admin@test.com",
-                "Password123!",
-                OrganizationRole.ADMIN
-        );
+        var user = test.recruiter();
 
-        var companyId = companyFactory.create(organization.id());
+        var companyId = test.companyId();
 
-        var jobDescriptionId = jobDescriptionFactory.create(
-                organization.id(),
-                companyId,
-                "Java Developer",
-                "Java backend developer",
-                "Develop backend applications",
-                List.of("Develop backend applications"),
-                List.of("3+ years of Java experience"),
-                List.of("Java", "Spring Boot"),
-                "Opole",
-                "PL",
-                EmploymentType.FULL_TIME,
-                WorkMode.HYBRID,
-                new BigDecimal("12000"),
-                new BigDecimal("18000"),
-                "PLN",
-                user.id()
-        );
+        var jobDescriptionId = test.jobDescriptionId();
 
         var polishPostingId = jobPostingFactory.create(
                 organization.id(),
@@ -252,36 +208,14 @@ class JobPostingQueryTest extends BaseRestIntegrationTest {
     @Test
     void shouldFilterJobPostingsBySearch() {
         // given
-        var organization = organizationFactory.create();
+        var test = scenario.create();
+        var organization = test.organization();
 
-        var user = userFactory.create(
-                organization,
-                "admin@test.com",
-                "Password123!",
-                OrganizationRole.ADMIN
-        );
+        var user = test.recruiter();
 
-        var companyId = companyFactory.create(organization.id());
+        var companyId = test.companyId();
 
-        var jobDescriptionId = jobDescriptionFactory.create(
-                organization.id(),
-                companyId,
-                "Backend Developer",
-                "Backend developer",
-                "Develop backend applications",
-                List.of("Develop backend applications"),
-                List.of("3+ years of experience"),
-                List.of("Java", "Spring Boot"),
-                "Opole",
-                "PL",
-                EmploymentType.FULL_TIME,
-                WorkMode.HYBRID,
-                new BigDecimal("12000"),
-                new BigDecimal("18000"),
-                "PLN",
-                user.id()
-        );
-
+        var jobDescriptionId = test.jobDescriptionId();
         jobPostingFactory.create(
                 organization.id(),
                 jobDescriptionId,
@@ -349,36 +283,14 @@ class JobPostingQueryTest extends BaseRestIntegrationTest {
     @Test
     void shouldFilterJobPostingsByStatus() {
         // given
-        var organization = organizationFactory.create();
+        var test = scenario.create();
+        var organization = test.organization();
 
-        var user = userFactory.create(
-                organization,
-                "admin@test.com",
-                "Password123!",
-                OrganizationRole.ADMIN
-        );
+        var user = test.recruiter();
 
-        var companyId = companyFactory.create(organization.id());
+        var companyId = test.companyId();
 
-        var jobDescriptionId = jobDescriptionFactory.create(
-                organization.id(),
-                companyId,
-                "Java Developer",
-                "Java backend developer",
-                "Develop backend applications",
-                List.of("Backend development"),
-                List.of("Java experience"),
-                List.of("Java", "Spring Boot"),
-                "Opole",
-                "PL",
-                EmploymentType.FULL_TIME,
-                WorkMode.HYBRID,
-                new BigDecimal("12000"),
-                new BigDecimal("18000"),
-                "PLN",
-                user.id()
-        );
-
+        var jobDescriptionId = test.jobDescriptionId();
         var draftPostingId = jobPostingFactory.create(
                 organization.id(),
                 jobDescriptionId,
@@ -454,14 +366,9 @@ class JobPostingQueryTest extends BaseRestIntegrationTest {
     @Test
     void shouldFilterJobPostingsByCompany() {
         // given
-        var organization = organizationFactory.create();
-
-        var user = userFactory.create(
-                organization,
-                "admin@test.com",
-                "Password123!",
-                OrganizationRole.ADMIN
-        );
+        var test = scenario.create();
+        var organization = test.organization();
+        var user = test.admin();
 
         var firstCompanyId = companyFactory.create(organization.id());
         var secondCompanyId = companyFactory.create(organization.id());
@@ -576,14 +483,10 @@ class JobPostingQueryTest extends BaseRestIntegrationTest {
     @Test
     void shouldCombineJobPostingFilters() {
         // given
-        var organization = organizationFactory.create();
-
-        var user = userFactory.create(
-                organization,
-                "admin@test.com",
-                "Password123!",
-                OrganizationRole.ADMIN
-        );
+        // given
+        var test = scenario.create();
+        var organization = test.organization();
+        var user = test.admin();
 
         var companyId = companyFactory.create(organization.id());
         var anotherCompanyId = companyFactory.create(organization.id());
@@ -699,15 +602,9 @@ class JobPostingQueryTest extends BaseRestIntegrationTest {
     @Test
     void shouldReturnEmptyPageWhenNoJobPostingMatchesFilter() {
         // given
-        var organization = organizationFactory.create();
-
-        var user = userFactory.create(
-                organization,
-                "admin@test.com",
-                "Password123!",
-                OrganizationRole.ADMIN
-        );
-
+        var test = scenario.create();
+        var organization = test.organization();
+        var user = test.admin();
         var companyId = companyFactory.create(organization.id());
 
         var jobDescriptionId = jobDescriptionFactory.create(
@@ -774,22 +671,16 @@ class JobPostingQueryTest extends BaseRestIntegrationTest {
     @Test
     void shouldReturnOnlyJobPostingsFromCurrentOrganization() {
         // given
-        var organization1 = organizationFactory.create();
-        var organization2 = organizationFactory.create();
+        // given
+        var testA = scenario.create();
+        var testB = scenario.create();
 
-        var user1 = userFactory.create(
-                organization1,
-                "user1@test.com",
-                "Password123!",
-                OrganizationRole.ADMIN
-        );
+        var organization1 = testA.organization();
+        var organization2 = testB.organization();
 
-        var user2 = userFactory.create(
-                organization2,
-                "user2@test.com",
-                "Password123!",
-                OrganizationRole.ADMIN
-        );
+        var user1 = testA.admin();
+
+        var user2 = testB.admin();
 
         var company1 = companyFactory.create(organization1.id());
         var company2 = companyFactory.create(organization2.id());

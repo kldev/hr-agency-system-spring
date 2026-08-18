@@ -16,37 +16,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class JobDescriptionAuditTest extends BaseRestIntegrationTest {
 
     @Autowired
-    private TestOrganizationFactory organizationFactory;
-
-    @Autowired
-    private TestUserFactory userFactory;
-
-    @Autowired
-    private TestCompanyFactory companyFactory;
+    private TestJobDescriptionScenario scenario;
 
     @Autowired
     private AuthenticationTestClient authenticationClient;
 
-    @Autowired
-    private TestJobDescriptionFactory jobDescriptionFactory;
-
     @Test
     void shouldCreateAuditEntryWhenJobDescriptionIsCreated() {
         // given
-        var organization = organizationFactory.create();
-
-        var user = userFactory.create(
-                organization,
-                "recruiter@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
-
-        var companyId = companyFactory.create(
-                organization.id()
-        );
-
-        var jobDescriptionId = jobDescriptionFactory.create(organization.id(), companyId, user.id());
+        var test = scenario.create();
+        var jobDescriptionId = test.jobDescriptionId();
 
         // then
         assertThat(jobDescriptionId)
@@ -73,37 +52,21 @@ public class JobDescriptionAuditTest extends BaseRestIntegrationTest {
                             .isEqualTo(jobDescriptionId);
 
                     assertThat(entry.getActorId())
-                            .isEqualTo(user.id());
+                            .isEqualTo(test.recruiter().id());
                 });
     }
 
     @Test
     void shouldCreateAuditEntryWhenJobDescriptionStatusIsChanged() {
         // given
-        var organization = organizationFactory.create();
-
-        var user = userFactory.create(
-                organization,
-                "recruiter@test.com",
-                "Password123!",
-                OrganizationRole.RECRUITER
-        );
-
-        var companyId = companyFactory.create(
-                organization.id()
-        );
-
-        var jobDescriptionId = jobDescriptionFactory.create(
-                organization.id(),
-                companyId,
-                user.id()
-        );
+        var test = scenario.create();
+        var jobDescriptionId = test.jobDescriptionId();
 
         var command = new ChangeJobDescriptionStatusCommand(
                 JobDescriptionStatus.OPEN
         );
 
-        var token = authenticationClient.login(user);
+        var token = authenticationClient.login(test.recruiter());
 
         // when
         restTestClient
@@ -139,7 +102,7 @@ public class JobDescriptionAuditTest extends BaseRestIntegrationTest {
                             .isEqualTo(jobDescriptionId);
 
                     assertThat(entry.getActorId())
-                            .isEqualTo(user.id());
+                            .isEqualTo(test.recruiter().id());
 
                     assertThat(entry.getModule())
                             .isEqualTo("job-description");
