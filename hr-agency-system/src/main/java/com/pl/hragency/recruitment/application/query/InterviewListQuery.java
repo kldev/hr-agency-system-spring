@@ -3,6 +3,7 @@ package com.pl.hragency.recruitment.application.query;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 public record InterviewListQuery(UUID createdBy,
@@ -15,7 +16,7 @@ public record InterviewListQuery(UUID createdBy,
     }
 
     public Instant toAtInstant() {
-        return to == null ? null : to.atStartOfDay(timezone).toInstant();
+        return to == null ? null : to.plusDays(1).atStartOfDay(timezone).toInstant();
     }
 
 }

@@ -4,7 +4,6 @@ import com.pl.hragency.recruitment.application.command.CreateInterviewCommand;
 import com.pl.hragency.recruitment.application.port.InterviewRepository;
 import com.pl.hragency.recruitment.application.port.JobApplicationRepository;
 import com.pl.hragency.recruitment.domain.event.InterviewScheduledEvent;
-import com.pl.hragency.recruitment.domain.model.application.JobApplication;
 import com.pl.hragency.recruitment.domain.model.application.JobApplicationId;
 import com.pl.hragency.recruitment.domain.model.interview.Interview;
 import com.pl.hragency.shared.event.EventPublisher;
