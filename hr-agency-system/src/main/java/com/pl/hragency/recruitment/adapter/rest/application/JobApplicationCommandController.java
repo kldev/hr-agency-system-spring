@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/recruitment/job-applications")
-@Tag(name = "Recruitment")
+@Tag(name = "Recruitment - Job Applications")
 public class JobApplicationCommandController {
     private final IdentityApi  identityApi;
     private final ChangeJobApplicationStatusHandler statusHandler;

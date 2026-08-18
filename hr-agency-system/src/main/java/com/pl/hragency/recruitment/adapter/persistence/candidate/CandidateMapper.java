@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CandidateMapper {
 
-    public CandidateJpaEntity toEntity(Candidate candidate) {
+    public CandidateJpaEntity createNew(Candidate candidate) {
         return new CandidateJpaEntity(
                 candidate.id().value(),
                 candidate.organizationId(),
@@ -17,9 +17,17 @@ public class CandidateMapper {
                 candidate.phone(),
                 candidate.status(),
                 candidate.source(),
-                candidate.createdAt(),
-                candidate.updatedAt()
+                candidate.createdAt()
         );
+    }
+
+    public void updateExisting(Candidate candidate, CandidateJpaEntity entity) {
+      entity.update(candidate.email(),
+              candidate.firstName(),
+              candidate.lastName(),
+              candidate.phone(),
+              candidate.status(),
+              candidate.summary());
     }
 
     public Candidate toDomain(CandidateJpaEntity entity) {
@@ -30,10 +38,10 @@ public class CandidateMapper {
                 entity.getFirstName(),
                 entity.getLastName(),
                 entity.getPhone(),
+                entity.getSummary(),
                 entity.getStatus(),
                 entity.getSource(),
-                entity.getCreatedAt(),
-                entity.getUpdatedAt()
+                entity.getCreatedAt()
         );
     }
 }

@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/recruitment/job-posting")
-@Tag(name = "Recruitment")
+@Tag(name = "Recruitment - Job Postings")
 public class JobPostingQueryController {
     private final GetJobPostingQueryHandler queryService;
 

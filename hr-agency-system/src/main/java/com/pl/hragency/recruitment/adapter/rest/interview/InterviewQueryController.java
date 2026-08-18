@@ -19,7 +19,7 @@ import java.time.ZoneId;
 
 @RestController
 @RequestMapping("/api/recruitment/interviews")
-@Tag(name = "Recruitment")
+@Tag(name = "Recruitment - Interviews")
 public class InterviewQueryController {
 
     private final InterviewQueryRepository repository;

@@ -116,5 +116,10 @@ public class JobApplicationJpaEntity {
     public CandidateSource getSource() {
         return source;
     }
+
+    @PreUpdate
+    public void preUpdate() {
+        updatedAt = Instant.now();
+    }
 }
 

@@ -84,6 +84,11 @@ public class CandidateJpaEntity {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    @Column(
+            name = "summary"
+    )
+    private String summary;
+
     @Version
     @Column(
             name = "version",
@@ -94,6 +99,7 @@ public class CandidateJpaEntity {
     protected CandidateJpaEntity() {
     }
 
+    /// Create new candidate constructor
     public CandidateJpaEntity(
             UUID id,
             UUID organizationId,
@@ -103,8 +109,7 @@ public class CandidateJpaEntity {
             String phone,
             CandidateStatus status,
             CandidateSource source,
-            Instant createdAt,
-            Instant updatedAt
+            Instant createdAt
     ) {
         this.id = id;
         this.organizationId = organizationId;
@@ -115,8 +120,22 @@ public class CandidateJpaEntity {
         this.status = status;
         this.source = source;
         this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
         this.version = null;
+    }
+
+    public void update(String email,
+                       String firstName,
+                       String lastName,
+                       String phone,
+                       CandidateStatus status,
+                       String summary)
+    {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.status = status;
+        this.summary = summary;
     }
 
     public UUID getId() {
@@ -161,5 +180,14 @@ public class CandidateJpaEntity {
 
     public CandidateSource getSource() {
         return source;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updatedAt = Instant.now();
+    }
+
+    public String getSummary() {
+        return summary;
     }
 }

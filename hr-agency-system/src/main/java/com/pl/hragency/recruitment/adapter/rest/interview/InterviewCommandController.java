@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/recruitment/job-applications")
-@Tag(name = "Recruitment")
+@Tag(name = "Recruitment - Interviews")
 public class InterviewCommandController {
     private final CreateInterviewHandler handler;
     private final IdentityApi identityApi;

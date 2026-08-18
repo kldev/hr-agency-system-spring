@@ -10,13 +10,14 @@ CREATE TABLE candidates
     first_name       VARCHAR(100),
     last_name        VARCHAR(100),
     phone            VARCHAR(50),
+    summary          TEXT NULL,
 
     status VARCHAR(20) NOT NULL,
 
     source VARCHAR(50),
 
     created_at       TIMESTAMP WITH TIME ZONE NOT NULL,
-    updated_at       TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_at       TIMESTAMP WITH TIME ZONE NULL,
 
     version          BIGINT       NOT NULL DEFAULT 0,
 

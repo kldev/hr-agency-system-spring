@@ -38,13 +38,10 @@ public class CreateCandidateHandler {
                 context.organizationId()
         );
 
-        if (existing.isPresent()) {
-            throw new IllegalStateException("Email already exists");
-        }
-
-        return candidateResolver.create(
+        return existing.orElseGet(() -> candidateResolver.create(
                 context,
                 command
-        );
+        ));
+
     }
 }

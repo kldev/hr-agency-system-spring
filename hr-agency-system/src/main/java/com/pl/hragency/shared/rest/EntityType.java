@@ -11,4 +11,6 @@ public enum EntityType {
     Company,
     CompanyContact,
     Recruiter,
+    Tag,
+    CandidateTag
 }

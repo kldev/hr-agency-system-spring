@@ -9,9 +9,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface CandidateRepository {
-    void save(Candidate candidate);
+    void create(Candidate candidate);
+    void update(Candidate candidate);
 
-    boolean existsByEmail(CandidateEmail email, UUID organizationId);
     Optional<Candidate> findByEmail(CandidateEmail email, UUID organizationId);
     Optional<Candidate> findById(
             UUID organizationId,

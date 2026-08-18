@@ -53,7 +53,7 @@ public class CandidateResolver {
                 command.source()
         );
 
-        repository.save(candidate);
+        repository.create(candidate);
 
         eventPublisher.publish(
                 new CandidateCreatedEvent(

@@ -4,6 +4,9 @@ import com.pl.hragency.company.api.CompanyApi;
 import com.pl.hragency.company.api.CompanySuggestion;
 import com.pl.hragency.identity.api.IdentityApi;
 import com.pl.hragency.identity.api.UserSuggestion;
+import com.pl.hragency.recruitment.api.RecruitmentApi;
+import com.pl.hragency.recruitment.api.TagCategory;
+import com.pl.hragency.recruitment.api.TagSuggestion;
 import com.pl.hragency.shared.rest.ExecutionContext;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,10 +24,14 @@ public class SuggestionController {
 
     private final IdentityApi identityApi;
     private final CompanyApi companyApi;
+    private final RecruitmentApi recruitmentApi;
 
-    public SuggestionController(IdentityApi identityApi, CompanyApi companyApi) {
+    public SuggestionController(IdentityApi identityApi,
+                                CompanyApi companyApi,
+                                RecruitmentApi recruitmentApi) {
         this.identityApi = identityApi;
         this.companyApi = companyApi;
+        this.recruitmentApi = recruitmentApi;
     }
 
     private ExecutionContext getContext() {
@@ -40,5 +47,10 @@ public class SuggestionController {
     @GetMapping("/companies")
     public List<CompanySuggestion> companies(@RequestParam(required = false) String search, @RequestParam(required = false) String countryCode){
         return companyApi.findCompanySuggestions(getContext().organizationId(), search, countryCode);
+    }
+
+    @GetMapping("/tags")
+    public List<TagSuggestion> tags(@RequestParam(required = false) String search, @RequestParam(required = false) TagCategory category){
+        return recruitmentApi.findTagsSuggestions(search, category);
     }
 }

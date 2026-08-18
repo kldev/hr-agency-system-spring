@@ -17,8 +17,9 @@ public final class Candidate {
     private CandidateStatus status;
     private final CandidateSource source;
 
+    private String summary;
     private final Instant createdAt;
-    private Instant updatedAt;
+
 
     private Candidate(
             CandidateId id,
@@ -27,10 +28,10 @@ public final class Candidate {
             String firstName,
             String lastName,
             String phone,
+            String summary,
             CandidateStatus status,
             CandidateSource source,
-            Instant createdAt,
-            Instant updatedAt) {
+            Instant createdAt) {
 
         this.id = Objects.requireNonNull(id);
         this.organizationId = Objects.requireNonNull(organizationId);
@@ -40,12 +41,12 @@ public final class Candidate {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
+        this.summary = summary;
 
         this.status = Objects.requireNonNull(status);
         this.source = Objects.requireNonNull(source);
 
         this.createdAt = Objects.requireNonNull(createdAt);
-        this.updatedAt = Objects.requireNonNull(updatedAt);
     }
 
     public static Candidate create(
@@ -65,9 +66,9 @@ public final class Candidate {
                 firstName,
                 lastName,
                 phone,
+                "",
                 CandidateStatus.ACTIVE,
                 source,
-                now,
                 now
         );
     }
@@ -79,10 +80,10 @@ public final class Candidate {
             String firstName,
             String lastName,
             String phone,
+            String summary,
             CandidateStatus status,
             CandidateSource source,
-            Instant createdAt,
-            Instant updatedAt) {
+            Instant createdAt) {
 
         return new Candidate(
                 id,
@@ -91,10 +92,10 @@ public final class Candidate {
                 firstName,
                 lastName,
                 phone,
+                summary,
                 status,
                 source,
-                createdAt,
-                updatedAt
+                createdAt
         );
     }
 
@@ -108,20 +109,30 @@ public final class Candidate {
         this.firstName = requireText(firstName, "First name");
         this.lastName = requireText(lastName, "Last name");
         this.phone = phone;
+    }
 
-        touch();
+    public void updateSummary(String summary)
+    {
+        this.summary =  requireText(summary, "Summary");;
+    }
+
+    public void updateStatus(CandidateStatus status)
+    {
+        switch (status) {
+            case ACTIVE -> activate();
+            case BLOCKED ->  block();
+            case ARCHIVED -> archive();
+        }
     }
 
     public void updatePhone(String phone)
     {
         this.phone =  requireText(phone, "Phone");;
-        touch();
     }
 
     public void updateEmail(String email)
     {
-        this.phone = normalizeEmail( requireText(email, "Email"));
-        touch();
+        this.email = normalizeEmail( requireText(email, "Email"));
     }
 
     public void block() {
@@ -136,7 +147,6 @@ public final class Candidate {
         }
 
         status = CandidateStatus.BLOCKED;
-        touch();
     }
 
     public void activate() {
@@ -151,7 +161,6 @@ public final class Candidate {
         }
 
         status = CandidateStatus.ACTIVE;
-        touch();
     }
 
     public void archive() {
@@ -160,11 +169,6 @@ public final class Candidate {
         }
 
         status = CandidateStatus.ARCHIVED;
-        touch();
-    }
-
-    private void touch() {
-        updatedAt = Instant.now();
     }
 
     private static String normalizeEmail(String email) {
@@ -213,7 +217,5 @@ public final class Candidate {
         return createdAt;
     }
 
-    public Instant updatedAt() {
-        return updatedAt;
-    }
+    public String summary() {return  summary; }
 }

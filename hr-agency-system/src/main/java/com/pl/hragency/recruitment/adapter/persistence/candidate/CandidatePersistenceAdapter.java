@@ -20,15 +20,23 @@ public class CandidatePersistenceAdapter implements CandidateRepository {
         this.mapper = mapper;
     }
 
-    @Override
-    public void save(Candidate candidate) {
 
-        repository.save(mapper.toEntity(candidate));
+    @Override
+    public void create(Candidate candidate) {
+        var entity = mapper.createNew(candidate);
+
+        this.repository.save(entity);
+
     }
 
     @Override
-    public boolean existsByEmail(CandidateEmail email, UUID organizationId) {
-        return repository.existsByEmailAndOrganizationId(email.value(), organizationId);
+    public void update(Candidate candidate) {
+        var entity = repository.findByIdAndOrganizationId(candidate.id().value(), candidate.organizationId())
+                .orElseThrow();
+
+        mapper.updateExisting(candidate, entity);
+
+        this.repository.save(entity);
     }
 
     @Override

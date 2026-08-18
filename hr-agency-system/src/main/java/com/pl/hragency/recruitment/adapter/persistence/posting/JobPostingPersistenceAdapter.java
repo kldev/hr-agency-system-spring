@@ -26,16 +26,8 @@ public class JobPostingPersistenceAdapter implements JobPostingRepository {
 
     @Override
     public void create(JobPosting jobPosting) {
-        var entity = new JobPostingJpaEntity(
-                jobPosting.id().value(),
-                jobPosting.organizationId(),
-                jobPosting.jobDescriptionId(),
-                jobPosting.companyId(),
-                jobPosting.recruiterId(),
-                jobPosting.organizationSlug(),
-                jobPosting.createdAt());
+        var entity = mapper.createNew(jobPosting);
 
-        mapper.mapFields(jobPosting, entity);
         repository.save(entity);
     }
 
@@ -43,7 +35,7 @@ public class JobPostingPersistenceAdapter implements JobPostingRepository {
     public void update(JobPosting jobPosting) {
         var entity = repository.findByIdAndOrganizationId(jobPosting.id().value(), jobPosting.organizationId())
                 .orElseThrow();
-        mapper.mapFields(jobPosting, entity);
+        mapper.updateExisting(jobPosting, entity);
         repository.save(entity);
     }
 

@@ -96,7 +96,7 @@ public class JobPostingJpaEntity {
 
     @Version
     @Column(name = "version", nullable = false)
-    private long version;
+    private Long version;
 
     protected JobPostingJpaEntity() {
         // JPA
@@ -109,7 +109,20 @@ public class JobPostingJpaEntity {
             UUID companyId,
             UUID recruiterId,
             String organizationSlug,
-            Instant createdAt)
+            Instant createdAt,
+            String title,
+            String summary,
+            String description,
+            List<String> responsibilities,
+            List<String> requirements,
+            List<String> skills,
+            String location,
+            String countryCode,
+            EmploymentType employmentType,
+            WorkMode workMode,
+            SalaryRange salaryRange,
+            JobPostingStatus status,
+            String slug)
     {
         this.id = id;
         this.organizationId = organizationId;
@@ -118,6 +131,22 @@ public class JobPostingJpaEntity {
         this.recruiterId = recruiterId;
         this.createdAt = createdAt;
         this.organizationSlug = organizationSlug;
+        this.title = title;
+        this.summary = summary;
+        this.description = description;
+        this.responsibilities = new ArrayList<>(responsibilities);
+        this.requirements = new ArrayList<>(requirements);
+        this.skills = new ArrayList<>(skills);
+        this.location = location;
+        this.countryCode = countryCode;
+        this.employmentType = employmentType;
+        this.workMode = workMode;
+        this.salaryMin = salaryRange.min();
+        this.salaryMax = salaryRange.max();
+        this.salaryCurrency = salaryRange.currency().getCurrencyCode();
+        this.status = status;
+        this.slug = slug;
+        this.version = null;
     }
 
     public void update(
@@ -236,7 +265,7 @@ public class JobPostingJpaEntity {
         return updatedAt;
     }
 
-    public long getVersion() {
+    public Long getVersion() {
         return version;
     }
 

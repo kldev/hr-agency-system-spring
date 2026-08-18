@@ -9,7 +9,31 @@ import java.util.Currency;
 @Component
 public class JobPostingMapper {
 
-    public void mapFields(JobPosting posting, JobPostingJpaEntity entity) {
+    public JobPostingJpaEntity createNew(JobPosting posting) {
+        return new JobPostingJpaEntity(
+                posting.id().value(),
+                posting.organizationId(),
+                posting.jobDescriptionId(),
+                posting.companyId(),
+                posting.recruiterId(),
+                posting.organizationSlug(),
+                posting.createdAt(),
+                posting.title(),
+                posting.summary(),
+                posting.description(),
+                posting.responsibilities(),
+                posting.requirements(),
+                posting.skills(),
+                posting.location(),
+                posting.countryCode(),
+                posting.employmentType(),
+                posting.workMode(),
+                posting.salaryRange(),
+                posting.status(),
+                posting.slug());
+    }
+
+    public void updateExisting(JobPosting posting, JobPostingJpaEntity entity) {
 
         entity.update(
                 posting.recruiterId(),
