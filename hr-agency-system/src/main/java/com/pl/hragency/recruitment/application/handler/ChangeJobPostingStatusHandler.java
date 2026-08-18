@@ -36,17 +36,10 @@ public class ChangeJobPostingStatusHandler {
             return;
         }
 
-        switch (command.status()) {
-            case PUBLISHED -> posting.publish();
-            case CLOSED -> posting.close();
-            case ARCHIVED -> posting.archive();
-        }
+        posting.updateStatus(command.status());
 
-        int count = repository.updateStatus(context.organizationId(), id, command.status(), posting.updatedAt());
+        repository.update(posting);
 
-        if (count != 1) {
-            throw new IllegalStateException("Status not updated");
-        }
 
         var event = new JobPostingStatusUpdatedEvent(id.value(),
                 context.organizationId(),

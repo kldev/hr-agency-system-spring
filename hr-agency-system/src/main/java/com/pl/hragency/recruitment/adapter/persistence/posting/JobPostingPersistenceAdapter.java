@@ -5,13 +5,11 @@ import com.pl.hragency.recruitment.application.port.JobPostingRepository;
 import com.pl.hragency.recruitment.application.query.JobPostingListQuery;
 import com.pl.hragency.recruitment.domain.model.posting.JobPosting;
 import com.pl.hragency.recruitment.domain.model.posting.JobPostingId;
-import com.pl.hragency.recruitment.domain.model.posting.JobPostingStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,8 +25,26 @@ public class JobPostingPersistenceAdapter implements JobPostingRepository {
     }
 
     @Override
-    public void save(JobPosting jobPosting) {
-        repository.save(mapper.fromDomain(jobPosting));
+    public void create(JobPosting jobPosting) {
+        var entity = new JobPostingJpaEntity(
+                jobPosting.id().value(),
+                jobPosting.organizationId(),
+                jobPosting.jobDescriptionId(),
+                jobPosting.companyId(),
+                jobPosting.recruiterId(),
+                jobPosting.organizationSlug(),
+                jobPosting.createdAt());
+
+        mapper.mapFields(jobPosting, entity);
+        repository.save(entity);
+    }
+
+    @Override
+    public void update(JobPosting jobPosting) {
+        var entity = repository.findByIdAndOrganizationId(jobPosting.id().value(), jobPosting.organizationId())
+                .orElseThrow();
+        mapper.mapFields(jobPosting, entity);
+        repository.save(entity);
     }
 
     @Override
@@ -37,18 +53,8 @@ public class JobPostingPersistenceAdapter implements JobPostingRepository {
     }
 
     @Override
-    public boolean existsById(UUID organizationId, JobPostingId id) {
-         return repository.existsByIdAndOrganizationId(id.value(), organizationId);
-    }
-
-    @Override
-    public int updateStatus(UUID organizationId, JobPostingId id, JobPostingStatus newStatus, Instant modifiedAt) {
-        return repository.updateStatus(id.value(), organizationId, newStatus, modifiedAt);
-    }
-
-    @Override
-    public int updateRecruiter(UUID organizationId, JobPostingId id, UUID recruiterId) {
-        return repository.updateRecruiter(id.value(), organizationId, recruiterId, Instant.now());
+    public Optional<JobPosting> findBySlug(UUID organizationId, String slug) {
+        return repository.findBySlugAndOrganizationId(slug, organizationId).map(mapper::toDomain);
     }
 
     @Override

@@ -82,6 +82,12 @@ public class JobPostingJpaEntity {
     @Column(name = "status", nullable = false, length = 30)
     private JobPostingStatus status;
 
+    @Column(name = "slug", length = 500)
+    private String slug;
+
+    @Column(name = "organization_slug", length = 200)
+    private String organizationSlug;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
@@ -102,6 +108,20 @@ public class JobPostingJpaEntity {
             UUID jobDescriptionId,
             UUID companyId,
             UUID recruiterId,
+            String organizationSlug,
+            Instant createdAt)
+    {
+        this.id = id;
+        this.organizationId = organizationId;
+        this.jobDescriptionId = jobDescriptionId;
+        this.companyId = companyId;
+        this.recruiterId = recruiterId;
+        this.createdAt = createdAt;
+        this.organizationSlug = organizationSlug;
+    }
+
+    public void update(
+            UUID recruiterId,
             String title,
             String summary,
             String description,
@@ -114,13 +134,8 @@ public class JobPostingJpaEntity {
             WorkMode workMode,
             SalaryRange salaryRange,
             JobPostingStatus status,
-            Instant createdAt,
-            Instant updatedAt) {
+            String slug) {
 
-        this.id = id;
-        this.organizationId = organizationId;
-        this.jobDescriptionId = jobDescriptionId;
-        this.companyId = companyId;
         this.recruiterId = recruiterId;
         this.title = title;
         this.summary = summary;
@@ -136,8 +151,7 @@ public class JobPostingJpaEntity {
         this.salaryMax = salaryRange.max();
         this.salaryCurrency = salaryRange.currency().getCurrencyCode();
         this.status = status;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.slug = slug;
     }
 
     public UUID getId() {
@@ -224,5 +238,18 @@ public class JobPostingJpaEntity {
 
     public long getVersion() {
         return version;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public String getOrganizationSlug() {
+        return organizationSlug;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updatedAt = Instant.now();
     }
 }

@@ -1,6 +1,7 @@
 package com.pl.hragency.company.api;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface CompanyApi {
@@ -21,4 +22,5 @@ public interface CompanyApi {
     List<UUID> findAllIds(UUID organizationId, int pageSize);
     boolean exists(UUID organizationId, UUID companyId);
     List<CompanySuggestion> findCompanySuggestions(UUID organizationId, String search, String countryCode);
+    Optional<CompanyInfo> getCompanyInfo(UUID organizationId, UUID companyId);
 }

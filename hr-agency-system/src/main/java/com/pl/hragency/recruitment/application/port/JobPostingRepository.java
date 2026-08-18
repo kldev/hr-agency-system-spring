@@ -12,18 +12,17 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface JobPostingRepository {
-    void save(JobPosting jobPosting);
+    void create(JobPosting jobPosting);
+
+    void update(JobPosting jobPosting);
 
     Optional<JobPosting> findById(
             UUID organizationId,
             JobPostingId id);
 
-    boolean existsById(
+    Optional<JobPosting> findBySlug(
             UUID organizationId,
-            JobPostingId id);
-
-    int updateStatus(UUID organizationId, JobPostingId id, JobPostingStatus newStatus, Instant modifiedAt);
-    int updateRecruiter(UUID organizationId, JobPostingId id, UUID recruiterId);
+            String slug);
 
     Page<JobPosting> search(UUID organizationId, JobPostingListQuery query, Pageable pageable);
 }

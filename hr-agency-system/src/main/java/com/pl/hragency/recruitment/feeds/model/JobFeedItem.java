@@ -16,6 +16,7 @@ public record JobFeedItem(
         String title,
         String summary,
         String description,
+        String applyUrl,
 
         @JsonProperty("responsibilities")
         @JacksonXmlElementWrapper(localName = "responsibilities")
@@ -30,13 +31,11 @@ public record JobFeedItem(
         @JacksonXmlProperty(localName = "skill")
         List<String> skills,
 
-
         String location,
         String countryCode,
         EmploymentType employmentType,
         WorkMode workMode,
         SalaryRange salaryRange,
-        Instant createdAt,
-        Instant updatedAt
+        Instant createdAt
 ) {
 }

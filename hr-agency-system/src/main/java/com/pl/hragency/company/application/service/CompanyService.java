@@ -1,6 +1,7 @@
 package com.pl.hragency.company.application.service;
 
 import com.pl.hragency.company.api.CompanyApi;
+import com.pl.hragency.company.api.CompanyInfo;
 import com.pl.hragency.company.api.CompanySuggestion;
 import com.pl.hragency.company.application.command.CreateCompanyCommand;
 import com.pl.hragency.company.application.command.CreateCompanyContactCommand;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -64,9 +66,13 @@ public class CompanyService  implements CompanyApi {
     }
 
     @Override
-    public void createContact(UUID userId, UUID organizationId, UUID companyId, String firstName, String lastName, String phone, String email, String jobTitle) {
-        CreateCompanyContactCommand command = new CreateCompanyContactCommand(email, phone, firstName, lastName, jobTitle, false);
-        createCompanyContactHandler.handle(new ExecutionContext(organizationId, userId, "System"),new CompanyContactCompanyId(companyId), command);
+    public void createContact(UUID userId, UUID organizationId, UUID companyId,
+                              String firstName, String lastName, String phone, String email, String jobTitle) {
+        CreateCompanyContactCommand command = new CreateCompanyContactCommand(email, phone, firstName,
+                lastName, jobTitle, false);
+
+        var context = new ExecutionContext(organizationId, userId, "System");
+        createCompanyContactHandler.handle(context, new CompanyContactCompanyId(companyId), command);
     }
 
     @Override
@@ -83,5 +89,12 @@ public class CompanyService  implements CompanyApi {
     @Override
     public List<CompanySuggestion> findCompanySuggestions(UUID organizationId, String search, String countryCode) {
         return companySuggestionsQuery.find(organizationId, search, countryCode);
+    }
+
+    @Override
+    public Optional<CompanyInfo> getCompanyInfo(UUID organizationId, UUID companyId) {
+        return companyQueryService.findOne(new CompanyId(companyId),
+                new CompanyOrganizationId(organizationId))
+                .map(m -> new CompanyInfo(m.id(), m.name()));
     }
 }

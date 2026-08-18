@@ -44,7 +44,9 @@ public class JobPostingDevelopmentRepository {
                 salary_currency,
                 status,
                 created_at,
-                updated_at
+                updated_at,
+                organization_slug,
+                slug                 
             )
             SELECT
                 :id,
@@ -67,8 +69,12 @@ public class JobPostingDevelopmentRepository {
                 jd.salary_currency,
                 'PUBLISHED',
                 now(),
-                now()
+                now(),
+                o.slug,
+                generate_slug(concat(c.name,'_', jd.title))    
             FROM job_descriptions jd
+            join organizations o on jd.organization_id = o.id
+            join companies c on jd.company_id = c.id 
             WHERE jd.id = :jobDescriptionId
             """,
                 new MapSqlParameterSource()

@@ -3,7 +3,7 @@
 # ============================================================
 # Build stage
 # ============================================================
-FROM eclipse-temurin:21-jdk AS builder
+FROM eclipse-temurin:25-jdk AS builder
 
 WORKDIR /workspace
 
@@ -27,7 +27,7 @@ RUN --mount=type=cache,target=/root/.gradle \
 # ============================================================
 # Runtime stage
 # ============================================================
-FROM eclipse-temurin:21-jre AS runtime
+FROM eclipse-temurin:25-jre AS runtime
 
 WORKDIR /app
 

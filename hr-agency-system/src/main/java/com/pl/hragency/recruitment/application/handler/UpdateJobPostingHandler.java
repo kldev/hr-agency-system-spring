@@ -44,7 +44,7 @@ public class UpdateJobPostingHandler {
                         command.salaryMax(),
                         Currency.getInstance(command.salaryCurrency())));
 
-        repository.save(posting);
+        repository.update(posting);
 
         var event = new JobPostingUpdatedEvent(posting.id().value(),
                 posting.organizationId(),

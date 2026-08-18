@@ -271,13 +271,11 @@
                     <div class="my-6 border-t border-slate-200"></div>
 
 
-                    <form th:action="@{/public/{slug}/apply/{id}(slug=${slug}, id=${jobPosting.id()})}"
+                    <form th:action="@{/public/{slug}/apply/{postingSlug}(slug=${slug}, postingSlug=${postingSlug})}"
                           th:object="${command}"
                           method="post"
                           class="space-y-5">
                         <input type="hidden" th:field="*{jobPostingId}">
-                        <input type="hidden"
-                               th:field="*{source}">
                         <div>
                             <label for="firstName"
                                    class="block text-sm font-semibold text-slate-800">

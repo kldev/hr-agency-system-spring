@@ -10,6 +10,7 @@ public record JobPostingItem(
         UUID id,
         UUID organizationId,
         UUID jobDescriptionId,
+        String organizationSlug,
 
         String title,
         String summary,
@@ -27,34 +28,10 @@ public record JobPostingItem(
 
         BigDecimal salaryMin,
         BigDecimal salaryMax,
-        String salaryCurrency
+        String salaryCurrency,
+        String slug,
+        String applyUrl
 ) {
 
-    public static JobPostingItem from(
-            JobPosting jobDescription
-    ) {
-        return new JobPostingItem(
-                jobDescription.id().value(),
-                jobDescription.organizationId(),
-                jobDescription.jobDescriptionId(),
 
-                jobDescription.title(),
-                jobDescription.summary(),
-                jobDescription.description(),
-
-                List.copyOf(jobDescription.responsibilities()),
-                List.copyOf(jobDescription.requirements()),
-                List.copyOf(jobDescription.skills()),
-
-                jobDescription.location(),
-                jobDescription.countryCode(),
-
-                jobDescription.employmentType().name(),
-                jobDescription.workMode().name(),
-
-                jobDescription.salaryRange().min(),
-                jobDescription.salaryRange().max(),
-                jobDescription.salaryRange().currency().getCurrencyCode()
-        );
-    }
 }

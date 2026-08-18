@@ -291,6 +291,7 @@ class JobFeedGeneratorTest {
                 title,
                 "Job summary",
                 "Job description",
+                "http://localhost:8080/acme/apply/job-title-a13a",
                 List.of(
                         "Develop backend applications",
                         "Write clean code"
@@ -313,7 +314,6 @@ class JobFeedGeneratorTest {
                         BigDecimal.valueOf(18000),
                         Currency.getInstance("PLN")
                 ),
-                now,
                 now
         );
     }
@@ -334,6 +334,9 @@ class JobFeedGeneratorTest {
                 WorkMode.REMOTE,
                 new SalaryRange(BigDecimal.valueOf(3000),
                         BigDecimal.valueOf(5000),
-                        Currency.getInstance("EUR")));
+                        Currency.getInstance("EUR")),
+                "job-summary-as33",
+                "acme"
+                );
     }
 }

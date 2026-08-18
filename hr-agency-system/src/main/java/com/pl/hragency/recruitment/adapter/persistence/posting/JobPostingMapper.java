@@ -9,12 +9,9 @@ import java.util.Currency;
 @Component
 public class JobPostingMapper {
 
-    public JobPostingJpaEntity fromDomain(JobPosting posting) {
-        return new JobPostingJpaEntity(
-                posting.id().value(),
-                posting.organizationId(),
-                posting.jobDescriptionId(),
-                posting.companyId(),
+    public void mapFields(JobPosting posting, JobPostingJpaEntity entity) {
+
+        entity.update(
                 posting.recruiterId(),
                 posting.title(),
                 posting.summary(),
@@ -28,9 +25,7 @@ public class JobPostingMapper {
                 posting.workMode(),
                 posting.salaryRange(),
                 posting.status(),
-                posting.createdAt(),
-                posting.updatedAt()
-        );
+                posting.slug());
     }
 
     public JobPosting toDomain(JobPostingJpaEntity entity) {
@@ -53,9 +48,9 @@ public class JobPostingMapper {
                 new SalaryRange(entity.getSalaryMin(), entity.getSalaryMax(),
                         Currency.getInstance(entity.getSalaryCurrency())),
                 entity.getStatus(),
-                entity.getCreatedAt(),
-                entity.getUpdatedAt(),
-                entity.getVersion()
+                entity.getSlug(),
+                entity.getOrganizationSlug(),
+                entity.getCreatedAt()
         );
     }
 }

@@ -1,11 +1,15 @@
 package com.pl.hragency.recruitment.application.handler;
 
+import com.pl.hragency.company.api.CompanyApi;
+import com.pl.hragency.company.domain.model.Company;
 import com.pl.hragency.identity.api.IdentityApi;
 import com.pl.hragency.jobdescription.api.JobDescriptionApi;
 import com.pl.hragency.jobdescription.api.SalaryRange;
 import com.pl.hragency.jobdescription.domain.model.JobDescription;
+import com.pl.hragency.organization.api.OrganizationApi;
 import com.pl.hragency.recruitment.application.command.CreateJobPostingCommand;
 import com.pl.hragency.recruitment.application.port.JobPostingRepository;
+import com.pl.hragency.recruitment.application.service.JobPostingSlugGenerator;
 import com.pl.hragency.recruitment.domain.event.JobPostingCreatedEvent;
 import com.pl.hragency.recruitment.domain.model.posting.JobPosting;
 import com.pl.hragency.recruitment.domain.model.posting.JobPostingId;
@@ -28,15 +32,24 @@ public class CreateJobPostingHandler {
     private final JobDescriptionApi  jobDescriptionApi;
     private final IdentityApi identityApi;
     private final EventPublisher  eventPublisher;
+    private final CompanyApi companyApi;
+    private final JobPostingSlugGenerator slugGenerator;
+    private final OrganizationApi organizationApi;
 
     public CreateJobPostingHandler(JobPostingRepository repository,
                                    JobDescriptionApi jobDescriptionApi,
                                    IdentityApi identityApi,
-                                   EventPublisher eventPublisher) {
+                                   EventPublisher eventPublisher,
+                                   CompanyApi companyApi,
+                                   JobPostingSlugGenerator slugGenerator,
+                                   OrganizationApi organizationApi) {
         this.repository = repository;
         this.jobDescriptionApi = jobDescriptionApi;
         this.identityApi = identityApi;
         this.eventPublisher = eventPublisher;
+        this.companyApi = companyApi;
+        this.slugGenerator = slugGenerator;
+        this.organizationApi = organizationApi;
     }
 
     private UUID resolveRecruitmentId(ExecutionContext context, UUID recruitmentId) {
@@ -55,11 +68,18 @@ public class CreateJobPostingHandler {
     @Transactional
     public JobPostingId handle(ExecutionContext context, CreateJobPostingCommand command) {
 
-        var jobDescription = jobDescriptionApi.get(context.organizationId(), command.jobDescriptionId())
+        var organizationId = context.organizationId();
+        var organization = organizationApi.findById(organizationId);
+        var jobDescription = jobDescriptionApi.get(organizationId, command.jobDescriptionId())
                 .orElseThrow( () -> new EntityNotFoundException(EntityType.JobDescription, command.jobDescriptionId()));
 
+        var organizationSlug = organization.slug();
+        var recruitmentId = resolveRecruitmentId(context, command.recruitmentId());
 
-        UUID recruitmentId = resolveRecruitmentId(context, command.recruitmentId());
+        var company = companyApi.getCompanyInfo(organizationId, jobDescription.companyId())
+                .orElseThrow( () -> new EntityNotFoundException(EntityType.Company, jobDescription.companyId()));
+
+        var postingSlug = slugGenerator.generate(company.name(), command.title(), command.location(), UUID.randomUUID());
 
         JobPosting jobPosting = JobPosting.draft(context.organizationId(),
                 command.jobDescriptionId(),
@@ -75,9 +95,12 @@ public class CreateJobPostingHandler {
                 command.countryCode(),
                 command.employmentType(),
                 command.workMode(),
-                new SalaryRange(command.salaryMin(), command.salaryMax(), Currency.getInstance(command.salaryCurrency()))
+                new SalaryRange(command.salaryMin(), command.salaryMax(), Currency.getInstance(command.salaryCurrency())),
+                postingSlug,
+                organizationSlug
                 );
-        repository.save(jobPosting);
+
+        repository.create(jobPosting);
 
         UserSnapshot userSnapshot = identityApi.findUser(recruitmentId, context.organizationId()).orElse(null);
 

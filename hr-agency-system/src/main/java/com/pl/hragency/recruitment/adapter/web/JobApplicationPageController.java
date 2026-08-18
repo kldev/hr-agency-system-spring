@@ -1,4 +1,4 @@
-package com.pl.hragency.recruitment.adapter.rest.posting;
+package com.pl.hragency.recruitment.adapter.web;
 
 import com.pl.hragency.identity.api.IdentityApi;
 import com.pl.hragency.organization.api.OrganizationApi;
@@ -6,6 +6,7 @@ import com.pl.hragency.recruitment.application.command.CreateJobApplicationComma
 import com.pl.hragency.recruitment.application.handler.CreateJobApplicationHandler;
 import com.pl.hragency.recruitment.application.port.JobPostingRepository;
 import com.pl.hragency.recruitment.application.query.JobPostingItem;
+import com.pl.hragency.recruitment.application.query.JobPostingItemMapper;
 import com.pl.hragency.recruitment.domain.model.candidate.CandidateSource;
 import com.pl.hragency.recruitment.domain.model.posting.JobPostingId;
 import com.pl.hragency.shared.event.UserSnapshot;
@@ -29,25 +30,28 @@ public class JobApplicationPageController {
     private final OrganizationApi api;
     private final CreateJobApplicationHandler handler;
     private final IdentityApi identityApi;
+    private final JobPostingItemMapper mapper;
 
     public JobApplicationPageController(JobPostingRepository service,
                                         OrganizationApi api,
-                                        CreateJobApplicationHandler handler, IdentityApi identityApi) {
+                                        CreateJobApplicationHandler handler,
+                                        IdentityApi identityApi,
+                                        JobPostingItemMapper mapper) {
         this.service = service;
         this.api = api;
         this.handler = handler;
         this.identityApi = identityApi;
+        this.mapper = mapper;
     }
 
-    @GetMapping("/{slug}/apply/{id}")
+    @GetMapping("/{slug}/apply/{postingSlug}")
     public String apply(
-            @PathVariable UUID id,
             Model model,
-            @PathVariable String slug) {
+            @PathVariable String slug, @PathVariable String postingSlug) {
         var organization = api.findBySlug(slug);
 
-        var jobPosting = service.findById(organization.id(),
-                new JobPostingId((id))).map(JobPostingItem::from).orElse(null);
+        var jobPosting = service.findBySlug(organization.id(),
+                postingSlug).map(mapper::from).orElse(null);
 
         if (jobPosting == null) {
             return "redirect:/";
@@ -56,65 +60,63 @@ public class JobApplicationPageController {
         model.addAttribute("jobPosting", jobPosting);
         model.addAttribute(
                 "command",
-                new CreateJobApplicationCommand(jobPosting.id(),
-                        "", "", "", "", CandidateSource.CAREER_PAGE )
+                new JobApplicationForm(jobPosting.id(),
+                        "", "", "", "")
         );
         model.addAttribute("slug", slug);
+        model.addAttribute("postingSlug", postingSlug);
 
         return "apply";
     }
 
-    @PostMapping("/{slug}/apply/{id}")
+    @PostMapping("/{slug}/apply/{postingSlug}")
     public String apply(
             @PathVariable String slug,
-            @PathVariable UUID id,
-            @Valid @ModelAttribute("command") CreateJobApplicationCommand command,
+            @PathVariable String postingSlug,
+            @Valid @ModelAttribute("command") JobApplicationForm form,
             BindingResult bindingResult,
             Model model
     ) {
-        logger.info("Applying job application: {} {}", slug, command.email());
+        logger.info("Applying job application: {} {}", slug, form.email());
         var organization = api.findBySlug(slug);
 
         if (organization == null) {
             return "redirect:/";
         }
 
-        var jobPosting = service.findById(
+        var jobPosting = service.findBySlug(
                 organization.id(),
-                new JobPostingId(id)
-        ).map(JobPostingItem::from).orElse(null);
+                postingSlug
+        ).map(mapper::from).orElse(null);
 
         if (jobPosting == null) {
             return "redirect:/";
         }
 
-        if (command.email().isBlank()) {
+        if (bindingResult.hasErrors()) {
             model.addAttribute("jobPosting", jobPosting);
-            model.addAttribute("command", command);
+            model.addAttribute("command", form);
+            model.addAttribute("slug", slug);
+            model.addAttribute("postingSlug", postingSlug);
 
             return "apply";
         }
 
-        var saveCommand = new CreateJobApplicationCommand(jobPosting.id(),
-                command.email(),
-                command.firstName(),
-                command.lastName(),
-                command.phone(),
-                CandidateSource.CAREER_PAGE );
+        var command = form.toCommand(jobPosting.id());
 
         var user = identityApi.findByEmail("system", organization.id())
                 .orElse(new UserSnapshot(UUID.randomUUID(), "", ""));
         handler.handle(
                 new ExecutionContext(organization.id(), user.id(), user.fullName()),
-                saveCommand
+                command
         );
 
-        return "redirect:/public/{slug}/apply/{id}/success";
+        return "redirect:/public/{slug}/apply/{postingSlug}/success";
     }
 
-    @GetMapping("/{slug}/apply/{id}/success")
+    @GetMapping("/{slug}/apply/{postingSlug}/success")
     public String success(@PathVariable String slug,
-                          @PathVariable UUID id,
+                          @PathVariable String postingSlug,
                           Model model){
 
         return "success";

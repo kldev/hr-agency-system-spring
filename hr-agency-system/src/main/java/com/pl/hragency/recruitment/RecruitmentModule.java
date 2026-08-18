@@ -7,6 +7,8 @@ import org.springframework.modulith.ApplicationModule;
                 "shared :: event", "identity :: api", "shared :: rest",
                 "jobdescription :: api",
                 "identity :: persistence",
-                "organization :: api"})
+                "organization :: api",
+                "company :: api"
+        })
 public class RecruitmentModule {
 }

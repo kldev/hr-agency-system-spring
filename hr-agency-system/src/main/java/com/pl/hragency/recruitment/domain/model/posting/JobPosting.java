@@ -15,7 +15,7 @@ public final class JobPosting {
     private final UUID organizationId;
     private final UUID jobDescriptionId;
     private final UUID companyId;
-    private final UUID recruiterId;
+    private UUID recruiterId;
 
     private String title;
     private String summary;
@@ -33,10 +33,10 @@ public final class JobPosting {
     private SalaryRange salaryRange;
 
     private JobPostingStatus status;
+    private String slug;
+    private String organizationSlug;
 
     private final Instant createdAt;
-    private Instant updatedAt;
-    private Long version;
 
     private JobPosting(
             JobPostingId id,
@@ -56,9 +56,9 @@ public final class JobPosting {
             WorkMode workMode,
             SalaryRange salaryRange,
             JobPostingStatus status,
-            Instant createdAt,
-            Instant updatedAt,
-            Long version) {
+            String slug,
+            String organizationSlug,
+            Instant createdAt) {
 
         this.id = Objects.requireNonNull(id);
         this.organizationId = Objects.requireNonNull(organizationId);
@@ -82,10 +82,10 @@ public final class JobPosting {
         this.salaryRange = salaryRange;
 
         this.status = Objects.requireNonNull(status);
+        this.slug = Objects.requireNonNull(slug);
+        this.organizationSlug = Objects.requireNonNull(organizationSlug);
 
         this.createdAt = Objects.requireNonNull(createdAt);
-        this.updatedAt = Objects.requireNonNull(updatedAt);
-        this.version = version;
     }
 
     public static JobPosting draft(
@@ -103,7 +103,9 @@ public final class JobPosting {
             String countryCode,
             EmploymentType employmentType,
             WorkMode workMode,
-            SalaryRange salaryRange
+            SalaryRange salaryRange,
+            String slug,
+            String organizationSlug
             ) {
 
         Instant now = Instant.now();
@@ -126,9 +128,9 @@ public final class JobPosting {
                 workMode,
                 salaryRange,
                 JobPostingStatus.DRAFT,
-                now,
-                now,
-                null
+                slug,
+                organizationSlug,
+                now
         );
     }
 
@@ -150,9 +152,9 @@ public final class JobPosting {
             WorkMode workMode,
             SalaryRange salaryRange,
             JobPostingStatus status,
-            Instant createdAt,
-            Instant updatedAt,
-            Long version) {
+            String slug,
+            String organizationSlug,
+            Instant createdAt) {
 
         return new JobPosting(
                 id,
@@ -172,9 +174,9 @@ public final class JobPosting {
                 workMode,
                 salaryRange,
                 status,
-                createdAt,
-                updatedAt,
-                version
+                slug,
+                organizationSlug,
+                createdAt
         );
     }
 
@@ -186,7 +188,6 @@ public final class JobPosting {
         }
 
         status = JobPostingStatus.PUBLISHED;
-        touch();
     }
 
     public void close() {
@@ -197,7 +198,6 @@ public final class JobPosting {
         }
 
         status = JobPostingStatus.CLOSED;
-        touch();
     }
 
     public void archive() {
@@ -208,7 +208,6 @@ public final class JobPosting {
         }
 
         status = JobPostingStatus.ARCHIVED;
-        touch();
     }
 
     public boolean active(){
@@ -248,13 +247,26 @@ public final class JobPosting {
         this.employmentType = Objects.requireNonNull(employmentType);
         this.workMode = Objects.requireNonNull(workMode);
         this.salaryRange = salaryRange;
-
-        touch();
     }
 
-    private void touch() {
-        this.updatedAt = Instant.now();
+    public void updateRecruiter(UUID recruiterId) {
+        this.recruiterId = recruiterId;
     }
+
+    public void updateStatus(JobPostingStatus status) {
+
+        if (status == status()) {
+            throw new IllegalStateException("Cannot change status for the same of job posting");
+        }
+
+        switch (status) {
+            case PUBLISHED -> publish();
+            case CLOSED -> close();
+            case ARCHIVED -> archive();
+        }
+
+    }
+
 
     private static List<String> copy(
             List<String> values,
@@ -344,13 +356,12 @@ public final class JobPosting {
         return status;
     }
 
+    public String slug() { return slug; }
+
+    public String organizationSlug() { return  organizationSlug; }
+
     public Instant createdAt() {
         return createdAt;
     }
 
-    public Instant updatedAt() {
-        return updatedAt;
-    }
-
-    public Long version() { return  version; }
 }

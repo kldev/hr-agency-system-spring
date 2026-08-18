@@ -27,7 +27,7 @@ CREATE TABLE job_postings
     status              VARCHAR(30)  NOT NULL,
 
     created_at          TIMESTAMP WITH TIME ZONE NOT NULL,
-    updated_at          TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_at          TIMESTAMP WITH TIME ZONE NULL,
 
     version          BIGINT       NOT NULL DEFAULT 0,
 

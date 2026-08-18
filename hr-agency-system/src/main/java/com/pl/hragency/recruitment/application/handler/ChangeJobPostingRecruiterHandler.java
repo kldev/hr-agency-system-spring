@@ -41,7 +41,9 @@ public class ChangeJobPostingRecruiterHandler {
         UUID oldRecruiterId;
         oldRecruiterId = jobPosting.recruiterId();
 
-        repository.updateRecruiter(context.organizationId(), id, command.recruiterId());
+        jobPosting.updateRecruiter(command.recruiterId());
+
+        repository.update(jobPosting);
 
         UserSnapshot oldRecruiter = identityApi.findUser(oldRecruiterId,
                 context.organizationId()).orElse(null);

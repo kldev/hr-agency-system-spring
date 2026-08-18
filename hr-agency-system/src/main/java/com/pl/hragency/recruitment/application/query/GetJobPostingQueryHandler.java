@@ -15,11 +15,12 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class GetJobPostingQueryHandler {
     private final JobPostingRepository repository;
-
+    private final JobPostingItemMapper mapper;
     public GetJobPostingQueryHandler(
-            JobPostingRepository repository
+            JobPostingRepository repository, JobPostingItemMapper mapper
     ) {
         this.repository = repository;
+        this.mapper = mapper;
     }
 
     public JobPostingItem get(
@@ -28,7 +29,7 @@ public class GetJobPostingQueryHandler {
     ) {
         return repository
                 .findById(organizationId, jobPostingId)
-                .map(JobPostingItem::from)
+                .map(mapper::from)
                 .orElseThrow(() ->
                         new EntityNotFoundException(EntityType.JobDescription, jobPostingId.value())
                 );
@@ -40,7 +41,7 @@ public class GetJobPostingQueryHandler {
             Pageable pageable
     ) {
         return repository
-                .search(organizationId, query, pageable).map(JobPostingItem::from);
+                .search(organizationId, query, pageable).map(mapper::from);
 
     }
 }

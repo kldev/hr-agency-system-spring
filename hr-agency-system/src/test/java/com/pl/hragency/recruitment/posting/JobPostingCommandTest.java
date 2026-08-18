@@ -201,6 +201,11 @@ public class JobPostingCommandTest extends BaseRestIntegrationTest {
 
         assertThat(jobPosting.recruiterId())
                 .isEqualTo(user.id());
+
+        assertThat(jobPosting.organizationSlug()).isNotNull();
+        assertThat(jobPosting.slug()).isNotNull().contains("java-developer");
+        ;
+
     }
 
     @Test
