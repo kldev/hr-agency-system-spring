@@ -8,5 +8,6 @@ import java.util.UUID;
 
 public interface SpringDataJobApplicationRepository extends JpaRepository<JobApplicationJpaEntity, UUID>, JpaSpecificationExecutor<JobApplicationJpaEntity> {
     Optional<JobApplicationJpaEntity> findByCandidateIdAndJobPostingIdAndOrganizationId(UUID candidateId, UUID jobPostingId, UUID organizationId);
+
     Optional<JobApplicationJpaEntity> findByIdAndOrganizationId(UUID id, UUID organizationId);
 }

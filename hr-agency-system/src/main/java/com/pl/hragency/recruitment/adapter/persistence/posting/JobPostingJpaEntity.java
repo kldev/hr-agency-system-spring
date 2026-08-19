@@ -1,5 +1,6 @@
 package com.pl.hragency.recruitment.adapter.persistence.posting;
 
+import com.pl.hragency.identity.adapter.persistence.UserJpaEntity;
 import com.pl.hragency.jobdescription.api.EmploymentType;
 import com.pl.hragency.jobdescription.api.SalaryRange;
 import com.pl.hragency.jobdescription.api.WorkMode;

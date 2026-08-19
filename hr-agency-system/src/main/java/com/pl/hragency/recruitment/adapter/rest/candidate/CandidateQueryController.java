@@ -37,7 +37,7 @@ public class CandidateQueryController {
 
 
     @GetMapping
-    public PageResponse<CandidateItem> getInterviews(@RequestParam(defaultValue = "0", required = false)  int page,
+    public PageResponse<CandidateItem> getCandidates(@RequestParam(defaultValue = "0", required = false)  int page,
                                                      @RequestParam(defaultValue = "20", required = false) int size,
                                                      @RequestParam(required = false) UUID companyId,
                                                      @RequestParam(required = false) CandidateStatus status,

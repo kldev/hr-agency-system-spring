@@ -7,7 +7,6 @@ import com.pl.hragency.recruitment.application.query.CandidateListQuery;
 import com.pl.hragency.recruitment.application.query.CandidateItem;
 import com.pl.hragency.recruitment.domain.model.candidate.CandidateStatus;
 import com.pl.hragency.recruitment.domain.model.candidate.CandidateTagging;
-import com.pl.hragency.recruitment.domain.model.candidate.CandidateId;
 import com.pl.hragency.testsupport.TestCandidateScenario;
 import com.pl.hragency.testsupport.TestJobApplicationScenario;
 import org.junit.jupiter.api.BeforeEach;

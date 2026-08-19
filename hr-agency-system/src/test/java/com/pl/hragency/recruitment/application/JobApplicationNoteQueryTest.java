@@ -139,7 +139,7 @@ class JobApplicationNoteQueryTest extends BaseRestIntegrationTest {
         var notes = restTestClient.get()
                 .uri(url(
                         "/api/recruitment/job-applications/%s/notes"
-                                .formatted(firstApplicationId)
+                                .formatted(firstApplicationId.applicationId())
                 ))
                 .header("Authorization", "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON)

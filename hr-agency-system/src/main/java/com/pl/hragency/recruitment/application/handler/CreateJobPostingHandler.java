@@ -1,11 +1,9 @@
 package com.pl.hragency.recruitment.application.handler;
 
 import com.pl.hragency.company.api.CompanyApi;
-import com.pl.hragency.company.domain.model.Company;
 import com.pl.hragency.identity.api.IdentityApi;
 import com.pl.hragency.jobdescription.api.JobDescriptionApi;
 import com.pl.hragency.jobdescription.api.SalaryRange;
-import com.pl.hragency.jobdescription.domain.model.JobDescription;
 import com.pl.hragency.organization.api.OrganizationApi;
 import com.pl.hragency.recruitment.application.command.CreateJobPostingCommand;
 import com.pl.hragency.recruitment.application.port.JobPostingRepository;
@@ -81,7 +79,8 @@ public class CreateJobPostingHandler {
 
         var postingSlug = slugGenerator.generate(company.name(), command.title(), command.location(), UUID.randomUUID());
 
-        JobPosting jobPosting = JobPosting.draft(context.organizationId(),
+        JobPosting jobPosting = JobPosting.draft(
+                context.organizationId(),
                 command.jobDescriptionId(),
                 jobDescription.companyId(),
                 recruitmentId,

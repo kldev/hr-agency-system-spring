@@ -92,7 +92,7 @@ public class TestJobPostingFactory {
 
         var command = new CreateJobPostingCommand(
                 jobDescriptionId,
-                companyId,
+                userId,
                 title,
                 summary,
                 description,

@@ -1,5 +1,7 @@
 package com.pl.hragency.recruitment.adapter.persistence.application;
 
+import com.pl.hragency.recruitment.adapter.persistence.candidate.CandidateJpaEntity;
+import com.pl.hragency.recruitment.adapter.persistence.posting.JobPostingJpaEntity;
 import com.pl.hragency.recruitment.domain.model.application.JobApplicationStatus;
 import com.pl.hragency.recruitment.domain.model.candidate.CandidateSource;
 import jakarta.persistence.*;
@@ -121,5 +123,6 @@ public class JobApplicationJpaEntity {
     public void preUpdate() {
         updatedAt = Instant.now();
     }
+
 }
 

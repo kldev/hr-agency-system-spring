@@ -2,6 +2,7 @@ package com.pl.hragency.testsupport;
 
 import com.pl.hragency.recruitment.domain.model.posting.JobPostingStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -23,6 +24,7 @@ public class TestJobApplicationScenario {
         this.jobApplicationFactory = jobApplicationFactory;
     }
 
+    @Transactional
     public Scenario create() {
         var jdScenario = jobDescriptionScenario.create();
         var organization = jdScenario.organization();
@@ -65,6 +67,7 @@ public class TestJobApplicationScenario {
         );
     }
 
+    @Transactional
     public TestJobApplicationFactory.Result createApplication(Scenario scenario) {
         return jobApplicationFactory.create(
                 scenario.organization().id(),
@@ -96,6 +99,7 @@ public class TestJobApplicationScenario {
         public UUID organizationId() {
             return organization.id();
         }
+        public UUID applicationId() { return jobApplicationId(); }
 
     }
 }
