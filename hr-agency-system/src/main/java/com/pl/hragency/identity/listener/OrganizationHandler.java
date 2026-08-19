@@ -7,6 +7,7 @@ import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.identity.domain.model.UserOrganizationId;
 import com.pl.hragency.organization.domain.event.OrganizationCreateAdminEvent;
 import com.pl.hragency.shared.rest.ExecutionContext;
+import org.springframework.core.annotation.Order;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class OrganizationHandler {
     }
 
     @ApplicationModuleListener
+    @Order(2)
     void on(OrganizationCreateAdminEvent event) {
 
         var systemUser = userRepository.findByEmailAndOrganizationId("system", new UserOrganizationId(event.organizationId()))

@@ -19,14 +19,19 @@ public class TestJobApplicationFactory {
         this.faker = new Faker(Locale.forLanguageTag("pl"));
     }
 
-    public UUID create(UUID organizationId, UUID userId, UUID jobPostingId)
+    public Result create(UUID organizationId, UUID userId, UUID jobPostingId)
     {
         return create(organizationId, userId, jobPostingId, faker.internet().emailAddress(), CandidateSource.JUST_JOIN_IT);
     }
 
-    public UUID create(UUID organizationId, UUID userId, UUID jobPostingId, String email, CandidateSource source) {
+    public Result create(UUID organizationId, UUID userId, UUID jobPostingId, String email, CandidateSource source) {
         var context = new ExecutionContext(organizationId, userId, "Test");
         var command = new CreateJobApplicationCommand(jobPostingId, email, "", "", "", source);
-        return handler.handle(context, command).applicationId();
+        var commandResult = handler.handle(context, command);
+        return new Result(commandResult.applicationId(), commandResult.CandidateId(), email);
+    }
+
+    public record Result(UUID applicationId, UUID candidateId, String email) {
+
     }
 }

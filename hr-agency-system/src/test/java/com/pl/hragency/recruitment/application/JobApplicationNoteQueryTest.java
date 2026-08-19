@@ -122,14 +122,14 @@ class JobApplicationNoteQueryTest extends BaseRestIntegrationTest {
         var firstNoteId = jobApplicationNoteFactory.create(
                 test.organization().id(),
                 test.recruiter().id(),
-                firstApplicationId,
+                firstApplicationId.applicationId(),
                 "Note for first application"
         );
 
         jobApplicationNoteFactory.create(
                 test.organization().id(),
                 test.recruiter().id(),
-                secondApplicationId,
+                secondApplicationId.applicationId(),
                 "Note for second application"
         );
 

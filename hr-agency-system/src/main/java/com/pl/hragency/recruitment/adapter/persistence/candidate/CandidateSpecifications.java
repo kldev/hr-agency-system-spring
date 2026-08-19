@@ -1,8 +1,11 @@
 package com.pl.hragency.recruitment.adapter.persistence.candidate;
 
+import com.pl.hragency.recruitment.adapter.persistence.application.JobApplicationJpaEntity;
+import com.pl.hragency.recruitment.adapter.persistence.posting.JobPostingJpaEntity;
 import com.pl.hragency.recruitment.domain.model.candidate.CandidateStatus;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.Set;
 import java.util.UUID;
 
 public final class CandidateSpecifications {
@@ -22,6 +25,8 @@ public final class CandidateSpecifications {
 
     public static Specification<CandidateJpaEntity> status(
             CandidateStatus status) {
+
+        if (status == null) return Specification.anyOf();
 
         return (root, query, cb) ->
                 cb.equal(
@@ -68,11 +73,21 @@ public final class CandidateSpecifications {
         return contains("phone", value);
     }
 
+    public static Specification<CandidateJpaEntity> candidateId(
+            UUID value) {
+
+        return (root, query, cb) ->
+                cb.equal(
+                        root.get("id"),
+                        value
+                );
+    }
+
     public static Specification<CandidateJpaEntity> search(
             String value) {
 
         if (value == null || value.isBlank()) {
-            return null;
+            return Specification.anyOf();
         }
 
         String normalized = "%" + value.trim().toLowerCase() + "%";
@@ -97,6 +112,68 @@ public final class CandidateSpecifications {
                         )
                 );
     }
+
+    public static Specification<CandidateJpaEntity> tags(Set<UUID> tagIds) {
+        if (tagIds == null || tagIds.isEmpty()) {
+            return Specification.anyOf();
+        }
+
+        return (root, query, cb) -> {
+            var subquery = query.subquery(UUID.class);
+            var tag = subquery.from(CandidateTagJpaEntity.class);
+
+            subquery
+                    .select(tag.get("id").get("candidateId"))
+                    .where(
+                            cb.equal(
+                                    tag.get("id").get("candidateId"),
+                                    root.get("id")
+                            ),
+                            tag.get("id").get("tagId").in(tagIds)
+                    );
+
+            return cb.exists(subquery);
+        };
+    }
+
+    public static Specification<CandidateJpaEntity> appliedToCompany(
+            UUID companyId) {
+
+        if (companyId == null) {
+            return Specification.anyOf();
+        }
+
+        return (root, query, cb) -> {
+
+            var subquery = query.subquery(UUID.class);
+
+            var application =
+                    subquery.from(JobApplicationJpaEntity.class);
+
+            var jobPosting =
+                    subquery.from(JobPostingJpaEntity.class);
+
+            subquery
+                    .select(application.get("id"))
+                    .where(
+                            cb.equal(
+                                    application.get("candidateId"),
+                                    root.get("id")
+                            ),
+                            cb.equal(
+                                    application.get("jobPostingId"),
+                                    jobPosting.get("id")
+                            ),
+                            cb.equal(
+                                    jobPosting.get("companyId"),
+                                    companyId
+                            )
+                    );
+
+            return cb.exists(subquery);
+        };
+    }
+
 
     private static Specification<CandidateJpaEntity> contains(
             String field,

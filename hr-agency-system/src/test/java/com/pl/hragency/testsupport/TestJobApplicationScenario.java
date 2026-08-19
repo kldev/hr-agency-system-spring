@@ -59,11 +59,13 @@ public class TestJobApplicationScenario {
                 jdScenario.companyId(),
                 jobDescriptionId,
                 jobPostingId,
-                jobApplicationId
+                jobApplicationId.applicationId(),
+                jobApplicationId.candidateId(),
+                jobApplicationId.email()
         );
     }
 
-    public UUID createApplication(Scenario scenario) {
+    public TestJobApplicationFactory.Result createApplication(Scenario scenario) {
         return jobApplicationFactory.create(
                 scenario.organization().id(),
                 scenario.recruiter().id(),
@@ -71,7 +73,7 @@ public class TestJobApplicationScenario {
         );
     }
 
-    public UUID createApplication(Scenario scenario, UUID recruiterId) {
+    public TestJobApplicationFactory.Result createApplication(Scenario scenario, UUID recruiterId) {
         return jobApplicationFactory.create(
                 scenario.organization().id(),
                 recruiterId,
@@ -87,7 +89,13 @@ public class TestJobApplicationScenario {
             UUID companyId,
             UUID jobDescriptionId,
             UUID jobPostingId,
-            UUID jobApplicationId
+            UUID jobApplicationId,
+            UUID candidateId,
+            String candidateEmail
     ) {
+        public UUID organizationId() {
+            return organization.id();
+        }
+
     }
 }

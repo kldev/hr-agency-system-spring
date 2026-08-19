@@ -40,14 +40,14 @@ class InterviewQueryTest extends BaseRestIntegrationTest {
 
         var interview1 = createInterview(
                 recruiter,
-                application1,
+                application1.applicationId(),
                 LocalDateTime.of(2026, 9, 15, 10, 30),
                 ZoneId.of("Europe/Warsaw")
         );
 
         var interview2 = createInterview(
                 recruiter,
-                application2,
+                application2.applicationId(),
                 LocalDateTime.of(2026, 9, 16, 11, 30),
                 ZoneId.of("Europe/Warsaw")
         );
@@ -86,21 +86,21 @@ class InterviewQueryTest extends BaseRestIntegrationTest {
 
         var beforeRange = createInterview(
                 recruiter,
-                application1,
+                application1.applicationId(),
                 LocalDateTime.of(2026, 9, 10, 10, 0),
                 ZoneId.of("Europe/Warsaw")
         );
 
         var insideRange1 = createInterview(
                 recruiter,
-                application2,
+                application2.applicationId(),
                 LocalDateTime.of(2026, 9, 15, 10, 0),
                 ZoneId.of("Europe/Warsaw")
         );
 
         var insideRange2 = createInterview(
                 recruiter,
-                application3,
+                application3.applicationId(),
                 LocalDateTime.of(2026, 9, 20, 10, 0),
                 ZoneId.of("Europe/Warsaw")
         );
@@ -167,14 +167,14 @@ class InterviewQueryTest extends BaseRestIntegrationTest {
 
         var myInterview = createInterview(
                 recruiter1,
-                application1,
+                application1.applicationId(),
                 LocalDateTime.of(2026, 9, 15, 10, 0),
                 ZoneId.of("Europe/Warsaw")
         );
 
         var otherInterview = createInterview(
                 recruiter2,
-                application2,
+                application2.applicationId(),
                 LocalDateTime.of(2026, 9, 16, 10, 0),
                 ZoneId.of("Europe/Warsaw")
         );
@@ -219,21 +219,21 @@ class InterviewQueryTest extends BaseRestIntegrationTest {
 
         var lateInterview = createInterview(
                 recruiter,
-                application1,
+                application1.applicationId(),
                 LocalDateTime.of(2026, 9, 20, 15, 0),
                 ZoneId.of("Europe/Warsaw")
         );
 
         var earlyInterview = createInterview(
                 recruiter,
-                application2,
+                application2.applicationId(),
                 LocalDateTime.of(2026, 9, 15, 10, 0),
                 ZoneId.of("Europe/Warsaw")
         );
 
         var middleInterview = createInterview(
                 recruiter,
-                application3,
+                application3.applicationId(),
                 LocalDateTime.of(2026, 9, 17, 12, 0),
                 ZoneId.of("Europe/Warsaw")
         );
