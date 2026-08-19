@@ -2,10 +2,12 @@ package com.pl.hragency.identity.application.query;
 
 import com.pl.hragency.identity.adapter.persistence.SpringDataUserRepository;
 import com.pl.hragency.identity.adapter.persistence.UserJpaEntity;
+import com.pl.hragency.identity.adapter.persistence.UserSpecifications;
 import com.pl.hragency.identity.application.port.CurrentPrincipalProvider;
 
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,23 +31,12 @@ public class UserQueryService {
                         .getRequiredUser()
                         .organizationId();
 
+       var specifications = Specification.allOf(
+               UserSpecifications.organizationId(organizationId),
+               UserSpecifications.search(query.search())
+       );
 
-        Page<UserJpaEntity> users;
-
-        if (query.search() == null
-                || query.search().isBlank()) {
-
-            users = repository.findAllByOrganizationId(
-                    organizationId, query.pageable());
-
-        } else {
-
-            users = repository
-                    .findAllByOrganizationIdAndEmailContainingIgnoreCase(
-                            organizationId,
-                            query.search(),
-                            query.pageable());
-        }
+        var users = repository.findAll(specifications,query.pageable());
 
         return users.map(this::toItem);
 

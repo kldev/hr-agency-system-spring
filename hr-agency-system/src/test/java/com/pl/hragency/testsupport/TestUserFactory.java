@@ -19,7 +19,7 @@ public class TestUserFactory {
 
         return create(
                 organization,
-                "john.smith@test.com",
+                "test-user@test.com",
                 "Password123!",
                 OrganizationRole.RECRUITER
         );
@@ -33,8 +33,8 @@ public class TestUserFactory {
 
         var userId = handler.createUser(
                         email,
-                        "John",
-                        "Smith",
+                        "Test",
+                        "User",
                         role.toString(),
                         organization.id(),
                         password

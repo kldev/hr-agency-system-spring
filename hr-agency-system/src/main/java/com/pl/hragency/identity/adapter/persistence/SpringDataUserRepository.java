@@ -17,11 +17,5 @@ public interface SpringDataUserRepository extends JpaRepository<UserJpaEntity, U
             UUID organizationId,
             Pageable pageable);
 
-    Page<UserJpaEntity> findAllByOrganizationIdAndEmailContainingIgnoreCase(
-            UUID organizationId,
-            String email,
-            Pageable pageable);
-
-    boolean existsByIdAndOrganizationId(UUID id, UUID organizationId);
     Optional<UserJpaEntity> findByIdAndOrganizationId(UUID id, UUID organizationId);
 }
