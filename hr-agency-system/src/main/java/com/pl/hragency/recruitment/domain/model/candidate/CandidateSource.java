@@ -81,5 +81,8 @@ public enum CandidateSource {
     /**
      * Source is known but does not match a predefined value.
      */
-    OTHER
+    OTHER,
+
+    ///
+    DIRECT
 }

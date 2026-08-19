@@ -38,3 +38,6 @@ CREATE INDEX idx_applications_job_posting
 
 CREATE INDEX idx_applications_status
     ON applications (organization_id, status);
+
+CREATE INDEX idx_applications_org_created
+    ON applications (organization_id, created_at);

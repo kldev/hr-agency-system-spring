@@ -34,7 +34,7 @@ public class JobApplicationQueryRepositoryTest extends BaseIntegrationTest {
         );
 
         assertThat(response).isNotNull();
-        assertThat(response.content()).hasSize(3);
+        assertThat(response).hasSize(3);
     }
 
     @Test
@@ -62,8 +62,8 @@ public class JobApplicationQueryRepositoryTest extends BaseIntegrationTest {
                 PageRequest.of(0, 20)
         );
 
-        assertThat(response.content()).hasSize(3);
-        assertThat(response.content())
+        assertThat(response).hasSize(3);
+        assertThat(response)
                 .allMatch(application -> application.companyId().equals(test.companyId()));
     }
 
@@ -89,7 +89,7 @@ public class JobApplicationQueryRepositoryTest extends BaseIntegrationTest {
                 PageRequest.of(0, 20)
         );
 
-        assertThat(response.content()).isEmpty();
+        assertThat(response).isEmpty();
     }
 
     @Test
@@ -115,8 +115,8 @@ public class JobApplicationQueryRepositoryTest extends BaseIntegrationTest {
                 PageRequest.of(0, 20)
         );
 
-        assertThat(response.content()).hasSize(3);
-        assertThat(response.content())
+        assertThat(response).hasSize(3);
+        assertThat(response)
                 .allMatch(application ->
                         application.recruiterId().equals(test.recruiter().id()));
     }
@@ -143,7 +143,7 @@ public class JobApplicationQueryRepositoryTest extends BaseIntegrationTest {
                 PageRequest.of(0, 20)
         );
 
-        assertThat(response.content()).isEmpty();
+        assertThat(response).isEmpty();
     }
 
     @Test
@@ -164,7 +164,7 @@ public class JobApplicationQueryRepositoryTest extends BaseIntegrationTest {
                 PageRequest.of(0, 20)
         );
 
-        assertThat(response.content()).hasSize(3);
+        assertThat(response).hasSize(3);
     }
 
     @Test
@@ -189,9 +189,9 @@ public class JobApplicationQueryRepositoryTest extends BaseIntegrationTest {
                 PageRequest.of(0, 20)
         );
 
-        assertThat(response.content()).hasSize(3);
+        assertThat(response).hasSize(3);
 
-        assertThat(response.content())
+        assertThat(response)
                 .allMatch(application ->
                         application.companyId().equals(test.companyId())
                                 && application.recruiterId().equals(test.recruiter().id()));
@@ -215,9 +215,8 @@ public class JobApplicationQueryRepositoryTest extends BaseIntegrationTest {
                 PageRequest.of(0, 2)
         );
 
-        assertThat(response.content()).hasSize(2);
-        assertThat(response.totalElements()).isEqualTo(6);
-        assertThat(response.totalPages()).isEqualTo(3);
+        assertThat(response).hasSize(2);
+
     }
 
     @Test
@@ -238,8 +237,7 @@ public class JobApplicationQueryRepositoryTest extends BaseIntegrationTest {
                 PageRequest.of(1, 2)
         );
 
-        assertThat(response.content()).hasSize(2);
-        assertThat(response.totalElements()).isEqualTo(6);
-        assertThat(response.totalPages()).isEqualTo(3);
+        assertThat(response).hasSize(2);
+
     }
 }

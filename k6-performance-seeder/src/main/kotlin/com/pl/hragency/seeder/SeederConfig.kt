@@ -38,10 +38,10 @@ data class SeederConfig(
                 notesPerApplication = int("NOTES_PER_APPLICATION", 0),
                 candidateTagsPerCandidate = int("CANDIDATE_TAGS_PER_CANDIDATE", 2),
                 batchSeed = int("SEED", 20260818),
-                // bcrypt hash for "password"; change this to the hash used by your application.
+                // bcrypt hash for "performence-test"; change this to the hash used by your application.
                 passwordHash = env(
                     "PASSWORD_HASH",
-                    $$"""$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy"""
+                    $$"""$2a$12$tPmOPCKlwmYvGEqY97xCY.O08z8eBUbrEzsi8NaJZ6LKPEwCUiIV2"""
                 )
             )
         }

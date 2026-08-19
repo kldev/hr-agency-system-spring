@@ -13,12 +13,14 @@ import com.pl.hragency.shared.rest.ExecutionContext;
 import com.pl.hragency.shared.rest.PageResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -40,14 +42,14 @@ public class JobApplicationQueryController {
     }
 
     @GetMapping
-    public PageResponse<JobApplicationItem> getApplications(@RequestParam(defaultValue = "0", required = false)  int page,
-                                                          @RequestParam(defaultValue = "20", required = false) int size,
-                                                          @RequestParam(required = false) UUID companyId,
-                                                          @RequestParam(required = false) UUID postingId,
-                                                           @RequestParam(required = false) UUID recruiterId,
-                                                          @RequestParam(required = false) CandidateSource source,
-                                                          @RequestParam(required = false) String search,
-                                                          @RequestParam(required = false) JobApplicationStatus status
+    public Slice<JobApplicationItem> getApplications(@RequestParam(defaultValue = "0", required = false)  int page,
+                                                     @RequestParam(defaultValue = "20", required = false) int size,
+                                                     @RequestParam(required = false) UUID companyId,
+                                                     @RequestParam(required = false) UUID postingId,
+                                                     @RequestParam(required = false) UUID recruiterId,
+                                                     @RequestParam(required = false) CandidateSource source,
+                                                     @RequestParam(required = false) String search,
+                                                     @RequestParam(required = false) JobApplicationStatus status
 
     ) {
 
@@ -57,5 +59,25 @@ public class JobApplicationQueryController {
         var query = new JobApplicationListQuery(search, companyId, status, postingId,recruiterId, source);
 
         return repository.search(getExecutionContext().organizationId(), query, sortBy);
+    }
+
+    @GetMapping("count")
+    public long getCountApplications(@RequestParam(defaultValue = "0", required = false)  int page,
+                                                    @RequestParam(defaultValue = "20", required = false) int size,
+                                                    @RequestParam(required = false) UUID companyId,
+                                                    @RequestParam(required = false) UUID postingId,
+                                                    @RequestParam(required = false) UUID recruiterId,
+                                                    @RequestParam(required = false) CandidateSource source,
+                                                    @RequestParam(required = false) String search,
+                                                    @RequestParam(required = false) JobApplicationStatus status
+
+    ) {
+
+        var sortBy = PageRequest.of(page, size,
+                Sort.by(Sort.Direction.ASC, "createdAt"));
+
+        var query = new JobApplicationListQuery(search, companyId, status, postingId,recruiterId, source);
+
+        return repository.countSearch(getExecutionContext().organizationId(), query, sortBy);
     }
 }

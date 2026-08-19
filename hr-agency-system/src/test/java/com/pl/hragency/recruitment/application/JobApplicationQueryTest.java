@@ -2,13 +2,14 @@ package com.pl.hragency.recruitment.application;
 
 import com.pl.hragency.BaseRestIntegrationTest;
 import com.pl.hragency.recruitment.application.query.JobApplicationItem;
-import com.pl.hragency.shared.rest.PageResponse;
 import com.pl.hragency.testsupport.AuthenticationTestClient;
 import com.pl.hragency.testsupport.TestJobApplicationScenario;
 import com.pl.hragency.testsupport.TestOrganizationScenario;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,14 +40,14 @@ class JobApplicationQueryTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(new ParameterizedTypeReference<PageResponse<JobApplicationItem>>() {
+                .expectBody(new ParameterizedTypeReference<List<JobApplicationItem>>() {
                 })
                 .returnResult()
                 .getResponseBody();
 
         // then
         assertThat(response).isNotNull();
-        assertThat(response.content())
+        assertThat(response)
                 .extracting(JobApplicationItem::id)
                 .containsExactly(
                         test.applicationId(),
@@ -54,7 +55,7 @@ class JobApplicationQueryTest extends BaseRestIntegrationTest {
                         third.applicationId()
                 );
 
-        assertThat(response.totalElements()).isEqualTo(3);
+      //  assertThat(response.totalElements()).isEqualTo(3);
     }
 
     @Test
@@ -71,15 +72,15 @@ class JobApplicationQueryTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(new ParameterizedTypeReference<PageResponse<JobApplicationItem>>() {
+                .expectBody(new ParameterizedTypeReference<List<JobApplicationItem>>() {
                 })
                 .returnResult()
                 .getResponseBody();
 
         // then
         assertThat(response).isNotNull();
-        assertThat(response.content()).isEmpty();
-        assertThat(response.totalElements()).isZero();
+        assertThat(response).isEmpty();
+
     }
 
     @Test
@@ -105,7 +106,7 @@ class JobApplicationQueryTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(new ParameterizedTypeReference<PageResponse<JobApplicationItem>>() {
+                .expectBody(new ParameterizedTypeReference<List<JobApplicationItem>>() {
                 })
                 .returnResult()
                 .getResponseBody();
@@ -113,7 +114,7 @@ class JobApplicationQueryTest extends BaseRestIntegrationTest {
         // then
         assertThat(response).isNotNull();
 
-        assertThat(response.content())
+        assertThat(response)
                 .extracting(JobApplicationItem::id)
                 .containsExactly(
                         test.applicationId(),
@@ -121,11 +122,11 @@ class JobApplicationQueryTest extends BaseRestIntegrationTest {
                         third.applicationId()
                 );
 
-        assertThat(response.content())
+        assertThat(response)
                 .extracting(JobApplicationItem::id)
                 .doesNotContain(otherApplication.applicationId());
 
-        assertThat(response.totalElements()).isEqualTo(3);
+     //   assertThat(response.totalElements()).isEqualTo(3);
     }
 
     @Test
@@ -148,7 +149,7 @@ class JobApplicationQueryTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(new ParameterizedTypeReference<PageResponse<JobApplicationItem>>() {
+                .expectBody(new ParameterizedTypeReference<List<JobApplicationItem>>() {
                 })
                 .returnResult()
                 .getResponseBody();
@@ -156,7 +157,7 @@ class JobApplicationQueryTest extends BaseRestIntegrationTest {
         // then
         assertThat(response).isNotNull();
 
-        assertThat(response.content())
+        assertThat(response)
                 .extracting(JobApplicationItem::id)
                 .doesNotContain(second.applicationId());
     }
@@ -184,7 +185,7 @@ class JobApplicationQueryTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(new ParameterizedTypeReference<PageResponse<JobApplicationItem>>() {
+                .expectBody(new ParameterizedTypeReference<List<JobApplicationItem>>() {
                 })
                 .returnResult()
                 .getResponseBody();
@@ -192,7 +193,7 @@ class JobApplicationQueryTest extends BaseRestIntegrationTest {
         // then
         assertThat(response).isNotNull();
 
-        assertThat(response.content())
+        assertThat(response)
                 .extracting(JobApplicationItem::id)
                 .containsExactly(
                         test.applicationId(),
@@ -200,7 +201,7 @@ class JobApplicationQueryTest extends BaseRestIntegrationTest {
                         third.applicationId()
                 );
 
-        assertThat(response.content())
+        assertThat(response)
                 .extracting(JobApplicationItem::id)
                 .doesNotContain(otherApplication.applicationId());
     }
@@ -222,15 +223,14 @@ class JobApplicationQueryTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(new ParameterizedTypeReference<PageResponse<JobApplicationItem>>() {
+                .expectBody(new ParameterizedTypeReference<List<JobApplicationItem>>() {
                 })
                 .returnResult()
                 .getResponseBody();
 
         // then
         assertThat(response).isNotNull();
-        assertThat(response.content()).isEmpty();
-        assertThat(response.totalElements()).isZero();
+        assertThat(response).isEmpty();
     }
 
     @Test
@@ -256,16 +256,15 @@ class JobApplicationQueryTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(new ParameterizedTypeReference<PageResponse<JobApplicationItem>>() {
+                .expectBody(new ParameterizedTypeReference<List<JobApplicationItem>>() {
                 })
                 .returnResult()
                 .getResponseBody();
 
         // then
         assertThat(response).isNotNull();
-        assertThat(response.content()).hasSize(2);
-        assertThat(response.totalElements()).isEqualTo(5);
-        assertThat(response.page()).isZero();
+        assertThat(response).hasSize(2);
+
         assertThat(response.size()).isEqualTo(2);
     }
 
@@ -292,17 +291,17 @@ class JobApplicationQueryTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(new ParameterizedTypeReference<PageResponse<JobApplicationItem>>() {
+                .expectBody(new ParameterizedTypeReference<List<JobApplicationItem>>() {
                 })
                 .returnResult()
                 .getResponseBody();
 
         // then
         assertThat(response).isNotNull();
-        assertThat(response.content()).hasSize(2);
-        assertThat(response.totalElements()).isEqualTo(5);
-        assertThat(response.page()).isEqualTo(1);
-        assertThat(response.size()).isEqualTo(2);
+        assertThat(response).hasSize(2);
+//        assertThat(response.totalElements()).isEqualTo(5);
+//        assertThat(response.page()).isEqualTo(1);
+//        assertThat(response.size()).isEqualTo(2);
     }
 
     @Test
@@ -324,7 +323,7 @@ class JobApplicationQueryTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(new ParameterizedTypeReference<PageResponse<JobApplicationItem>>() {
+                .expectBody(new ParameterizedTypeReference<List<JobApplicationItem>>() {
                 })
                 .returnResult()
                 .getResponseBody();
@@ -332,14 +331,14 @@ class JobApplicationQueryTest extends BaseRestIntegrationTest {
         // then
         assertThat(response).isNotNull();
 
-        assertThat(response.content())
+        assertThat(response)
                 .extracting(JobApplicationItem::id)
                 .containsExactly(
                         test.applicationId(),
                         otherApplication.applicationId()
                 );
 
-        assertThat(response.content())
+        assertThat(response)
                 .extracting(JobApplicationItem::id)
                 .doesNotContain(applicationFromOtherOrganization.applicationId());
     }
