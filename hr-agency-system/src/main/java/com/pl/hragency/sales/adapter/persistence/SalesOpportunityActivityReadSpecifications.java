@@ -6,12 +6,11 @@ import org.springframework.data.jpa.domain.Specification;
 import java.time.Instant;
 import java.util.UUID;
 
-public final class SalesOpportunityActivitySpecifications {
-
-    private SalesOpportunityActivitySpecifications() {
+public class SalesOpportunityActivityReadSpecifications {
+    private SalesOpportunityActivityReadSpecifications() {
     }
 
-    public static Specification<SalesOpportunityActivityJpaEntity> organizationId(
+    public static Specification<SalesOpportunityActivityReadJpaEntity> organizationId(
             UUID organizationId
     ) {
         if (organizationId == null) {
@@ -25,7 +24,7 @@ public final class SalesOpportunityActivitySpecifications {
                 );
     }
 
-    public static Specification<SalesOpportunityActivityJpaEntity> salesOpportunityId(
+    public static Specification<SalesOpportunityActivityReadJpaEntity> salesOpportunityId(
             UUID salesOpportunityId
     ) {
         if (salesOpportunityId == null) {
@@ -39,7 +38,7 @@ public final class SalesOpportunityActivitySpecifications {
                 );
     }
 
-    public static Specification<SalesOpportunityActivityJpaEntity> contactId(
+    public static Specification<SalesOpportunityActivityReadJpaEntity> contactId(
             UUID contactId
     ) {
         if (contactId == null) {
@@ -53,7 +52,7 @@ public final class SalesOpportunityActivitySpecifications {
                 );
     }
 
-    public static Specification<SalesOpportunityActivityJpaEntity> type(
+    public static Specification<SalesOpportunityActivityReadJpaEntity> type(
             SalesActivityType type
     ) {
         if (type == null) {
@@ -67,7 +66,7 @@ public final class SalesOpportunityActivitySpecifications {
                 );
     }
 
-    public static Specification<SalesOpportunityActivityJpaEntity> occurredFrom(
+    public static Specification<SalesOpportunityActivityReadJpaEntity> occurredFrom(
             Instant occurredFrom
     ) {
         if (occurredFrom == null) {
@@ -81,7 +80,7 @@ public final class SalesOpportunityActivitySpecifications {
                 );
     }
 
-    public static Specification<SalesOpportunityActivityJpaEntity> occurredTo(
+    public static Specification<SalesOpportunityActivityReadJpaEntity> occurredTo(
             Instant occurredTo
     ) {
         if (occurredTo == null) {
@@ -95,7 +94,7 @@ public final class SalesOpportunityActivitySpecifications {
                 );
     }
 
-    public static Specification<SalesOpportunityActivityJpaEntity> search(
+    public static Specification<SalesOpportunityActivityReadJpaEntity> search(
             String search
     ) {
         if (search == null || search.isBlank()) {
@@ -109,17 +108,13 @@ public final class SalesOpportunityActivitySpecifications {
         return (root, query, cb) ->
                 cb.or(
                         cb.like(
-                                cb.lower(root.get("subject")),
-                                value
-                        ),
-                        cb.like(
-                                cb.lower(root.get("description")),
+                                cb.lower(root.get("note")),
                                 value
                         )
                 );
     }
 
-    public static Specification<SalesOpportunityActivityJpaEntity> occurredDesc() {
+    public static Specification<SalesOpportunityActivityReadJpaEntity> occurredDesc() {
         return (root, query, cb) -> {
             query.orderBy(
                     cb.desc(root.get("occurredAt"))

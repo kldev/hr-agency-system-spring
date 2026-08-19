@@ -148,7 +148,7 @@ public final class SalesOpportunity {
         }
 
         validateTransition(newStage);
-        
+
         if (newStage == SalesOpportunityStage.LOST) {
             if (lostReason == null || lostReason.isBlank()) {
                 throw new IllegalArgumentException(

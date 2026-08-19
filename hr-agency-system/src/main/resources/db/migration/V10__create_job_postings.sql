@@ -40,7 +40,11 @@ CREATE TABLE job_postings
 
     CONSTRAINT fk_job_postings_job_description
         FOREIGN KEY (job_description_id)
-            REFERENCES job_descriptions(id)
+            REFERENCES job_descriptions(id),
+
+    CONSTRAINT fk_job_postings_recruiter_id
+        FOREIGN KEY (recruiter_id)
+            REFERENCES users(id)
 );
 
 CREATE INDEX idx_job_postings_organization

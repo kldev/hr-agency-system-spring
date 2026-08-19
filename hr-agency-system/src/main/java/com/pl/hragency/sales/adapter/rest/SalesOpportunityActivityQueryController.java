@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.UUID;
 
 @RestController
@@ -46,7 +47,8 @@ public class SalesOpportunityActivityQueryController {
             @RequestParam(required = false) UUID salesOpportunityId,
             @RequestParam(required = false) SalesActivityType type,
             @RequestParam(required = false) LocalDate occurredFrom,
-            @RequestParam(required = false)LocalDate occurredTo) {
+            @RequestParam(required = false)LocalDate occurredTo,
+            @RequestParam(defaultValue = "Europe/Warsaw", required = false) ZoneId timezone) {
 
         var pageable = PageRequest.of(
                 page,
@@ -56,12 +58,15 @@ public class SalesOpportunityActivityQueryController {
                 )
         );
 
+        var query = new SalesOpportunityActivityQuery(
+                salesOpportunityId,
+                type,
+                occurredFrom,
+                occurredTo, search, timezone);
+
         var result = queryService.search(getContext().organizationId(),
-                new SalesOpportunityActivityQuery(
-                        salesOpportunityId,
-                        type,
-                        occurredFrom,
-                        occurredTo, search), pageable
+                query,
+                pageable
         );
 
         return new PageResponse<>(

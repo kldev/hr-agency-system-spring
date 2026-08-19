@@ -28,6 +28,10 @@ CREATE TABLE sales_opportunity_activities
         FOREIGN KEY (sales_opportunity_id)
             REFERENCES sales_opportunities(id),
 
+    CONSTRAINT fk_sales_opportunity_created_by
+        FOREIGN KEY (created_by)
+            REFERENCES users(id),
+
     CONSTRAINT uq_sales_opportunity_activities_organization_id_id
         UNIQUE (organization_id, id),
 
