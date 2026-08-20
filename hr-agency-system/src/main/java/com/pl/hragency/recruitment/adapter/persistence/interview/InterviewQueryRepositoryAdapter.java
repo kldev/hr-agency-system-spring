@@ -41,7 +41,17 @@ public class InterviewQueryRepositoryAdapter
 
     @Override
     protected InterviewItem from(InterviewReadJpaEntity entity) {
-        return null;
+        return new InterviewItem(entity.getId(),
+                entity.getCandidateId(),
+                entity.getCandidateName(),
+                entity.getCandidateEmail(),
+                entity.getApplicationId(),
+                entity.getStatus(),
+                entity.getFeedback(),
+                entity.getScheduledAt(),
+                entity.getCreatedAt(),
+                entity.getCreatedBy(),
+                entity.getCreatedName());
     }
 
 

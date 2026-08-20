@@ -1,5 +1,7 @@
 package com.pl.hragency.recruitment.application.query;
 
+import com.pl.hragency.jobdescription.api.EmploymentType;
+import com.pl.hragency.jobdescription.api.WorkMode;
 import com.pl.hragency.recruitment.domain.model.posting.JobPosting;
 
 import java.math.BigDecimal;
@@ -23,8 +25,8 @@ public record JobPostingItem(
         String location,
         String countryCode,
 
-        String employmentType,
-        String workMode,
+        EmploymentType employmentType,
+        WorkMode workMode,
 
         BigDecimal salaryMin,
         BigDecimal salaryMax,

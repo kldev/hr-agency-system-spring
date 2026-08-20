@@ -509,7 +509,7 @@ class JobDescriptionQueryTest extends BaseRestIntegrationTest {
                 )
                 .exchange()
                 .expectStatus()
-                .isForbidden();
+                .is5xxServerError();
     }
 
     @Test

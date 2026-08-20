@@ -9,6 +9,7 @@ services:
   postgres:
     image: postgres:17
     container_name: hr-agency-showcase-postgres
+    shm_size: 256mb
     restart: unless-stopped
 
     environment:

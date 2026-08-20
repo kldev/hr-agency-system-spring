@@ -32,8 +32,8 @@ public class JobPostingItemMapper {
                 posting.location(),
                 posting.countryCode(),
 
-                posting.employmentType().name(),
-                posting.workMode().name(),
+                posting.employmentType(),
+                posting.workMode(),
 
                 posting.salaryRange().min(),
                 posting.salaryRange().max(),

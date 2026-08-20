@@ -7,6 +7,7 @@ import com.pl.hragency.recruitment.application.query.GetJobPostingQueryHandler;
 import com.pl.hragency.recruitment.domain.model.posting.JobPostingStatus;
 import com.pl.hragency.shared.rest.ExecutionContext;
 import com.pl.hragency.shared.rest.PageResponse;
+import com.pl.hragency.shared.rest.SliceResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -35,7 +36,7 @@ public class JobPostingQueryController {
     }
 
     @GetMapping
-    public PageResponse<JobPostingItem> getPaged(
+    public SliceResponse<JobPostingItem> getPaged(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) JobPostingStatus status,
             @RequestParam(required = false) UUID companyId,
@@ -52,17 +53,25 @@ public class JobPostingQueryController {
                 )
         );
 
-        var result = queryService.search(getContext().organizationId(),
-                new JobPostingListQuery(search, status, companyId, jobDescriptionId), pageable
-        );
+        var query = new JobPostingListQuery(search, status, companyId, jobDescriptionId);
 
-        return new PageResponse<>(
-                result.getContent(),
-                result.getNumber(),
-                result.getSize(),
-                result.getTotalElements(),
-                result.getTotalPages()
+        return queryService.search(getContext().organizationId(),
+                query, pageable
         );
     }
 
+    @GetMapping("count")
+    public long getCount(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) JobPostingStatus status,
+            @RequestParam(required = false) UUID companyId,
+            @RequestParam(required = false) UUID jobDescriptionId) {
+
+
+        var query = new JobPostingListQuery(search, status, companyId, jobDescriptionId);
+
+        return queryService.countSearch(getContext().organizationId(),
+                query
+        );
+    }
 }

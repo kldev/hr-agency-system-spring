@@ -5,11 +5,10 @@ import com.pl.hragency.recruitment.application.port.InterviewQueryRepository;
 import com.pl.hragency.recruitment.application.query.InterviewItem;
 import com.pl.hragency.recruitment.application.query.InterviewListQuery;
 import com.pl.hragency.shared.rest.ExecutionContext;
-import com.pl.hragency.shared.rest.PageResponse;
+import com.pl.hragency.shared.rest.SliceResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Max;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,13 +38,13 @@ public class InterviewQueryController {
 
 
     @GetMapping
-    public Slice<InterviewItem> getInterviews(@Validated @RequestParam(defaultValue = "0", required = false)  int page,
-                                              @RequestParam(defaultValue = "20", required = false) @Max(500) int size,
-                                              @RequestParam(defaultValue = "Europe/Warsaw", required = false) ZoneId timezone,
-                                              @RequestParam(required = false) LocalDate from,
-                                              @RequestParam(required = false) LocalDate to,
-                                              @RequestParam(required = false) boolean onlyMine,
-                                              @RequestParam(required = false) String search
+    public SliceResponse<InterviewItem> getInterviews(@Validated @RequestParam(defaultValue = "0", required = false)  int page,
+                                                      @RequestParam(defaultValue = "20", required = false) @Max(500) int size,
+                                                      @RequestParam(defaultValue = "Europe/Warsaw", required = false) ZoneId timezone,
+                                                      @RequestParam(required = false) LocalDate from,
+                                                      @RequestParam(required = false) LocalDate to,
+                                                      @RequestParam(required = false) boolean onlyMine,
+                                                      @RequestParam(required = false) String search
                                                      ) {
 
 
@@ -60,9 +59,7 @@ public class InterviewQueryController {
     }
 
     @GetMapping("count")
-    public long getInterviewsCount(@Validated @RequestParam(defaultValue = "0", required = false)  int page,
-                                              @RequestParam(defaultValue = "20", required = false) @Max(500) int size,
-                                              @RequestParam(defaultValue = "Europe/Warsaw", required = false) ZoneId timezone,
+    public long getInterviewsCount(@Validated @RequestParam(defaultValue = "Europe/Warsaw", required = false) ZoneId timezone,
                                               @RequestParam(required = false) LocalDate from,
                                               @RequestParam(required = false) LocalDate to,
                                               @RequestParam(required = false) boolean onlyMine,

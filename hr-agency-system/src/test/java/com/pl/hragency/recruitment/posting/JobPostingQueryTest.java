@@ -1,12 +1,11 @@
 package com.pl.hragency.recruitment.posting;
 
 import com.pl.hragency.BaseRestIntegrationTest;
-import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.jobdescription.api.EmploymentType;
 import com.pl.hragency.jobdescription.api.WorkMode;
 import com.pl.hragency.recruitment.application.query.JobPostingItem;
 import com.pl.hragency.recruitment.domain.model.posting.JobPostingStatus;
-import com.pl.hragency.shared.rest.PageResponse;
+import com.pl.hragency.shared.rest.SliceResponse;
 import com.pl.hragency.testsupport.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,7 +97,7 @@ class JobPostingQueryTest extends BaseRestIntegrationTest {
                 .expectStatus()
                 .isOk()
                 .expectBody(
-                        new ParameterizedTypeReference<PageResponse<JobPostingItem>>() {}
+                        new ParameterizedTypeReference<SliceResponse<JobPostingItem>>() {}
                 )
                 .returnResult()
                 .getResponseBody();
@@ -184,7 +183,7 @@ class JobPostingQueryTest extends BaseRestIntegrationTest {
                 .expectStatus()
                 .isOk()
                 .expectBody(
-                        new ParameterizedTypeReference<PageResponse<JobPostingItem>>() {}
+                        new ParameterizedTypeReference<SliceResponse<JobPostingItem>>() {}
                 )
                 .returnResult()
                 .getResponseBody();
@@ -267,7 +266,7 @@ class JobPostingQueryTest extends BaseRestIntegrationTest {
                 .expectStatus()
                 .isOk()
                 .expectBody(
-                        new ParameterizedTypeReference<PageResponse<JobPostingItem>>() {}
+                        new ParameterizedTypeReference<SliceResponse<JobPostingItem>>() {}
                 )
                 .returnResult()
                 .getResponseBody();
@@ -349,7 +348,7 @@ class JobPostingQueryTest extends BaseRestIntegrationTest {
                 .expectStatus()
                 .isOk()
                 .expectBody(
-                        new ParameterizedTypeReference<PageResponse<JobPostingItem>>() {}
+                        new ParameterizedTypeReference<SliceResponse<JobPostingItem>>() {}
                 )
                 .returnResult()
                 .getResponseBody();
@@ -465,7 +464,7 @@ class JobPostingQueryTest extends BaseRestIntegrationTest {
                 .expectStatus()
                 .isOk()
                 .expectBody(
-                        new ParameterizedTypeReference<PageResponse<JobPostingItem>>() {}
+                        new ParameterizedTypeReference<SliceResponse<JobPostingItem>>() {}
                 )
                 .returnResult()
                 .getResponseBody();
@@ -585,7 +584,7 @@ class JobPostingQueryTest extends BaseRestIntegrationTest {
                 .expectStatus()
                 .isOk()
                 .expectBody(
-                        new ParameterizedTypeReference<PageResponse<JobPostingItem>>() {}
+                        new ParameterizedTypeReference<SliceResponse<JobPostingItem>>() {}
                 )
                 .returnResult()
                 .getResponseBody();
@@ -657,7 +656,7 @@ class JobPostingQueryTest extends BaseRestIntegrationTest {
                 .expectStatus()
                 .isOk()
                 .expectBody(
-                        new ParameterizedTypeReference<PageResponse<JobPostingItem>>() {}
+                        new ParameterizedTypeReference<SliceResponse<JobPostingItem>>() {}
                 )
                 .returnResult()
                 .getResponseBody();
@@ -665,7 +664,7 @@ class JobPostingQueryTest extends BaseRestIntegrationTest {
         // then
         assertThat(items).isNotNull();
         assertThat(items.content()).isEmpty();
-        assertThat(items.totalElements()).isZero();
+        assertThat(items.hasNext()).isFalse();
     }
 
     @Test
@@ -774,7 +773,7 @@ class JobPostingQueryTest extends BaseRestIntegrationTest {
                 .expectStatus()
                 .isOk()
                 .expectBody(
-                        new ParameterizedTypeReference<PageResponse<JobPostingItem>>() {}
+                        new ParameterizedTypeReference<SliceResponse<JobPostingItem>>() {}
                 )
                 .returnResult()
                 .getResponseBody();

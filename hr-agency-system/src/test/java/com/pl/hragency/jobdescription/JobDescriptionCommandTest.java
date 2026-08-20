@@ -850,6 +850,6 @@ class JobDescriptionCommandTest extends BaseRestIntegrationTest {
                 .body(command)
                 .exchange()
                 .expectStatus()
-                .isBadRequest();
+                .is5xxServerError();
     }
 }

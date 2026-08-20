@@ -2,13 +2,14 @@ package com.pl.hragency.recruitment.candidate;
 
 import com.pl.hragency.BaseRestIntegrationTest;
 import com.pl.hragency.recruitment.application.query.CandidateItem;
+import com.pl.hragency.shared.rest.SliceResponse;
 import com.pl.hragency.testsupport.AuthenticationTestClient;
 import com.pl.hragency.testsupport.TestCandidateScenario;
 import com.pl.hragency.testsupport.TestJobApplicationScenario;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.domain.Slice;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,14 +47,14 @@ class CandidateQueryTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(new ParameterizedTypeReference<Slice<CandidateItem>>() {
+                .expectBody(new ParameterizedTypeReference<SliceResponse<CandidateItem>>() {
                 })
                 .returnResult()
                 .getResponseBody();
 
         // then
         assertThat(response).isNotNull();
-        assertThat(response)
+        assertThat(response.content())
                 .extracting(CandidateItem::id)
                 .containsExactly(test.id(), candidate2.id());
     }
@@ -84,18 +85,18 @@ class CandidateQueryTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(new ParameterizedTypeReference<Slice<CandidateItem>>() {
+                .expectBody(new ParameterizedTypeReference<SliceResponse<CandidateItem>>() {
                 })
                 .returnResult()
                 .getResponseBody();
 
         // then
         assertThat(response).isNotNull();
-        assertThat(response)
+        assertThat(response.content())
                 .extracting(CandidateItem::id)
                 .containsExactly(test.id());
 
-        assertThat(response)
+        assertThat(response.content())
                 .extracting(CandidateItem::id)
                 .doesNotContain(notMatching.id());
     }
@@ -117,14 +118,14 @@ class CandidateQueryTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(new ParameterizedTypeReference<Slice<CandidateItem>>() {
+                .expectBody(new ParameterizedTypeReference<SliceResponse<CandidateItem>>() {
                 })
                 .returnResult()
                 .getResponseBody();
 
         // then
         assertThat(response).isNotNull();
-        assertThat(response).isEmpty();
+        assertThat(response.content()).isEmpty();
         assertThat(response.hasNext()).isFalse();
     }
 
@@ -154,14 +155,14 @@ class CandidateQueryTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(new ParameterizedTypeReference<Slice<CandidateItem>>() {
+                .expectBody(new ParameterizedTypeReference<SliceResponse<CandidateItem>>() {
                 })
                 .returnResult()
                 .getResponseBody();
 
         // then
         assertThat(response).isNotNull();
-        assertThat(response)
+        assertThat(response.content())
                 .extracting(CandidateItem::id)
                 .containsExactly(test.id());
     }
@@ -202,14 +203,14 @@ class CandidateQueryTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(new ParameterizedTypeReference<Slice<CandidateItem>>() {
+                .expectBody(new ParameterizedTypeReference<SliceResponse<CandidateItem>>() {
                 })
                 .returnResult()
                 .getResponseBody();
 
         // then
         assertThat(response).isNotNull();
-        assertThat(response).hasSize(1);
+        assertThat(response.content()).hasSize(1);
         assertThat(response.hasNext()).isTrue();
     }
 
@@ -241,14 +242,14 @@ class CandidateQueryTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(new ParameterizedTypeReference<Slice<CandidateItem>>() {
+                .expectBody(new ParameterizedTypeReference<SliceResponse<CandidateItem>>() {
                 })
                 .returnResult()
                 .getResponseBody();
 
         // then
         assertThat(response).isNotNull();
-        assertThat(response)
+        assertThat(response.content())
                 .extracting(CandidateItem::id)
                 .containsExactly(test.candidateId(), secondApplicationSameCompany.candidateId());
     }

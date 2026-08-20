@@ -1,9 +1,11 @@
 package com.pl.hragency.recruitment.application.query;
 
+import com.pl.hragency.recruitment.application.port.JobPostingQueryRepository;
 import com.pl.hragency.recruitment.application.port.JobPostingRepository;
 import com.pl.hragency.recruitment.domain.model.posting.JobPostingId;
 import com.pl.hragency.shared.rest.EntityNotFoundException;
 import com.pl.hragency.shared.rest.EntityType;
+import com.pl.hragency.shared.rest.SliceResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,11 +17,13 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class GetJobPostingQueryHandler {
     private final JobPostingRepository repository;
+    private final JobPostingQueryRepository queryRepository;
     private final JobPostingItemMapper mapper;
     public GetJobPostingQueryHandler(
-            JobPostingRepository repository, JobPostingItemMapper mapper
+            JobPostingRepository repository, JobPostingQueryRepository queryRepository, JobPostingItemMapper mapper
     ) {
         this.repository = repository;
+        this.queryRepository = queryRepository;
         this.mapper = mapper;
     }
 
@@ -35,13 +39,20 @@ public class GetJobPostingQueryHandler {
                 );
     }
 
-    public Page<JobPostingItem> search(
+    public SliceResponse<JobPostingItem> search(
             UUID organizationId,
             JobPostingListQuery query,
             Pageable pageable
     ) {
-        return repository
-                .search(organizationId, query, pageable).map(mapper::from);
+        return queryRepository
+                .search(organizationId, query, pageable);
 
+    }
+
+    public long countSearch(
+            UUID organizationId,
+            JobPostingListQuery query
+    ) {
+        return queryRepository.countSearch(organizationId,query);
     }
 }

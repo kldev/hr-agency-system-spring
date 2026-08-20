@@ -1,5 +1,6 @@
 package com.pl.hragency.shared.persistence;
 
+import com.pl.hragency.shared.rest.SliceResponse;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -22,7 +23,7 @@ public abstract class AbstractJpaSliceQueryRepository<
         this.entityManager = entityManager;
     }
 
-    public Slice<I> search(
+    public SliceResponse<I> search(
             UUID organizationId,
             Q query,
             Pageable pageable) {
@@ -67,11 +68,10 @@ public abstract class AbstractJpaSliceQueryRepository<
             result = result.subList(0, pageable.getPageSize());
         }
 
-        return new SliceImpl<>(
+        return new SliceResponse<I>(
                 result.stream()
                         .map(this::from)
                         .toList(),
-                pageable,
                 hasNext
         );
     }

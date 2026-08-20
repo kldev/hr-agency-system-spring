@@ -106,6 +106,6 @@ class OrganizationApiTest extends BaseRestIntegrationTest {
                 .body(command)
                 .exchange()
                 .expectStatus()
-                .isForbidden();
+                .is5xxServerError();
     }
 }

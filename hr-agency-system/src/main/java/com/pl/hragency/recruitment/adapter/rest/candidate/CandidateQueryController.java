@@ -6,10 +6,10 @@ import com.pl.hragency.recruitment.application.query.CandidateItem;
 import com.pl.hragency.recruitment.application.query.CandidateListQuery;
 import com.pl.hragency.recruitment.domain.model.candidate.CandidateStatus;
 import com.pl.hragency.shared.rest.ExecutionContext;
+import com.pl.hragency.shared.rest.SliceResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Max;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,12 +39,12 @@ public class CandidateQueryController {
 
 
     @GetMapping
-    public Slice<CandidateItem> getCandidates(@Validated @RequestParam(defaultValue = "0", required = false)  int page,
-                                              @RequestParam(defaultValue = "20", required = false)  @Max(500) int size,
-                                              @RequestParam(required = false) UUID companyId,
-                                              @RequestParam(required = false) CandidateStatus status,
-                                              @RequestParam(required = false) String search,
-                                              @RequestParam(required = false) Set<UUID> tags
+    public SliceResponse<CandidateItem> getCandidates(@Validated @RequestParam(defaultValue = "0", required = false)  int page,
+                                                      @RequestParam(defaultValue = "20", required = false)  @Max(500) int size,
+                                                      @RequestParam(required = false) UUID companyId,
+                                                      @RequestParam(required = false) CandidateStatus status,
+                                                      @RequestParam(required = false) String search,
+                                                      @RequestParam(required = false) Set<UUID> tags
 
     ) {
 
@@ -57,9 +57,7 @@ public class CandidateQueryController {
     }
 
     @GetMapping("count")
-    public long getCandidatesCount(@RequestParam(defaultValue = "0", required = false)  int page,
-                                              @RequestParam(defaultValue = "20", required = false) int size,
-                                              @RequestParam(required = false) UUID companyId,
+    public long getCandidatesCount(@RequestParam(required = false) UUID companyId,
                                               @RequestParam(required = false) CandidateStatus status,
                                               @RequestParam(required = false) String search,
                                               @RequestParam(required = false) Set<UUID> tags
