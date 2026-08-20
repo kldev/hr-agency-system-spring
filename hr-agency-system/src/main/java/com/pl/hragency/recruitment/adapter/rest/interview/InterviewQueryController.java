@@ -7,8 +7,10 @@ import com.pl.hragency.recruitment.application.query.InterviewListQuery;
 import com.pl.hragency.shared.rest.ExecutionContext;
 import com.pl.hragency.shared.rest.PageResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Max;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,8 +38,8 @@ public class InterviewQueryController {
 
 
     @GetMapping
-    public PageResponse<InterviewItem> getInterviews(@RequestParam(defaultValue = "0", required = false)  int page,
-                                                     @RequestParam(defaultValue = "20", required = false) int size,
+    public PageResponse<InterviewItem> getInterviews(@Validated @RequestParam(defaultValue = "0", required = false)  int page,
+                                                     @RequestParam(defaultValue = "20", required = false) @Max(500) int size,
                                                      @RequestParam(defaultValue = "Europe/Warsaw", required = false) ZoneId timezone,
                                                      @RequestParam(required = false) LocalDate from,
                                                      @RequestParam(required = false) LocalDate to,

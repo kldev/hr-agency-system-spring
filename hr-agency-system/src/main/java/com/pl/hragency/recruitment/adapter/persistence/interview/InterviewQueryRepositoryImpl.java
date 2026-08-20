@@ -144,7 +144,7 @@ public class InterviewQueryRepositoryImpl implements InterviewQueryRepository {
         );
 
         typedQuery.setMaxResults(
-                pageable.getPageSize()
+                Math.min(pageable.getPageSize(), 500)
         );
 
         List<InterviewItem> items = typedQuery.getResultList();

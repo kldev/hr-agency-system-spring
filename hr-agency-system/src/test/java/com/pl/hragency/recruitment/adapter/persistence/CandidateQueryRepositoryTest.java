@@ -83,7 +83,7 @@ class CandidateQueryRepositoryTest extends BaseIntegrationTest {
                 pageable
         );
 
-        assertThat(result.content())
+        assertThat(result)
                 .extracting(CandidateItem::id)
                 .containsExactlyInAnyOrder(
                         javaCandidate.id(),
@@ -118,7 +118,7 @@ class CandidateQueryRepositoryTest extends BaseIntegrationTest {
                 pageable
         );
 
-        assertThat(result.content())
+        assertThat(result)
                 .extracting(CandidateItem::id)
                 .containsExactly(javaCandidate.candidate().id());
     }
@@ -150,7 +150,7 @@ class CandidateQueryRepositoryTest extends BaseIntegrationTest {
                 pageable
         );
 
-        assertThat(result.content())
+        assertThat(result)
                 .extracting(CandidateItem::id)
                 .containsExactly(candidate.id());
     }
@@ -182,7 +182,7 @@ class CandidateQueryRepositoryTest extends BaseIntegrationTest {
                 pageable
         );
 
-        assertThat(result.content())
+        assertThat(result)
                 .extracting(CandidateItem::id)
                 .containsExactly(candidate.id());
     }
@@ -214,7 +214,7 @@ class CandidateQueryRepositoryTest extends BaseIntegrationTest {
                 pageable
         );
 
-        assertThat(result.content())
+        assertThat(result)
                 .extracting(CandidateItem::id)
                 .containsExactly(candidate.id());
     }
@@ -248,7 +248,7 @@ class CandidateQueryRepositoryTest extends BaseIntegrationTest {
                 pageable
         );
 
-        assertThat(result.content())
+        assertThat(result)
                 .extracting(CandidateItem::id)
                 .containsExactly(candidate.id());
     }
@@ -286,11 +286,11 @@ class CandidateQueryRepositoryTest extends BaseIntegrationTest {
                 pageable
         );
 
-        assertThat(result.content())
+        assertThat(result)
                 .extracting(CandidateItem::id)
                 .contains(activeCandidate.id());
 
-        assertThat(result.content())
+        assertThat(result)
                 .extracting(CandidateItem::id)
                 .doesNotContain(archivedCandidate.id());
     }
@@ -336,7 +336,7 @@ class CandidateQueryRepositoryTest extends BaseIntegrationTest {
                 pageable
         );
 
-        assertThat(result.content())
+        assertThat(result)
                 .extracting(CandidateItem::id)
                 .containsExactly(javaCandidate.candidate().id());
     }
@@ -388,14 +388,14 @@ class CandidateQueryRepositoryTest extends BaseIntegrationTest {
                 pageable
         );
 
-        assertThat(result.content())
+        assertThat(result)
                 .extracting(CandidateItem::id)
                 .containsExactlyInAnyOrder(
                         javaCandidate.id(),
                         dockerCandidate.id()
                 );
 
-        assertThat(result.content())
+        assertThat(result)
                 .extracting(CandidateItem::id)
                 .doesNotContain(pythonCandidate.id());
     }
@@ -435,7 +435,7 @@ class CandidateQueryRepositoryTest extends BaseIntegrationTest {
                 pageable
         );
 
-        assertThat(result.content())
+        assertThat(result)
                 .extracting(CandidateItem::id)
                 .containsExactly(candidate.id());
     }
@@ -475,12 +475,12 @@ class CandidateQueryRepositoryTest extends BaseIntegrationTest {
                 pageable
         );
 
-        assertThat(result.content())
+        assertThat(result)
                 .extracting(CandidateItem::id)
                 .containsExactly(candidate.id());
 
-        assertThat(result.totalElements())
-                .isEqualTo(1);
+        assertThat(result.hasNext())
+                .isEqualTo(false);
     }
 
 
@@ -518,7 +518,7 @@ class CandidateQueryRepositoryTest extends BaseIntegrationTest {
                 pageable
         );
 
-        assertThat(result.content())
+        assertThat(result)
                 .extracting(CandidateItem::id)
                 .containsExactly(matching.id());
     }
@@ -541,11 +541,11 @@ class CandidateQueryRepositoryTest extends BaseIntegrationTest {
                 pageable
         );
 
-        assertThat(result.content())
+        assertThat(result)
                 .extracting(CandidateItem::id)
                 .containsExactly(companyA.candidateId());
 
-        assertThat(result.content())
+        assertThat(result)
                 .extracting(CandidateItem::id)
                 .doesNotContain(companyB.candidateId());
     }
@@ -607,7 +607,7 @@ class CandidateQueryRepositoryTest extends BaseIntegrationTest {
                 pageable
         );
 
-        assertThat(result.content())
+        assertThat(result)
                 .extracting(CandidateItem::id)
                 .containsExactly(matching.id());
     }
@@ -679,7 +679,7 @@ class CandidateQueryRepositoryTest extends BaseIntegrationTest {
                 pageable
         );
 
-        assertThat(result.content())
+        assertThat(result)
                 .extracting(CandidateItem::id)
                 .containsExactly(matching);
     }
@@ -705,8 +705,8 @@ class CandidateQueryRepositoryTest extends BaseIntegrationTest {
                 pageable
         );
 
-        assertThat(result.content()).isEmpty();
-        assertThat(result.totalElements()).isZero();
+        assertThat(result).isEmpty();
+        assertThat(result.hasNext()).isFalse();
     }
 
     @Test
@@ -730,7 +730,7 @@ class CandidateQueryRepositoryTest extends BaseIntegrationTest {
                 pageable
         );
 
-        assertThat(result.content())
+        assertThat(result)
                 .extracting(CandidateItem::id)
                 .contains(candidate.id());
     }
@@ -756,7 +756,7 @@ class CandidateQueryRepositoryTest extends BaseIntegrationTest {
                 pageable
         );
 
-        assertThat(result.content())
+        assertThat(result)
                 .extracting(CandidateItem::id)
                 .contains(candidate.id());
     }

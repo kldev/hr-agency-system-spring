@@ -12,5 +12,5 @@ import java.util.UUID;
 public interface JobApplicationQueryRepository {
 
     Slice<JobApplicationItem> search(UUID organizationId, JobApplicationListQuery query, Pageable pageable);
-    long countSearch(UUID organizationId, JobApplicationListQuery query, Pageable pageable);
+    long countSearch(UUID organizationId, JobApplicationListQuery query);
 }

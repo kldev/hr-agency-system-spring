@@ -6,16 +6,17 @@ import com.pl.hragency.recruitment.application.query.CandidateItem;
 import com.pl.hragency.recruitment.application.query.CandidateListQuery;
 import com.pl.hragency.recruitment.domain.model.candidate.CandidateStatus;
 import com.pl.hragency.shared.rest.ExecutionContext;
-import com.pl.hragency.shared.rest.PageResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Max;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -38,12 +39,12 @@ public class CandidateQueryController {
 
 
     @GetMapping
-    public PageResponse<CandidateItem> getCandidates(@RequestParam(defaultValue = "0", required = false)  int page,
-                                                     @RequestParam(defaultValue = "20", required = false) int size,
-                                                     @RequestParam(required = false) UUID companyId,
-                                                     @RequestParam(required = false) CandidateStatus status,
-                                                     @RequestParam(required = false) String search,
-                                                     @RequestParam(required = false) Set<UUID> tags
+    public Slice<CandidateItem> getCandidates(@Validated @RequestParam(defaultValue = "0", required = false)  int page,
+                                              @RequestParam(defaultValue = "20", required = false)  @Max(500) int size,
+                                              @RequestParam(required = false) UUID companyId,
+                                              @RequestParam(required = false) CandidateStatus status,
+                                              @RequestParam(required = false) String search,
+                                              @RequestParam(required = false) Set<UUID> tags
 
     ) {
 
@@ -53,5 +54,19 @@ public class CandidateQueryController {
         var query = new CandidateListQuery(search, companyId, tags, status);
 
         return repository.search(getExecutionContext().organizationId(), query, sortBy);
+    }
+
+    @GetMapping("count")
+    public long getCandidatesCount(@RequestParam(defaultValue = "0", required = false)  int page,
+                                              @RequestParam(defaultValue = "20", required = false) int size,
+                                              @RequestParam(required = false) UUID companyId,
+                                              @RequestParam(required = false) CandidateStatus status,
+                                              @RequestParam(required = false) String search,
+                                              @RequestParam(required = false) Set<UUID> tags
+
+    ) {
+        var query = new CandidateListQuery(search, companyId, tags, status);
+
+        return repository.countSearch(getExecutionContext().organizationId(), query);
     }
 }

@@ -72,12 +72,8 @@ public class JobApplicationQueryController {
                                                     @RequestParam(required = false) JobApplicationStatus status
 
     ) {
-
-        var sortBy = PageRequest.of(page, size,
-                Sort.by(Sort.Direction.ASC, "createdAt"));
-
         var query = new JobApplicationListQuery(search, companyId, status, postingId,recruiterId, source);
 
-        return repository.countSearch(getExecutionContext().organizationId(), query, sortBy);
+        return repository.countSearch(getExecutionContext().organizationId(), query);
     }
 }

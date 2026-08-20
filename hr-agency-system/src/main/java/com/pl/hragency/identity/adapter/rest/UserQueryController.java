@@ -5,9 +5,11 @@ import com.pl.hragency.identity.application.query.UserListQuery;
 import com.pl.hragency.identity.application.query.UserQueryService;
 import com.pl.hragency.shared.rest.PageResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Max;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,12 +28,11 @@ public class UserQueryController {
     }
 
     @GetMapping
-    public PageResponse<UserListItem> getUsers(
-            @RequestParam(required = false) String search, @RequestParam(defaultValue = "0")
-            int page,
-
-            @RequestParam(defaultValue = "20")
-            int size) {
+    public PageResponse<UserListItem> getUsers(@Validated
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20", required = false)  @Max(500) int size
+    ) {
 
         var pageable = PageRequest.of(
                 page,

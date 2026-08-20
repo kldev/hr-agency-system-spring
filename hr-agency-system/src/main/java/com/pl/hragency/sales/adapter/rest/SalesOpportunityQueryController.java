@@ -8,8 +8,10 @@ import com.pl.hragency.sales.domain.model.SalesOpportunityStage;
 import com.pl.hragency.shared.rest.ExecutionContext;
 import com.pl.hragency.shared.rest.PageResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Max;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -36,12 +38,9 @@ public class SalesOpportunityQueryController {
     }
 
     @GetMapping
-    public PageResponse<SalesOpportunityItem> findAll(
-            @RequestParam(defaultValue = "0")
-            int page,
-
-            @RequestParam(defaultValue = "20")
-            int size,
+    public PageResponse<SalesOpportunityItem> findAll(@Validated
+            @RequestParam(defaultValue = "0")  int page,
+            @RequestParam(defaultValue = "20") @Max(500) int size,
             @RequestParam(required = false)
             SalesOpportunityStage stage
 
