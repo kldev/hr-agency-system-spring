@@ -4,11 +4,12 @@ import com.pl.hragency.BaseRestIntegrationTest;
 import com.pl.hragency.identity.domain.model.OrganizationRole;
 import com.pl.hragency.recruitment.application.command.CreateInterviewCommand;
 import com.pl.hragency.recruitment.application.query.InterviewItem;
-import com.pl.hragency.shared.rest.PageResponse;
+
 import com.pl.hragency.testsupport.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.MediaType;
 
 import java.time.LocalDateTime;
@@ -61,14 +62,14 @@ class InterviewQueryTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(new ParameterizedTypeReference<PageResponse<InterviewItem>>() {
+                .expectBody(new ParameterizedTypeReference<Slice<InterviewItem>>() {
                 })
                 .returnResult()
                 .getResponseBody();
 
         // then
         assertThat(response).isNotNull();
-        assertThat(response.content())
+        assertThat(response)
                 .extracting("id")
                 .containsExactly(interview1, interview2);
     }
@@ -118,21 +119,21 @@ class InterviewQueryTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(new ParameterizedTypeReference<PageResponse<InterviewItem>>() {
+                .expectBody(new ParameterizedTypeReference<Slice<InterviewItem>>() {
                 })
                 .returnResult()
                 .getResponseBody();
 
         // then
         assertThat(response).isNotNull();
-        assertThat(response.content())
+        assertThat(response)
                 .extracting("id")
                 .containsExactly(
                         insideRange1,
                         insideRange2
                 );
 
-        assertThat(response.content())
+        assertThat(response)
                 .extracting("id")
                 .doesNotContain(beforeRange);
     }
@@ -188,18 +189,18 @@ class InterviewQueryTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(new ParameterizedTypeReference<PageResponse<InterviewItem>>() {
+                .expectBody(new ParameterizedTypeReference<Slice<InterviewItem>>() {
                 })
                 .returnResult()
                 .getResponseBody();
 
         // then
         assertThat(response).isNotNull();
-        assertThat(response.content())
+        assertThat(response)
                 .extracting("id")
                 .containsExactly(myInterview);
 
-        assertThat(response.content())
+        assertThat(response)
                 .extracting("id")
                 .doesNotContain(otherInterview);
     }
@@ -247,13 +248,13 @@ class InterviewQueryTest extends BaseRestIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(new ParameterizedTypeReference<PageResponse<InterviewItem>>() {})
+                .expectBody(new ParameterizedTypeReference<Slice<InterviewItem>>() {})
                 .returnResult()
                 .getResponseBody();
 
         // then
         assertThat(response).isNotNull();
-        assertThat(response.content())
+        assertThat(response)
                 .extracting("id")
                 .containsExactly(
                         earlyInterview,

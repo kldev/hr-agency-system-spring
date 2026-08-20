@@ -9,7 +9,8 @@ import java.util.UUID;
 public record InterviewListQuery(UUID createdBy,
                                  LocalDate from,
                                  LocalDate to,
-                                 ZoneId timezone) {
+                                 ZoneId timezone,
+                                 String search) {
 
     public Instant fromAtInstant() {
         return from == null ? null : from.atStartOfDay(timezone).toInstant();

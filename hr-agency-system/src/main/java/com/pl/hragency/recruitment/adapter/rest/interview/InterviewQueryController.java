@@ -9,6 +9,7 @@ import com.pl.hragency.shared.rest.PageResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Max;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,23 +39,39 @@ public class InterviewQueryController {
 
 
     @GetMapping
-    public PageResponse<InterviewItem> getInterviews(@Validated @RequestParam(defaultValue = "0", required = false)  int page,
-                                                     @RequestParam(defaultValue = "20", required = false) @Max(500) int size,
-                                                     @RequestParam(defaultValue = "Europe/Warsaw", required = false) ZoneId timezone,
-                                                     @RequestParam(required = false) LocalDate from,
-                                                     @RequestParam(required = false) LocalDate to,
-                                                     @RequestParam(required = false) boolean onlyMine
+    public Slice<InterviewItem> getInterviews(@Validated @RequestParam(defaultValue = "0", required = false)  int page,
+                                              @RequestParam(defaultValue = "20", required = false) @Max(500) int size,
+                                              @RequestParam(defaultValue = "Europe/Warsaw", required = false) ZoneId timezone,
+                                              @RequestParam(required = false) LocalDate from,
+                                              @RequestParam(required = false) LocalDate to,
+                                              @RequestParam(required = false) boolean onlyMine,
+                                              @RequestParam(required = false) String search
                                                      ) {
 
 
         var sortBy = PageRequest.of(page, size,
                 Sort.by(Sort.Direction.ASC, "scheduledAt"));
 
-        var query = new InterviewListQuery(onlyMine ? getExecutionContext().userId() : null,
-                from, to, timezone);
+        var query = new InterviewListQuery(
+                onlyMine ? getExecutionContext().userId() : null,
+                from, to, timezone, search);
 
-        var result = repository.search(getExecutionContext().organizationId(), query, sortBy);
+        return repository.search(getExecutionContext().organizationId(), query, sortBy);
+    }
 
-        return  PageResponse.from(result);
+    @GetMapping("count")
+    public long getInterviewsCount(@Validated @RequestParam(defaultValue = "0", required = false)  int page,
+                                              @RequestParam(defaultValue = "20", required = false) @Max(500) int size,
+                                              @RequestParam(defaultValue = "Europe/Warsaw", required = false) ZoneId timezone,
+                                              @RequestParam(required = false) LocalDate from,
+                                              @RequestParam(required = false) LocalDate to,
+                                              @RequestParam(required = false) boolean onlyMine,
+                                              @RequestParam(required = false) String search
+    ) {
+        var query = new InterviewListQuery(
+                onlyMine ? getExecutionContext().userId() : null,
+                from, to, timezone, search);
+
+        return repository.countSearch(getExecutionContext().organizationId(), query);
     }
 }

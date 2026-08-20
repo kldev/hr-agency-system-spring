@@ -8,7 +8,8 @@ import org.springframework.modulith.ApplicationModule;
                 "jobdescription :: api",
                 "identity :: persistence",
                 "organization :: api",
-                "company :: api"
+                "company :: api",
+                "shared :: persistence"
         })
 public class RecruitmentModule {
 }
